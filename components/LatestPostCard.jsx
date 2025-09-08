@@ -1,10 +1,6 @@
-"use client";
-import { motion } from 'framer-motion';
-
 export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png' }) {
   return (
-    <motion.div 
-      style={{
+    <div style={{
       width: width,
       height: height,
       borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
@@ -15,25 +11,8 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
       backgroundPosition: 'center',
       display: 'flex',
       flexDirection: 'column',
-      padding: '12px', // 24px * 0.5 = 12px (50% smaller)
-      cursor: 'pointer'
-    }}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.3 }}
-    transition={{ duration: 0.5 }}
-    whileHover={{ 
-      scale: 1.02,
-      y: -5,
-      transition: { 
-        type: "spring", 
-        stiffness: 300, 
-        damping: 20,
-        duration: 0.3
-      }
-    }}
-    whileTap={{ scale: 0.98 }}
-  >
+      padding: '12px' // 24px * 0.5 = 12px (50% smaller)
+    }}>
       {/* Top Section with Tour Button */}
       <div style={{
         display: 'flex',
@@ -116,6 +95,6 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           <span>Dec 15, 2024</span>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
