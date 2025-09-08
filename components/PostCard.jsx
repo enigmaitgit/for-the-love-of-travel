@@ -7,6 +7,7 @@ export default function PostCard({ post, width, height, variant = "default" }) {
   if (variant === "latest") {
     return (
       <motion.div 
+        className="w-full lg:w-auto"
         style={{
           width: width || '382px',
           height: height || '146px',
@@ -16,7 +17,8 @@ export default function PostCard({ post, width, height, variant = "default" }) {
           display: 'flex',
           flexDirection: 'column',
           padding: '14px',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          minHeight: '200px'
         }}
         initial={{ scale: 1, y: 0 }}
         whileHover={{ 

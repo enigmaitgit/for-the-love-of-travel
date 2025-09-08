@@ -16,66 +16,83 @@ export default function HomePageClient() {
       <Navbar />
       <Hero />
 
-      {/* Featured Stories Grid - New Layout */}
+      {/* Featured Stories Grid - Mobile Responsive Layout */}
       <section id="stories" className="section pt-16 md:pt-20 lg:pt-24">
-        <div style={{ 
-          maxWidth: '92%', 
-          margin: '0 auto', 
-          marginTop: '40px', 
-          marginLeft: '8%',
-          position: 'relative',
-          minHeight: '110vh'
-        }}>
-          {/* Row 1 - Absolute positioned cards */}
-          <div style={{ position: 'relative', height: '480px', marginBottom: '72px' }}>
-            <div style={{
-              position: 'absolute',
-              top: '-60px',
-              left: '6px',
-              zIndex: 2,
-              gap: '12px',
-              marginRight: '24px'
-            }}>
-              <PostCard post={featuredPosts[0]} variant="latest" width="624px" height="240px" />
-            </div>
-            <div style={{
-              position: 'absolute',
-              top: '-60px',
-              left: '642px',
-              zIndex: 1,
-              marginLeft: '24px'
-            }}>
-              <PostCard post={featuredPosts[1]} variant="latest" width="624px" height="240px" />
-            </div>
+        <div className="px-4 sm:px-6 lg:px-8">
+          {/* Mobile: Stack all cards vertically */}
+          <div className="block lg:hidden space-y-6 max-w-4xl mx-auto">
+            {featuredPosts.slice(0, 6).map((post, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <PostCard post={post} variant="latest" />
+              </motion.div>
+            ))}
           </div>
 
-          {/* Row 2 - Grid layout */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr 2fr', 
-            gap: '18px',
-            marginTop: '-348px',
-            marginBottom: '24px'
-          }}>
-            <PostCard post={featuredPosts[2]} variant="latest" width="540px" height="300px" />
-            <PostCard post={featuredPosts[3]} variant="latest" width="420px" height="300px" />
-            <PostCard post={featuredPosts[4]} variant="latest" width="300px" height="240px" />
-          </div>
-
-          {/* Row 3 - Custom layout with absolute positioning */}
-          <div style={{ 
+          {/* Desktop: Original complex layout */}
+          <div className="hidden lg:block" style={{ 
+            maxWidth: '92%', 
+            margin: '0 auto', 
+            marginTop: '40px', 
+            marginLeft: '8%',
             position: 'relative',
-            height: '480px',
-            marginTop: '18px'
+            minHeight: '110vh'
           }}>
-            <PostCard post={featuredPosts[5]} variant="latest" width="984px" height="336px" />
-            <div style={{
-              position: 'absolute',
-              top: '-60px',
-              left: '1002px',
-              zIndex: 1
+            {/* Row 1 - Absolute positioned cards */}
+            <div style={{ position: 'relative', height: '480px', marginBottom: '72px' }}>
+              <div style={{
+                position: 'absolute',
+                top: '-60px',
+                left: '6px',
+                zIndex: 2,
+                gap: '12px',
+                marginRight: '24px'
+              }}>
+                <PostCard post={featuredPosts[0]} variant="latest" width="624px" height="240px" />
+              </div>
+              <div style={{
+                position: 'absolute',
+                top: '-60px',
+                left: '642px',
+                zIndex: 1,
+                marginLeft: '24px'
+              }}>
+                <PostCard post={featuredPosts[1]} variant="latest" width="624px" height="240px" />
+              </div>
+            </div>
+
+            {/* Row 2 - Grid layout */}
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr 2fr', 
+              gap: '18px',
+              marginTop: '-348px',
+              marginBottom: '24px'
             }}>
-              <PostCard post={featuredPosts[6]} variant="latest" width="300px" height="396px" />
+              <PostCard post={featuredPosts[2]} variant="latest" width="540px" height="300px" />
+              <PostCard post={featuredPosts[3]} variant="latest" width="420px" height="300px" />
+              <PostCard post={featuredPosts[4]} variant="latest" width="300px" height="240px" />
+            </div>
+
+            {/* Row 3 - Custom layout with absolute positioning */}
+            <div style={{ 
+              position: 'relative',
+              height: '480px',
+              marginTop: '18px'
+            }}>
+              <PostCard post={featuredPosts[5]} variant="latest" width="984px" height="336px" />
+              <div style={{
+                position: 'absolute',
+                top: '-60px',
+                left: '1002px',
+                zIndex: 1
+              }}>
+                <PostCard post={featuredPosts[6]} variant="latest" width="300px" height="396px" />
+              </div>
             </div>
           </div>
         </div>
@@ -92,11 +109,40 @@ export default function HomePageClient() {
             </div>
           </div>
           
-          {/* Staggered Card Layout */}
-          <div className="flex gap-6 w-full items-start">
-            {/* Left spacer to align with heading */}
+          {/* Mobile: Grid layout, Desktop: Staggered layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:hidden">
+            {latestPosts.map((src, i) => (
+              <motion.div 
+                key={i} 
+                className="relative rounded-xl overflow-hidden shadow-lg h-80 w-full group cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ 
+                  scale: 1.03,
+                  y: -5,
+                  transition: { 
+                    type: "spring", 
+                    stiffness: 300, 
+                    damping: 20
+                  }
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Image 
+                  src={src} 
+                  alt={`Latest post ${i+1}`} 
+                  fill 
+                  className="object-cover object-center transition-transform duration-500 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Desktop: Original staggered layout */}
+          <div className="hidden lg:flex gap-6 w-full items-start">
             <div className="w-0 sm:w-4"></div>
-            {/* Cards container */}
             <div className="flex gap-6 flex-1 justify-center">
             {latestPosts.map((src, i) => (
               <motion.div 
@@ -124,12 +170,10 @@ export default function HomePageClient() {
                   fill 
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-110" 
                 />
-                {/* Dark Gradient Overlay - Removed on Hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:opacity-0 transition-opacity duration-300"></div>
               </motion.div>
             ))}
             </div>
-            {/* Right spacer for even spacing */}
             <div className="w-0 sm:w-4"></div>
           </div>
         </div>
@@ -139,14 +183,14 @@ export default function HomePageClient() {
       <section className="section text-white py-16" style={{ backgroundColor: '#0D2436' }}>
         <div className="container">
           {/* Filter Buttons */}
-          <div className="flex gap-4 mb-12 justify-center">
-            <button className="px-6 py-3 text-white rounded-lg font-medium transition-colors" style={{ backgroundColor: '#3514EE' }}>
+          <div className="flex flex-wrap gap-2 sm:gap-4 mb-12 justify-center">
+            <button className="px-4 sm:px-6 py-2 sm:py-3 text-white rounded-lg font-medium transition-colors text-sm sm:text-base" style={{ backgroundColor: '#3514EE' }}>
               Destinations
             </button>
-            <button className="px-6 py-3 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
+            <button className="px-4 sm:px-6 py-2 sm:py-3 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors text-sm sm:text-base">
               Vacations
             </button>
-            <button className="px-6 py-3 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
+            <button className="px-4 sm:px-6 py-2 sm:py-3 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors text-sm sm:text-base">
               Tours
             </button>
           </div>

@@ -37,10 +37,22 @@ export default function Navbar() {
       initial={{ y: 0 }}
       animate={{ 
         y: 0,
-        backgroundColor: isScrolled ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0)',
-        backdropFilter: isScrolled ? 'blur(20px)' : 'blur(0px)',
-        borderBottomColor: isScrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0)',
-        borderBottomWidth: isScrolled ? '1px' : '0px'
+        backgroundColor: open 
+          ? 'rgba(255,255,255,0.15)' // Increased opacity when mobile menu is open
+          : isScrolled 
+            ? 'rgba(255,255,255,0.05)' 
+            : 'rgba(255,255,255,0)',
+        backdropFilter: open 
+          ? 'blur(20px)' // Enhanced blur when mobile menu is open
+          : isScrolled 
+            ? 'blur(20px)' 
+            : 'blur(0px)',
+        borderBottomColor: open 
+          ? 'rgba(255,255,255,0.2)' // Enhanced border when mobile menu is open
+          : isScrolled 
+            ? 'rgba(255,255,255,0.1)' 
+            : 'rgba(255,255,255,0)',
+        borderBottomWidth: open || isScrolled ? '1px' : '0px'
       }}
       transition={{ 
         duration: 0.4, 
@@ -52,7 +64,7 @@ export default function Navbar() {
     >
       <div className="container relative flex h-24 items-center">
         {/* Logo (outside the glass group) */}
-        <Link href="/" className="relative z-50 flex items-center mt-6 -ml-10">
+        <Link href="/" className="relative z-50 flex items-center mt-6 -ml-10 ml-2 md:ml-0">
           <Image
             src="/images/logo.png"
             alt="For the Love of Travel Logo"
@@ -64,7 +76,7 @@ export default function Navbar() {
         </Link>
 
                  {/* Desktop: liquid glass nav positioned closer to logo */}
-         <div className="hidden md:block absolute left-[200px] right-32 mt-6">
+         <div className="hidden md:block absolute left-[240px] right-32 mt-6">
           <motion.nav
             className="w-full flex items-center justify-between rounded-[18px] border px-8 py-4"
             animate={{
@@ -172,7 +184,7 @@ export default function Navbar() {
 
         {/* Mobile menu button (right) */}
         <motion.button
-          className="ml-auto md:hidden text-black transition-all duration-300 ease-out"
+          className="ml-auto md:hidden text-black transition-all duration-300 ease-out mr-2"
           aria-label="Toggle menu"
           onClick={() => setOpen(!open)}
           whileHover={{ scale: 1.1 }}
