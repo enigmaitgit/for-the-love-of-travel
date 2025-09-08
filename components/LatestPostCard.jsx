@@ -1,4 +1,4 @@
-export default function LatestPostCard({ width = '382px', height = '146px' }) {
+export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png' }) {
   return (
     <div style={{
       width: width,
@@ -6,7 +6,7 @@ export default function LatestPostCard({ width = '382px', height = '146px' }) {
       borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
       overflow: 'hidden',
       position: 'relative',
-      backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("/images/balloon4to.png")',
+      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("${image}")`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       display: 'flex',

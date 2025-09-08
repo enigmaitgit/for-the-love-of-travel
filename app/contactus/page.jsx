@@ -1,13 +1,15 @@
 'use client'
 
+import Navbar from '../../components/Navbar.jsx'
 import HeroSection from '../../components/HeroSection.jsx'
 import { ArrowRight } from 'lucide-react'
-import Footer from '../../components/footer.jsx'
+import Footer from '../../components/Footer.jsx'
 
 export default function ContactUs() {
  
     return (
         <div>
+            <Navbar />
             <HeroSection title="Contact Us" />
 
             <div className="container" style={{

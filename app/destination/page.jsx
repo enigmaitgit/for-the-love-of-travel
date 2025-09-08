@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Navbar from '../../components/Navbar.jsx'
 import HeroSection from '../../components/HeroSection.jsx'
 import NewSection from '../../components/NewSection.jsx'
 import NewsCard from '../../components/NewsCard.jsx'
@@ -8,7 +9,7 @@ import DestinationGrid from '../../components/DestinationGrid.jsx'
 import PopularPostCard from '../../components/PopularPostCard.jsx'
 import FramerCard from '../../components/FramerCard.jsx'
 import VideoCard from '../../components/VideoCard.jsx'
-import Footer from '../../components/footer.jsx'
+import Footer from '../../components/Footer.jsx'
 
 
 
@@ -26,10 +27,11 @@ export default function DestinationPage() {
 
   return (
     <div className="min-h-screen">
+      <Navbar />
       <HeroSection title="Destination" />
       
       {/* Content Section */}
-      <div className="p-6 sm:p-10">
+      <div className="p-6 md:p-10">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Destination Page

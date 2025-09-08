@@ -1,20 +1,20 @@
 "use client";
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import SectionHeader from "@/components/SectionHeader";
-import PostCard from "@/components/PostCard";
-import VideoCard from "@/components/VideoCard";
-import Newsletter from "@/components/Newsletter";
-import Footer from "@/components/Footer";
+import Navbar from "../components/Navbar";
+import HeroSection from "../components/HeroSection";
+import SectionHeader from "../components/SectionHeader";
+import PostCard from "../components/PostCard";
+import VideoCard from "../components/VideoCard";
+import Newsletter from "../components/Newsletter";
+import Footer from "../components/Footer";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { featuredPosts, latestPosts, videos } from "@/lib/data";
+import { featuredPosts, latestPosts, videos } from "../lib/data";
 
 export default function HomePageClient() {
   return (
     <main>
       <Navbar />
-      <Hero />
+      <HeroSection title="Home" />
 
       {/* Featured Stories Grid - New Layout */}
       <section id="stories" className="section pt-16 md:pt-20 lg:pt-24">
@@ -95,7 +95,7 @@ export default function HomePageClient() {
           {/* Staggered Card Layout */}
           <div className="flex gap-6 w-full items-start">
             {/* Left spacer to align with heading */}
-            <div className="w-0 sm:w-4"></div>
+            <div className="w-0 md:w-4"></div>
             {/* Cards container */}
             <div className="flex gap-6 flex-1 justify-center">
             {latestPosts.map((src, i) => (
@@ -130,7 +130,7 @@ export default function HomePageClient() {
             ))}
             </div>
             {/* Right spacer for even spacing */}
-            <div className="w-0 sm:w-4"></div>
+            <div className="w-0 md:w-4"></div>
           </div>
         </div>
       </section>
@@ -152,7 +152,7 @@ export default function HomePageClient() {
           </div>
 
           {/* Articles Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {Array.from({ length: 8 }, (_, i) => {
               // Define which images to use for specific cards
               let imageSrc = "/images/placeholder.jpg"; // default placeholder
@@ -255,7 +255,7 @@ export default function HomePageClient() {
             </div>
           </div>
           {/* Videos Grid - Same layout as filtered articles */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {Array.from({ length: 8 }, (_, i) => {
               // Use the same images as the filtered articles section
               const cardImages = [

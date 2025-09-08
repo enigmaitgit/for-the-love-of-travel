@@ -12,11 +12,11 @@ html, body {
 }
 
 .container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  @apply max-w-7xl mx-auto px-4;
 }
 
 .section {
-  @apply py-10 sm:py-14 md:py-16;
+  @apply py-10 md:py-16;
 }
 
 .btn {
