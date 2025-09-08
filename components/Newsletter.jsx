@@ -14,23 +14,23 @@ export default function Newsletter() {
     />
   </svg>
 
-  <div className="container relative z-10 pt-24 pb-16 text-center">
-    <h3 className="text-2xl md:text-3xl font-semibold">
-      Get the best stories and travel deals straight<br />to your inbox, Sign-up here
+  <div className="container relative z-10 pt-16 sm:pt-24 pb-12 sm:pb-16 text-center px-4">
+    <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+      Get the best stories and travel deals straight<br className="hidden sm:block" />to your inbox, Sign-up here
     </h3>
-    <p className="mt-2 text-white/70">
+    <p className="mt-2 text-white/70 text-sm sm:text-base">
       We send only good stuff no spam, just pure wanderlust.
     </p>
 
-    <form className="mt-12 mx-auto flex w-full max-w-xl overflow-hidden rounded-lg bg-white">
+    <form className="mt-8 sm:mt-12 mx-auto flex flex-col sm:flex-row w-full max-w-xl overflow-hidden rounded-lg bg-white">
       <input
         type="email"
         placeholder="Enter Your Email"
-        className="flex-1 px-5 py-3 text-black outline-none"
+        className="flex-1 px-4 sm:px-5 py-3 text-black outline-none text-sm sm:text-base"
         required
       />
-      <button type="submit" className="px-5 py-3 bg-indigo-600 text-white">
-        Enter Your Email
+      <button type="submit" className="px-4 sm:px-5 py-3 bg-indigo-600 text-white text-sm sm:text-base font-medium">
+        Subscribe
       </button>
     </form>
   </div>

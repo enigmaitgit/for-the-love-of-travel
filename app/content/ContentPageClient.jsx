@@ -120,11 +120,11 @@ export default function ContentPageClient() {
          </div>
        </section>
 
-      {/* Article Content - Split Layout (ONLY for this section) */}
-      <section className="h-screen bg-white flex">
+      {/* Article Content - Mobile Responsive Layout */}
+      <section className="min-h-screen bg-white flex flex-col lg:flex-row">
         {/* Left Side - Scrollable Content */}
-        <div className="w-1/2 overflow-y-auto h-screen">
-          <div className="p-16 space-y-8">
+        <div className="w-full lg:w-1/2 overflow-y-auto lg:h-screen">
+          <div className="p-4 sm:p-8 lg:p-16 space-y-8">
             {/* Article with Drop Cap */}
             <motion.div
               className="mb-8"
@@ -236,14 +236,14 @@ export default function ContentPageClient() {
         </div>
 
         {/* Right Side - Sticky Image (only for this section) */}
-        <div className="w-1/2 sticky top-0 h-screen flex items-center justify-center bg-gray-50">
-          <div className="p-8 w-full h-full flex items-center justify-center">
+        <div className="w-full lg:w-1/2 lg:sticky lg:top-0 lg:h-screen flex items-center justify-center bg-gray-50 order-first lg:order-last">
+          <div className="p-4 sm:p-8 w-full h-full flex items-center justify-center">
             <Image
               src="/images/fda08960788ac48d0e9729d96349d66cce42cefd.png"
               alt="Travel destination image"
               width={1016}
               height={2359}
-              className="shadow-2xl w-full max-h-[90vh] object-cover"
+              className="shadow-2xl w-full max-h-[50vh] lg:max-h-[90vh] object-cover"
               style={{ borderRadius: '25px' }}
               priority
             />
@@ -356,9 +356,9 @@ export default function ContentPageClient() {
       <section className="py-16 bg-white">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Floating image column - Left (sticky) */}
-            <div className="lg:col-span-2">
-              <div className="sticky top-24" style={{ height: 'calc(100vh - 6rem)' }}>
+            {/* Mobile: Image first, Desktop: Image left */}
+            <div className="lg:col-span-2 order-1 lg:order-1">
+              <div className="lg:sticky lg:top-24" style={{ height: 'auto', minHeight: '400px' }}>
                 <div className="relative group cursor-pointer overflow-hidden rounded-[25px] h-full">
                   <Image
                     src="/images/fda08960788ac48d0e9729d96349d66cce42cefd.png"
@@ -384,9 +384,9 @@ export default function ContentPageClient() {
               </div>
             </div>
 
-            {/* Text column - Right (animate opacity only) */}
+            {/* Text column - Mobile: Second, Desktop: Right */}
             <motion.div
-              className="lg:col-span-1 space-y-6"
+              className="lg:col-span-1 space-y-6 order-2 lg:order-2"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
@@ -477,8 +477,8 @@ export default function ContentPageClient() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                 >
-                  <div className="flex h-48">
-                    <div className="relative w-40 h-40 flex-shrink-0">
+                  <div className="flex h-48 sm:h-56">
+                    <div className="relative w-40 h-full flex-shrink-0">
                       <Image
                         src="/images/3abf26dd585632b9d05dcfd0daffacedd55842f5.jpg"
                         alt="Article image"
@@ -486,14 +486,14 @@ export default function ContentPageClient() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="p-6 flex-1 flex flex-col">
-                      <h4 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                    <div className="p-4 sm:p-6 flex-1 flex flex-col">
+                      <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 line-clamp-2">
                         Sri Lanka's Hidden Coves ...
                       </h4>
-                      <p className="text-gray-600 text-base mb-4 line-clamp-2">
+                      <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2">
                         Embarking on the journey through the significant trends in recreation for designers, as predicted by the industry, reveals a dynamic landscape of innovation and creativity. From immersive experiences to sustainable practices, these trends shape the future of design and
                       </p>
-                      <div className="flex items-center justify-end text-sm text-gray-500 mt-auto">
+                      <div className="flex items-center justify-end text-xs sm:text-sm text-gray-500 mt-auto">
                         <span>14 min read</span>
                         <span className="mx-2">|</span>
                         <span>May 28, 2025</span>
@@ -511,8 +511,42 @@ export default function ContentPageClient() {
       <section className="py-16 bg-gray-50">
         <div className="container max-w-6xl mx-auto px-4">
           
-          {/* Postcard Layout - Scaled Down for Content Page */}
-          <div style={{ 
+          {/* Mobile: Simple grid layout */}
+          <div className="block lg:hidden">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {Array.from({ length: 6 }, (_, i) => {
+                const images = [
+                  "/images/74654a8f67369b797c8fb2e96a533fd515fb2939.jpg",
+                  "/images/3abf26dd585632b9d05dcfd0daffacedd55842f5.jpg",
+                  "/images/3969146248009e641f454298f62e13de84ac0a09.jpg",
+                  "/images/0ef79490733114b35273ae93b13e8ebc24870d94.png",
+                  "/images/74654a8f67369b797c8fb2e96a533fd515fb2939.jpg",
+                  "/images/3abf26dd585632b9d05dcfd0daffacedd55842f5.jpg"
+                ];
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                    whileHover={{ scale: 1.03, y: -5 }}
+                    className="relative group cursor-pointer overflow-hidden rounded-xl shadow-lg h-64"
+                  >
+                    <Image
+                      src={images[i]}
+                      alt="Travel destination"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Desktop: Original complex layout */}
+          <div className="hidden lg:block" style={{ 
             maxWidth: '85%', 
             margin: '0 auto', 
             marginTop: '20px', 
