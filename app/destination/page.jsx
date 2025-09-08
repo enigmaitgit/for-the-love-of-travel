@@ -31,7 +31,7 @@ export default function DestinationPage() {
       <HeroSection title="Destination" />
       
       {/* Content Section */}
-      <div className="p-6 md:p-10">
+      <div className="p-6 sm:p-10">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Destination Page

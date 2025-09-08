@@ -95,7 +95,7 @@ export default function HomePageClient() {
           {/* Staggered Card Layout */}
           <div className="flex gap-6 w-full items-start">
             {/* Left spacer to align with heading */}
-            <div className="w-0 md:w-4"></div>
+            <div className="w-0 sm:w-4"></div>
             {/* Cards container */}
             <div className="flex gap-6 flex-1 justify-center">
             {latestPosts.map((src, i) => (
@@ -106,6 +106,7 @@ export default function HomePageClient() {
                 }`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 whileHover={{ 
                   scale: 1.03,
@@ -130,7 +131,7 @@ export default function HomePageClient() {
             ))}
             </div>
             {/* Right spacer for even spacing */}
-            <div className="w-0 md:w-4"></div>
+            <div className="w-0 sm:w-4"></div>
           </div>
         </div>
       </section>
@@ -152,7 +153,7 @@ export default function HomePageClient() {
           </div>
 
           {/* Articles Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {Array.from({ length: 8 }, (_, i) => {
               // Define which images to use for specific cards
               let imageSrc = "/images/placeholder.jpg"; // default placeholder
@@ -255,7 +256,7 @@ export default function HomePageClient() {
             </div>
           </div>
           {/* Videos Grid - Same layout as filtered articles */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {Array.from({ length: 8 }, (_, i) => {
               // Use the same images as the filtered articles section
               const cardImages = [
