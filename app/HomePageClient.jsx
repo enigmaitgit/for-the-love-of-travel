@@ -1,6 +1,6 @@
 "use client";
 import Navbar from "../components/Navbar";
-import HeroSection from "../components/HeroSection";
+import Hero from "../components/Hero";
 import SectionHeader from "../components/SectionHeader";
 import PostCard from "../components/PostCard";
 import VideoCard from "../components/VideoCard";
@@ -14,7 +14,7 @@ export default function HomePageClient() {
   return (
     <main>
       <Navbar />
-      <HeroSection title="Home" />
+      <Hero />
 
       {/* Featured Stories Grid - Mobile Responsive Layout */}
       <section id="stories" className="section pt-16 md:pt-20 lg:pt-24">

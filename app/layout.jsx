@@ -13,7 +13,10 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${inter.variable} ${playfair.variable} bg-white text-brand-ink antialiased`}>
+      <body 
+        className={`${inter.variable} ${playfair.variable} bg-white text-brand-ink antialiased`}
+        suppressHydrationWarning={true}
+      >
         {children}
       </body>
     </html>

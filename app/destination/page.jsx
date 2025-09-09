@@ -28,7 +28,7 @@ export default function DestinationPage() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <HeroSection title="Destination" />
+      <HeroSection title="Destinations" />
       
       {/* Content Section */}
       <div className="p-6 sm:p-10">
