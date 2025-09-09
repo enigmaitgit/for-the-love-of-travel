@@ -3,10 +3,9 @@ import LatestPostCard from "./LatestPostCard";
 
 const DestinationGrid = () => {
   return (
-    <div style={{ 
-      maxWidth: '90%', 
-      margin: '0 auto', 
-      marginTop: '22px', 
+    <div style={{
+      maxWidth: '90%',
+      margin: '22px 0 0 13%',
       position: 'relative',
       minHeight: '100vh'
     }}>

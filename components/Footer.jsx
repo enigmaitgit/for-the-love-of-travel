@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Facebook, FacebookIcon, Twitter, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer({
-  bg = "gray-900", // choose between "gray-900" or "black"
+  bg = "black", // choose between "gray-900" or "black"
   useFacebookIcon = false // toggle between Facebook and FacebookIcon
 }) {
   return (
@@ -118,33 +118,33 @@ export default function Footer({
         <div className="mt-6 flex justify-end px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 max-w-4xl w-full">
             {/* Legal Links */}
-            <div className="flex flex-wrap gap-4 text-xs text-white uppercase">
-              <Link
-                href="#"
-                className="hover:text-brand-gold transition-colors"
-              >
-                Privacy Policy & Cookies Statement
-              </Link>
-              <span className="text-gray-400">|</span>
-              <Link
-                href="#"
-                className="hover:text-brand-gold transition-colors"
-              >
-                RSS Feeds
-              </Link>
-              <span className="text-gray-400">|</span>
-              <Link
-                href="#"
-                className="hover:text-brand-gold transition-colors"
-              >
-                Conde Nast Store
-              </Link>
-            </div>
+             <div className="flex flex-wrap gap-4 text-xs text-white uppercase">
+               <Link
+                 href="#"
+                 className="hover:text-brand-gold transition-colors"
+               >
+                 Privacy Policy & Cookies Statement
+               </Link>
+               <span className="text-gray-400">|</span>
+               <Link
+                 href="#"
+                 className="hover:text-brand-gold transition-colors"
+               >
+                 RSS Feeds
+               </Link>
+               <span className="text-gray-400">|</span>
+               <Link
+                 href="#"
+                 className="hover:text-brand-gold transition-colors"
+               >
+                 Conde Nast Store
+               </Link>
+             </div>
 
-            {/* Copyright */}
-            <div className="text-xs text-white">
-              Copyright 2025, fortheloveoftravel.nz
-            </div>
+             {/* Copyright */}
+             <div className="text-xs text-white">
+               Copyright 2025, fortheloveoftravel.nz
+             </div>
           </div>
         </div>
       </div>
