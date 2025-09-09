@@ -1,18 +1,62 @@
-export default function LatestPostCard({ width = '382px', height = '146px' }) {
+"use client";
+import { motion } from 'framer-motion';
+
+export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png' }) {
   return (
-    <div style={{
-      width: width,
-      height: height,
-      borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
-      overflow: 'hidden',
-      position: 'relative',
-      backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("/images/balloon4to.png")',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      display: 'flex',
-      flexDirection: 'column',
-      padding: '12px' // 24px * 0.5 = 12px (50% smaller)
-    }}>
+    <motion.div 
+      style={{
+        width: width,
+        height: height,
+        borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '12px', // 24px * 0.5 = 12px (50% smaller)
+        cursor: 'pointer'
+      }}
+      initial={{ scale: 1, y: 0 }}
+      whileHover={{ 
+        scale: 1.02,
+        y: -5,
+        transition: { 
+          type: "spring", 
+          stiffness: 300, 
+          damping: 20,
+          duration: 0.3
+        }
+      }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 300, 
+        damping: 20 
+      }}
+    >
+      {/* Background Image with Zoom Effect */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("${image}")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          zIndex: -1
+        }}
+        initial={{ scale: 1 }}
+        whileHover={{ 
+          scale: 1.1,
+          transition: { 
+            type: "spring", 
+            stiffness: 200, 
+            damping: 25,
+            duration: 0.4
+          }
+        }}
+      />
       {/* Top Section with Tour Button */}
       <div style={{
         display: 'flex',
@@ -95,6 +139,6 @@ export default function LatestPostCard({ width = '382px', height = '146px' }) {
           <span>Dec 15, 2024</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
