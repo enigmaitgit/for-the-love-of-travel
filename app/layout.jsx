@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Inter, Playfair_Display } from "next/font/google";
-import { defaultMetadata } from "@/lib/seo";
+import { defaultMetadata } from "../lib/seo";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -13,7 +13,10 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${inter.variable} ${playfair.variable} bg-white text-brand-ink antialiased`}>
+      <body 
+        className={`${inter.variable} ${playfair.variable} bg-white text-brand-ink antialiased`}
+        suppressHydrationWarning={true}
+      >
         {children}
       </body>
     </html>
