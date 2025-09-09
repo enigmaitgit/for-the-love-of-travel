@@ -228,14 +228,14 @@ export default function Navbar() {
   return (
     
     <motion.header 
-      className="fixed inset-x-0 top-0 z-[9999] w-full pb-4"
+      className="fixed inset-x-0 top-0 z-50 w-full pb-4"
       initial={{ y: 0 }}
       animate={{ 
         y: 0,
-        backgroundColor: isScrolled ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.8)',
-        backdropFilter: isScrolled ? 'blur(20px)' : 'blur(10px)',
-        borderBottomColor: isScrolled ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.05)',
-        borderBottomWidth: '1px'
+        backgroundColor: isScrolled ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0)',
+        backdropFilter: isScrolled ? 'blur(20px)' : 'blur(0px)',
+        borderBottomColor: isScrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0)',
+        borderBottomWidth: isScrolled ? '1px' : '0px'
       }}
       transition={{ 
         duration: 0.4, 
@@ -245,34 +245,34 @@ export default function Navbar() {
         borderBottomColor: { duration: 0.3 }
       }}
     >
-      <div className="container relative flex h-24 items-center">
+      <div className="container relative flex h-16 md:h-24 items-center px-4 md:px-0">
         {/* LOGO SECTION */}
        
-        <Link href="/" className="relative z-50 flex items-center mt-6 -ml-0  ">
+        <Link href="/" className="relative z-50 flex items-center mt-3 md:mt-6 -ml-0">
           <Image
             src="/icon.png"
             alt="For the Love of Travel Logo"
             width={180}
             height={60}
-            className="h-16 w-auto"
+            className="h-12 md:h-16 w-auto"
             priority
           />
         </Link>
 
         {/* DESKTOP NAVIGATION SECTION */}
        
-        <div className="hidden md:block absolute left-[250px] right-32 mt-6">
+        <div className="hidden md:block absolute left-[200px] lg:left-[250px] right-24 lg:right-32 mt-6">
           <motion.nav
             className="w-full flex items-center justify-between rounded-[18px] px-8 py-4"
             animate={{
-              backgroundColor: isScrolled ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.7)',
+              backgroundColor: isScrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.15)',
               borderWidth: '1px',
               borderStyle: 'solid',
-              borderColor: isScrolled ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.2)',
+              borderColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)',
               backdropFilter: isScrolled ? 'blur(24px)' : 'blur(12px)',
               boxShadow: isScrolled 
-                ? '0 8px 32px rgba(0,0,0,0.15)' 
-                : '0 10px 30px rgba(0,0,0,0.2)',
+                ? '0 8px 32px rgba(0,0,0,0.08)' 
+                : '0 10px 30px rgba(0,0,0,0.15)',
             }}
             transition={{ 
               duration: 0.5, 
@@ -307,8 +307,8 @@ export default function Navbar() {
                       className={[
                         "text-sm font-medium transition-all duration-300 ease-out",
                         isActive
-                          ? "text-brand-gold font-semibold"
-                          : "text-gray-800 hover:text-brand-gold",
+                          ? "text-brand-gold"
+                          : "text-black hover:text-brand-gold",
                       ].join(" ")}
                     >
                       {l.label}
@@ -498,7 +498,7 @@ export default function Navbar() {
               {/* SEARCH ICON BUTTON */}
     
               <motion.button
-                className="grid h-8 w-8 place-items-center text-gray-800 hover:text-brand-gold transition-all duration-300 ease-out"
+                className="grid h-8 w-8 place-items-center text-black hover:text-brand-gold transition-all duration-300 ease-out"
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
                 whileHover={{ scale: 1.1, rotate: 5 }}
@@ -514,7 +514,7 @@ export default function Navbar() {
         {/* MOBILE MENU TOGGLE BUTTON */}
    
         <motion.button
-          className="ml-auto md:hidden text-gray-800 transition-all duration-300 ease-out"
+          className="ml-auto md:hidden text-black transition-all duration-300 ease-out p-2 mt-3 md:mt-0"
           aria-label="Toggle menu"
           onClick={() => setOpen(!open)}
           whileHover={{ scale: 1.1 }}
@@ -525,7 +525,7 @@ export default function Navbar() {
             animate={{ rotate: open ? 180 : 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            {open ? <X /> : <Menu />}
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </motion.div>
         </motion.button>
       </div>
@@ -534,8 +534,8 @@ export default function Navbar() {
   
       <AnimatePresence>
         {open && (
-          <motion.div 
-            className="md:hidden mx-4 rounded-2xl backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.15)]"
+          <motion.div
+            className="md:hidden mx-2 sm:mx-4 rounded-2xl backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.15)]"
             initial={{ 
               opacity: 0, 
               y: -30, 
@@ -569,7 +569,7 @@ export default function Navbar() {
           >
           {/* MOBILE NAVIGATION LINKS */}
         
-          <div className="px-4 py-3 space-y-2">
+          <div className="px-3 sm:px-4 py-3 space-y-2">
             {links.map((l, index) => {
               const isDropdownOpen = activeDropdown === l.label;
               
@@ -592,7 +592,7 @@ export default function Navbar() {
                         setActiveDropdown(isDropdownOpen ? null : l.label);
                         setChevronHovered(isDropdownOpen ? null : l.label);
                       }}
-                      className={`w-full flex items-center justify-center rounded-full px-4 py-2 text-black transition-all duration-300 ease-out ${
+                      className={`w-full flex items-center justify-center rounded-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base text-black transition-all duration-300 ease-out ${
                         l.label === "Home"
                           ? "bg-white/20 text-brand-gold"
                           : "hover:text-brand-gold hover:bg-white/10"
@@ -619,7 +619,7 @@ export default function Navbar() {
                           onMouseEnter={() => setChevronHovered(l.label)}
                           onMouseLeave={() => setChevronHovered(null)}
                         >
-                          <div className="ml-4 space-y-2" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                          <div className="ml-2 sm:ml-4 space-y-2" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             {/* DROPDOWN MENU ITEMS */}
                             <div 
                               className="space-y-1 rounded-xl backdrop-blur-md shadow-lg p-2"
@@ -645,9 +645,9 @@ export default function Navbar() {
                                 >
                                   <Link
                                     href={item.href}
-                                    className={`block rounded-full px-4 py-2 text-sm transition-all duration-200 ease-out ${
+                                    className={`block rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-200 ease-out ${
                                       hoveredDropdownItem === `${l.label}-${item.label}`
-                                        ? 'text-yellow-500' 
+                                        ? 'text-yellow-500'
                                         : 'text-black/80'
                                     }`}
                                     onMouseEnter={() => setHoveredDropdownItem(`${l.label}-${item.label}`)}
@@ -662,13 +662,10 @@ export default function Navbar() {
                             {/* FRAMER CARD PREVIEW - Only show when dropdown is hovered */}
                             {chevronHovered === l.label && l.cards && (
                               <div
+                                className="flex gap-1 w-full max-w-xs h-16 p-1 overflow-x-auto"
                                 style={{
-                                  display: 'flex',
-                                  gap: '4px', // 10px - 60% = 4px
-                                  width: '192px', // 480px - 60% = 192px
-                                  height: '72px', // 180px - 60% = 72px
-                                  padding: '4px', // 10px - 60% = 4px
-                                  overflowX: 'auto'
+                                  scrollbarWidth: 'none',
+                                  msOverflowStyle: 'none'
                                 }}
                               >
                                 {l.cards.map((card, cardIndex) => {
@@ -678,31 +675,21 @@ export default function Navbar() {
                                   return (
                                     <motion.div
                                       key={card.id}
+                                      className="w-10 h-14 rounded border flex-shrink-0"
                                       style={{
-                                        width: '44px', // 110px - 60% = 44px
-                                        height: '65px', // 162px - 60% = 65px
-                                        opacity: 1,
-                                        borderRadius: '3px', // 8px - 60% = 3px
-                                        padding: '3px 5px', // 8px 12px - 60% = 3px 5px
-                                        gap: '3px', // 7px - 60% = 3px
                                         backgroundColor: isScrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.15)',
-                                        borderWidth: '1px',
-                                        borderStyle: 'solid',
                                         borderColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)',
-                                        boxShadow: 'none !important',
-                                        filter: 'none',
-                                        flexShrink: 0,
                                         zIndex: isSelected ? 10 : (isHovered ? 5 : 1)
                                       }}
                                       animate={{
-                                        scale: isSelected ? 1.1 : (isHovered ? 0.95 : 1), // Reduced scale for smaller cards
-                                        y: isSelected ? -4 : 0 // Reduced y offset for smaller cards
+                                        scale: isSelected ? 1.05 : (isHovered ? 0.98 : 1),
+                                        y: isSelected ? -2 : 0
                                       }}
-                                      whileHover={{ 
-                                        scale: 0.95, // Reduced hover scale
+                                      whileHover={{
+                                        scale: 0.98,
                                         transition: { duration: 0.2, ease: "easeOut" }
                                       }}
-                                      whileTap={{ scale: 0.8 }} // Reduced tap scale
+                                      whileTap={{ scale: 0.9 }}
                                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                       onClick={() => setSelectedCard(isSelected ? null : card.id)}
                                     >
@@ -744,16 +731,16 @@ export default function Navbar() {
                 ease: "easeOut" 
               }}
             >
-              <div 
-                className="flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-black transition-all duration-300 ease-out hover:bg-white/20"
+              <div
+                className="flex items-center gap-2 rounded-full bg-white/15 px-3 sm:px-4 py-2 text-black transition-all duration-300 ease-out hover:bg-white/20"
                 style={{
                   borderWidth: '1px',
                   borderStyle: 'solid',
                   borderColor: 'rgba(255,255,255,0.3)'
                 }}
               >
-                <Search className="h-5 w-5 opacity-80" />
-                <span className="text-sm/none opacity-80">Search</span>
+                <Search className="h-4 w-4 sm:h-5 sm:w-5 opacity-80" />
+                <span className="text-xs sm:text-sm opacity-80">Search</span>
               </div>
             </motion.div>
           </div>

@@ -1,3 +1,5 @@
+import Navbar from './Navbar.jsx';
+
 export default function HeroSection({ title = "Destination" }) {
   return (
     <div
@@ -12,6 +14,8 @@ export default function HeroSection({ title = "Destination" }) {
         backgroundPosition:"center"
       }}
     >
+      {/* Navbar */}
+      <Navbar />
 
       {/* Travel Icon 
       <div style={{

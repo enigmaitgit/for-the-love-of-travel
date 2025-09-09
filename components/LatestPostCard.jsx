@@ -4,16 +4,10 @@ import { motion } from 'framer-motion';
 export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png' }) {
   return (
     <motion.div 
+      className="w-full h-32 sm:h-40 lg:h-[146px] rounded-[10px] overflow-hidden relative flex flex-col p-3 sm:p-4 lg:p-[12px] cursor-pointer"
       style={{
         width: width,
         height: height,
-        borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '12px', // 24px * 0.5 = 12px (50% smaller)
-        cursor: 'pointer'
       }}
       initial={{ scale: 1, y: 0 }}
       whileHover={{ 
@@ -65,22 +59,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         marginBottom: 'auto'
       }}>
         {/* Tour Button - Top Left */}
-        <button style={{
-          width: '62px', // 125px * 0.5 = 62px (50% smaller)
-          height: '20px', // 40px * 0.5 = 20px (50% smaller)
-          border: '1px solid #FFFFFF',
-          borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
-          padding: '5px', // 10px * 0.5 = 5px (50% smaller)
-          gap: '5px', // 10px * 0.5 = 5px (50% smaller)
-          background: 'transparent',
-          color: '#FFFFFF',
-          fontSize: '7px', // 14px * 0.5 = 7px (50% smaller)
-          fontWeight: '500',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
+        <button className="w-12 h-4 sm:w-14 sm:h-5 lg:w-[62px] lg:h-[20px] border border-white rounded-[10px] px-1 py-0.5 sm:px-1.5 sm:py-1 lg:px-[5px] lg:py-[5px] gap-1 sm:gap-1.5 lg:gap-[5px] bg-transparent text-white text-[6px] sm:text-[6px] lg:text-[7px] font-medium cursor-pointer flex items-center justify-center">
           Tour
         </button>
       </div>
@@ -94,23 +73,10 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         gap: '8px', // 16px * 0.5 = 8px (50% smaller)
         marginBottom: 'auto'
       }}>
-        <h3 style={{
-          fontSize: '12px', // 24px * 0.5 = 12px (50% smaller)
-          fontWeight: 'bold',
-          color: '#FFFFFF',
-          margin: 0,
-          lineHeight: '1.3',
-          textShadow: '1px 1px 2px rgba(0,0,0,0.7)' // 2px * 0.5 = 1px (50% smaller)
-        }}>
+        <h3 className="text-[8px] sm:text-[10px] lg:text-[12px] font-bold text-white m-0 leading-tight" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.7)' }}>
           Discover Hidden Gems: Sri Lanka's Secret Beaches
         </h3>
-        <p style={{
-          fontSize: '8px', // 16px * 0.5 = 8px (50% smaller)
-          color: '#FFFFFF',
-          margin: 0,
-          lineHeight: '1.5',
-          textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' // 1px * 0.5 = 0.5px (50% smaller)
-        }}>
+        <p className="text-[6px] sm:text-[7px] lg:text-[8px] text-white m-0 leading-relaxed" style={{ textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' }}>
           Explore the untouched beauty of Sri Lanka's hidden coastal treasures. From pristine white sand beaches to crystal clear waters, discover the island's best-kept secrets that offer tranquility away from the crowds.
         </p>
       </div>
@@ -122,16 +88,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         alignItems: 'flex-end'
       }}>
         {/* Metadata Section */}
-        <div style={{
-          width: '127px', // 254px * 0.5 = 127px (50% smaller)
-          height: '14px', // 28px * 0.5 = 14px (50% smaller)
-          gap: '12px', // 24px * 0.5 = 12px (50% smaller)
-          display: 'flex',
-          alignItems: 'center',
-          fontSize: '7px', // 14px * 0.5 = 7px (50% smaller)
-          color: '#FFFFFF',
-          textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' // 1px * 0.5 = 0.5px (50% smaller)
-        }}>
+        <div className="w-20 sm:w-24 lg:w-[127px] h-3 sm:h-3.5 lg:h-[14px] gap-2 sm:gap-3 lg:gap-[12px] flex items-center text-[5px] sm:text-[6px] lg:text-[7px] text-white" style={{ textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' }}>
           <span>8 min read</span>
           <span>|</span>
           <span>Travel Guide</span>

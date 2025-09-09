@@ -1,81 +1,29 @@
 export default function NewsCard() {
   return (
-    <div style={{
-      width: '600px', // Adjusted for larger content section
-      height: '163px', // 266px / 2 = 133px (half size)
-      gap: '16px', // 32px / 2 = 16px (half size)
-      borderRadius: '12px', // 25px / 2 = 12px (half size)
-      border: '1px solid #E8E8EA',
-      padding: '12px', // 24px / 2 = 12px (half size)
-      background: '#FFFFFF',
-      display: 'flex',
-      alignItems: 'center'
-    }}>
+    <div className="w-full max-w-[600px] lg:w-[600px] h-32 sm:h-40 lg:h-[163px] gap-3 sm:gap-4 lg:gap-[16px] rounded-[12px] border border-[#E8E8EA] p-3 sm:p-4 lg:p-[12px] bg-white flex flex-col sm:flex-row items-start sm:items-center">
       {/* Image Section */}
-      <div style={{
-        width: '120px', // 241px / 2 = 120px (half size)
-        height: '139px', // 218px / 2 = 109px (half size)
-        borderRadius: '7px', // 14px / 2 = 7px (half size)
-        overflow: 'hidden',
-        flexShrink: 0
-      }}>
+      <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[139px] rounded-[7px] overflow-hidden flex-shrink-0">
         <img
           src="/news2.jpg"
           alt="News Image"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
+          className="w-full h-full object-cover"
         />
       </div>
 
       {/* Content Section */}
-      <div style={{
-        width: '857px', // 118% larger than original 392px
-        height: '109px', // 218px / 2 = 109px (half size)
-        gap: '10px', // 20px / 2 = 10px (half size)
-        padding: '4px', // 8px / 2 = 4px (half size)
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        marginLeft: '16px', // 32px / 2 = 16px (half size)
-        position: 'relative'
-      }}>
+      <div className="flex-1 flex flex-col justify-between gap-2 sm:gap-2.5 lg:gap-[10px] p-1 sm:p-2 lg:p-[4px] sm:ml-4 lg:ml-[16px] relative">
         {/* Main Content */}
         <div>
-          <h3 style={{
-            fontSize: '20px', // 24px / 2 = 12px (half size)
-            fontWeight: 'bold',
-            color: '#000000',
-            margin: '0 0 6px 0', // 12px / 2 = 6px (half size)
-            lineHeight: '1.3'
-          }}>
+          <h3 className="text-sm sm:text-base lg:text-[20px] font-bold text-black mb-1 sm:mb-1.5 lg:mb-[6px] leading-tight">
             Latest Travel News & Updates
           </h3>
-          <p style={{
-            fontSize: '11px', // 16px / 2 = 8px (half size)
-            color: '#666666',
-            margin: '0 0 8px 0', // 16px / 2 = 8px (half size)
-            lineHeight: '1.5'
-          }}>
+          <p className="text-[9px] sm:text-[10px] lg:text-[11px] text-[#666666] mb-2 sm:mb-2.5 lg:mb-[8px] leading-relaxed">
             Discover the latest travel trends, destination highlights, and exclusive offers from around the world. Stay updated with our curated travel content.
           </p>
         </div>
 
         {/* Metadata Section - Positioned at right bottom */}
-        <div style={{
-          width: '127px', // 254px / 2 = 127px (half size)
-          height: '14px', // 28px / 2 = 14px (half size)
-          gap: '12px', // 24px / 2 = 12px (half size)
-          display: 'flex',
-          alignItems: 'center',
-          fontSize: '9px', // 14px / 2 = 7px (half size)
-          color: '#888888',
-          position: 'absolute',
-          bottom: '4px',
-          right: '4px'
-        }}>
+        <div className="w-20 sm:w-24 lg:w-[127px] h-3 sm:h-3.5 lg:h-[14px] gap-2 sm:gap-3 lg:gap-[12px] flex items-center text-[7px] sm:text-[8px] lg:text-[9px] text-[#888888] absolute bottom-1 sm:bottom-1.5 lg:bottom-[4px] right-1 sm:right-1.5 lg:right-[4px]">
           <span>5 min read</span>
           <span>|</span>
           <span>Travel News</span>
