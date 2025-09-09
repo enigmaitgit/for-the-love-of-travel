@@ -99,11 +99,25 @@ export default function HomePageClient() {
             {/* Cards container */}
             <div className="flex gap-6 flex-1 justify-center">
              {latestPosts.map((src, i) => (
-               <div 
+               <motion.div 
                  key={i} 
                  className={`relative rounded-xl overflow-hidden shadow-lg h-80 w-64 group cursor-pointer flex-shrink-0 ${
                    i === 1 ? 'mt-20' : i === 3 ? 'mt-16' : ''
                  }`}
+                 initial={{ opacity: 0, y: 20 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true, amount: 0.3 }}
+                 transition={{ duration: 0.5, delay: i * 0.1 }}
+                 whileHover={{ 
+                   scale: 1.03,
+                   y: -5,
+                   transition: { 
+                     type: "spring", 
+                     stiffness: 300, 
+                     damping: 20
+                   }
+                 }}
+                 whileTap={{ scale: 0.98 }}
                >
                 <Image 
                   src={src} 
@@ -113,7 +127,7 @@ export default function HomePageClient() {
                 />
                  {/* Dark Gradient Overlay - Removed on Hover */}
                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:opacity-0 transition-opacity duration-300"></div>
-               </div>
+               </motion.div>
             ))}
             </div>
             {/* Right spacer for even spacing */}

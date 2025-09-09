@@ -6,11 +6,8 @@ export default function Footer({
   bg = "gray-900", // choose between "gray-900" or "black"
   useFacebookIcon = false // toggle between Facebook and FacebookIcon
 }) {
-  // Ensure Tailwind classes are properly recognized
-  const bgClass = bg === "black" ? "bg-black" : "bg-gray-900";
-  
   return (
-    <footer className={`${bgClass} text-white pt-12 pb-8 mt-10`}>
+    <footer className={`bg-${bg} text-white pt-12 pb-8 mt-10`}>
       <div className="container">
         {/* Main Footer Content */}
         <div className="flex justify-end px-8">
