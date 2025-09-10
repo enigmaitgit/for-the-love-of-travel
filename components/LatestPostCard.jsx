@@ -1,22 +1,21 @@
 "use client";
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 
 export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png' }) {
   return (
-    <Link href="/content" className="block">
-      <motion.div 
-        style={{
-          width: width,
-          height: height,
-          borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
-          overflow: 'hidden',
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '12px', // 24px * 0.5 = 12px (50% smaller)
-          cursor: 'pointer'
-        }}
+    <motion.div
+      className="latest-post-card"
+      style={{
+        width: width,
+        height: height,
+        borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '12px', // 24px * 0.5 = 12px (50% smaller)
+        cursor: 'pointer'
+      }}
       initial={{ scale: 1, y: 0 }}
       whileHover={{ 
         scale: 1.02,
@@ -67,7 +66,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         marginBottom: 'auto'
       }}>
         {/* Tour Button - Top Left */}
-        <button style={{
+        <button className="tour-button" style={{
           width: '62px', // 125px * 0.5 = 62px (50% smaller)
           height: '20px', // 40px * 0.5 = 20px (50% smaller)
           border: '1px solid #FFFFFF',
@@ -96,7 +95,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         gap: '8px', // 16px * 0.5 = 8px (50% smaller)
         marginBottom: 'auto'
       }}>
-        <h3 style={{
+        <h3 className="card-title" style={{
           fontSize: '12px', // 24px * 0.5 = 12px (50% smaller)
           fontWeight: 'bold',
           color: '#FFFFFF',
@@ -106,7 +105,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         }}>
           Discover Hidden Gems: Sri Lanka's Secret Beaches
         </h3>
-        <p style={{
+        <p className="card-description" style={{
           fontSize: '8px', // 16px * 0.5 = 8px (50% smaller)
           color: '#FFFFFF',
           margin: 0,
@@ -124,7 +123,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         alignItems: 'flex-end'
       }}>
         {/* Metadata Section */}
-        <div style={{
+        <div className="card-metadata" style={{
           width: '127px', // 254px * 0.5 = 127px (50% smaller)
           height: '14px', // 28px * 0.5 = 14px (50% smaller)
           gap: '12px', // 24px * 0.5 = 12px (50% smaller)
@@ -141,7 +140,81 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           <span>Dec 15, 2024</span>
         </div>
       </div>
+
+      {/* Mobile-specific CSS - Only applies to mobile, desktop remains unchanged */}
+      <style jsx>{`
+        @media screen and (max-width: 768px) {
+          :global(.latest-post-card) {
+            width: 100% !important;
+            max-width: 350px !important;
+            height: 200px !important;
+            margin: 0 auto !important;
+          }
+          
+          :global(.tour-button) {
+            width: 50px !important;
+            height: 25px !important;
+            font-size: 10px !important;
+            padding: 6px !important;
+          }
+          
+          :global(.card-title) {
+            font-size: 14px !important;
+            margin-bottom: 8px !important;
+          }
+          
+          :global(.card-description) {
+            font-size: 11px !important;
+            line-height: 1.4 !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 3 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+          }
+          
+          :global(.card-metadata) {
+            width: auto !important;
+            height: auto !important;
+            font-size: 9px !important;
+            gap: 8px !important;
+          }
+        }
+        
+        @media screen and (max-width: 480px) {
+          :global(.latest-post-card) {
+            max-width: 100% !important;
+            height: 180px !important;
+            margin: 0 10px !important;
+          }
+          
+          :global(.tour-button) {
+            width: 45px !important;
+            height: 22px !important;
+            font-size: 9px !important;
+          }
+          
+          :global(.card-title) {
+            font-size: 13px !important;
+          }
+          
+          :global(.card-description) {
+            font-size: 10px !important;
+            -webkit-line-clamp: 2 !important;
+          }
+          
+          :global(.card-metadata) {
+            font-size: 8px !important;
+            gap: 6px !important;
+          }
+        }
+        
+        /* Ensure desktop framer motion is preserved */
+        @media screen and (min-width: 769px) {
+          :global(.latest-post-card) {
+            /* Desktop styles remain unchanged - framer motion works normally */
+          }
+        }
+      `}</style>
     </motion.div>
-    </Link>
   );
 }

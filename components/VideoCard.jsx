@@ -26,29 +26,29 @@ const VideoCard = ({
 
   // Size-based styling (for second version)
   const cardStyles = size === "large" ? {
-    width: '666.18px',
-    height: '540.86px',
-    borderRadius: '28.9px',
-    playIconSize: '136px',
-    contentPadding: '34px',
-    titleFontSize: '27.2px',
-    descriptionFontSize: '20.4px',
-    durationFontSize: '17px',
-    contentMargin: '13.6px',
-    durationPadding: '6.8px 13.6px',
-    durationBorderRadius: '6.8px'
+    width: 'w-full max-w-2xl lg:w-[666.18px]',
+    height: 'h-64 sm:h-80 lg:h-[540.86px]',
+    borderRadius: 'rounded-3xl',
+    playIconSize: 'w-24 h-24 sm:w-32 sm:h-32 lg:w-[136px] lg:h-[136px]',
+    contentPadding: 'p-6 sm:p-8 lg:p-9',
+    titleFontSize: 'text-lg sm:text-xl lg:text-2xl xl:text-3xl',
+    descriptionFontSize: 'text-sm sm:text-base lg:text-lg xl:text-xl',
+    durationFontSize: 'text-sm sm:text-base lg:text-lg',
+    contentMargin: 'mb-3 sm:mb-4 lg:mb-5',
+    durationPadding: 'px-3 py-1 sm:px-4 sm:py-2 lg:px-5 lg:py-2',
+    durationBorderRadius: 'rounded-lg'
   } : {
-    width: '214.51px',
-    height: '150px',
-    borderRadius: '8.09px',
-    playIconSize: '38.08px',
-    contentPadding: '9.52px',
-    titleFontSize: '7.62px',
-    descriptionFontSize: '5.71px',
-    durationFontSize: '4.76px',
-    contentMargin: '3.81px',
-    durationPadding: '1.90px 3.81px',
-    durationBorderRadius: '1.90px'
+    width: 'w-full max-w-xs sm:w-56 lg:w-[214.51px]',
+    height: 'h-32 sm:h-36 lg:h-[150px]',
+    borderRadius: 'rounded-lg',
+    playIconSize: 'w-8 h-8 sm:w-10 sm:h-10 lg:w-[38.08px] lg:h-[38.08px]',
+    contentPadding: 'p-2 sm:p-3 lg:p-2',
+    titleFontSize: 'text-xs sm:text-sm lg:text-xs',
+    descriptionFontSize: 'text-xs sm:text-sm lg:text-xs',
+    durationFontSize: 'text-xs sm:text-sm lg:text-xs',
+    contentMargin: 'mb-1 sm:mb-2 lg:mb-1',
+    durationPadding: 'px-2 py-1 sm:px-3 sm:py-1 lg:px-2 lg:py-1',
+    durationBorderRadius: 'rounded-md'
   };
 
   // --- If "video" prop is passed → use the first implementation ---
@@ -79,37 +79,20 @@ const VideoCard = ({
 
   // --- Otherwise use the second implementation ---
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="flex flex-col items-center">
       <div 
+        className={`${cardStyles.width} ${cardStyles.height} ${cardStyles.borderRadius} overflow-hidden relative cursor-pointer flex flex-col justify-center items-center`}
         style={{
-          width: cardStyles.width,
-          height: cardStyles.height,
-          borderRadius: cardStyles.borderRadius,
-          overflow: 'hidden',
-          position: 'relative',
-          cursor: 'pointer',
           backgroundImage: `url('${thumbnail}')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center'
+          backgroundPosition: 'center'
         }}
         onClick={handleCardClick}
       >
         {/* Video Player */}
         {isPlaying && (
           <video
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              zIndex: 2
-            }}
+            className="absolute top-0 left-0 w-full h-full object-cover z-10"
             autoPlay
             controls
             onEnded={() => setIsPlaying(false)}
@@ -121,79 +104,31 @@ const VideoCard = ({
 
         {/* Play Icon Overlay */}
         {!isPlaying && (
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 3,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex justify-center items-center">
             <img 
               src="/viicon.png" 
               alt="Play Video"
-              style={{
-                width: cardStyles.playIconSize,
-                height: cardStyles.playIconSize,
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
-              }}
+              className={`${cardStyles.playIconSize} drop-shadow-lg`}
             />
           </div>
         )}
 
         {/* Dark Overlay */}
         {!isPlaying && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.3)',
-            zIndex: 1
-          }} />
+          <div className="absolute top-0 left-0 w-full h-full bg-black/30 z-0" />
         )}
 
         {/* Content Overlay */}
         {!isPlaying && (
-          <div style={{
-            position: 'absolute',
-            bottom: cardStyles.contentPadding,
-            left: cardStyles.contentPadding,
-            right: cardStyles.contentPadding,
-            zIndex: 3,
-            color: 'white'
-          }}>
-            <h3 style={{
-              fontSize: cardStyles.titleFontSize,
-              fontWeight: 'bold',
-              margin: `0 0 ${cardStyles.contentMargin} 0`,
-              textShadow: '1px 1px 2px rgba(0,0,0,0.7)'
-            }}>
+          <div className={`absolute bottom-0 left-0 right-0 ${cardStyles.contentPadding} z-10 text-white`}>
+            <h3 className={`${cardStyles.titleFontSize} font-bold ${cardStyles.contentMargin} text-shadow-lg`}>
               {title}
             </h3>
-            <p style={{
-              fontSize: cardStyles.descriptionFontSize,
-              margin: `0 0 ${cardStyles.contentMargin} 0`,
-              textShadow: '1px 1px 2px rgba(0,0,0,0.7)',
-              lineHeight: '1.4'
-            }}>
+            <p className={`${cardStyles.descriptionFontSize} ${cardStyles.contentMargin} text-shadow-lg leading-relaxed`}>
               {description}
             </p>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <span style={{
-                fontSize: cardStyles.durationFontSize,
-                background: 'rgba(0,0,0,0.7)',
-                padding: cardStyles.durationPadding,
-                borderRadius: cardStyles.durationBorderRadius,
-                textShadow: '1px 1px 2px rgba(0,0,0,0.7)'
-              }}>
+            <div className="flex justify-between items-center">
+              <span className={`${cardStyles.durationFontSize} bg-black/70 ${cardStyles.durationPadding} ${cardStyles.durationBorderRadius} text-shadow-lg`}>
                 {duration}
               </span>
             </div>
@@ -203,36 +138,14 @@ const VideoCard = ({
       
       {/* Content field for small cards - below the card */}
       {size === "small" && content && (
-        <div style={{
-          marginTop: '8px',
-          padding: '6px 10px',
-          background: 'rgba(247, 236, 213, 0.3)',
-          borderRadius: '8px',
-          fontSize: '11px',
-          color: '#333',
-          textAlign: 'center',
-          width: '100%',
-          maxWidth: cardStyles.width,
-          fontWeight: '500',
-          lineHeight: '1.3'
-        }}>
+        <div className="mt-2 p-2 sm:p-3 bg-amber-50 rounded-lg text-xs sm:text-sm text-gray-800 text-center w-full font-medium leading-relaxed">
           {content}
         </div>
       )}
       
       {/* Metadata for small cards - below the content */}
       {size === "small" && metadata && (
-        <div style={{
-          marginTop: '6px',
-          padding: '4px 8px',
-          background: 'rgba(0,0,0,0.1)',
-          borderRadius: '6px',
-          fontSize: '10px',
-          color: '#666',
-          textAlign: 'center',
-          width: '100%',
-          maxWidth: cardStyles.width
-        }}>
+        <div className="mt-2 p-2 bg-gray-100 rounded-md text-xs text-gray-600 text-center w-full">
           {metadata}
         </div>
       )}

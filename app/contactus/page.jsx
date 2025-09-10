@@ -25,16 +25,14 @@ export default function ContactUs() {
 
 
             {/* Contact Form Section */}
-            <div style={{
+            <div className="contact-form-section" style={{
                 width: '100%',
                 maxWidth: '2050.5px',
-                height: '749px',
+                minHeight: '749px',
                 opacity: 1,
                 gap: '10px',
                 paddingTop: '88px',
-                paddingRight: '144px',
                 paddingBottom: '88px',
-                paddingLeft: '144px',
                 background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.65) 1.8%, rgba(238, 201, 249, 0.65) 99.54%)',
                 display: 'flex',
                 flexDirection: 'column',
@@ -49,7 +47,7 @@ export default function ContactUs() {
                     gap: '24px'
                 }}>
                     {/* Form Title */}
-                    <h2 style={{
+                    <h2 className="form-title" style={{
                         fontSize: '2.5rem',
                         fontWeight: 'bold',
                         color: '#333',
@@ -59,9 +57,10 @@ export default function ContactUs() {
                         Get in Touch
                     </h2>
 
-                    {/* Name and Email Row (Parallel) */}
-                    <div style={{
+                    {/* Name and Email Row (Parallel on desktop, stacked on mobile) */}
+                    <div className="form-row" style={{
                         display: 'flex',
+                        flexDirection: 'row',
                         gap: '20px',
                         width: '100%'
                     }}>
@@ -182,6 +181,7 @@ export default function ContactUs() {
 
                     {/* Send Message Button */}
                     <button
+                        className="submit-button"
                         style={{
                             background: '#3514EE',
                             color: 'white',
@@ -217,6 +217,45 @@ export default function ContactUs() {
             </div>
 
             <Footer />
+
+            {/* Mobile-specific CSS */}
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .contact-form-section {
+                        padding-left: 20px !important;
+                        padding-right: 20px !important;
+                    }
+                    
+                    .form-title {
+                        font-size: 2rem !important;
+                    }
+                    
+                    .form-row {
+                        flex-direction: column !important;
+                    }
+                    
+                    .submit-button {
+                        align-self: stretch !important;
+                        width: 100% !important;
+                        padding: 14px 24px !important;
+                        font-size: 1rem !important;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .contact-form-section {
+                        padding-left: 16px !important;
+                        padding-right: 16px !important;
+                        padding-top: 60px !important;
+                        padding-bottom: 60px !important;
+                    }
+                    
+                    .form-title {
+                        font-size: 1.75rem !important;
+                        margin-bottom: 16px !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
