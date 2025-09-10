@@ -214,7 +214,8 @@ export default function Navbar() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [chevronHovered, setChevronHovered] = useState(null);
-  const [hoveredDropdownItem, setHoveredDropdownItem] = useState(null); 
+  const [hoveredDropdownItem, setHoveredDropdownItem] = useState(null);
+  const [hoverTimeout, setHoverTimeout] = useState(null); 
 
 
   useEffect(() => {
@@ -224,8 +225,13 @@ export default function Navbar() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
+    };
+  }, [hoverTimeout]);
 
   return (
     
@@ -277,43 +283,29 @@ export default function Navbar() {
           <motion.nav
             className="relative w-full flex items-center justify-between rounded-[18px] px-8 py-4"
             animate={{
-              // more transparent to let the background come through
-              backgroundColor: isScrolled ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.15)',
+              // Apply the same blur effect as the hero search bar
+              backgroundColor: 'rgba(255,255,255,0.4)',
 
-              // white-ish border sells the glass better than a dark border
+              // Use the same border style as hero search bar
               borderWidth: '1px',
               borderStyle: 'solid',
-              borderColor: isScrolled ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.18)',
+              borderColor: isScrolled ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.35)',
 
-              // stronger blur + saturation (include the webkit prop for Safari)
-              backdropFilter: isScrolled ? 'blur(28px) saturate(160%)' : 'blur(22px) saturate(160%)',
-              WebkitBackdropFilter: isScrolled ? 'blur(28px) saturate(160%)' : 'blur(22px) saturate(160%)',
+              // Apply stronger blur effect (20px blur)
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
 
-              // a touch more glow
-              boxShadow: isScrolled
-                ? '0 12px 40px rgba(0,0,0,0.12)'
-                : '0 14px 46px rgba(0,0,0,0.15)',
+              // Remove the glow effect to match hero search bar
+              boxShadow: 'none',
             }}
             transition={{
-              duration: 0.5,
+              duration: 0.3,
               ease: [0.25, 0.46, 0.45, 0.94],
-              backgroundColor: { duration: 0.35 },
-              borderColor: { duration: 0.35 },
-              backdropFilter: { duration: 0.35 },
-              boxShadow: { duration: 0.35 },
+              backgroundColor: { duration: 0.2 },
+              borderColor: { duration: 0.2 },
+              backdropFilter: { duration: 0.2 },
             }}
           >
-            {/* subtle highlight/glare (purely visual) */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[18px]"
-              style={{
-                // faint vertical sheen + tiny top-left glare
-                background:
-                  'linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.04) 100%), radial-gradient(200px 60px at 20% -20%, rgba(255,255,255,0.25), rgba(255,255,255,0))',
-                opacity: 0.12,
-              }}
-            />
             {/* DESKTOP NAVIGATION LINKS */}
         
              <div className="flex items-center gap-8">
@@ -326,8 +318,22 @@ export default function Navbar() {
                   <motion.div
                     key={l.label}
                     className="relative"
-                    onMouseEnter={() => setActiveDropdown(l.label)}
-                    onMouseLeave={() => setActiveDropdown(null)}
+                    onMouseEnter={() => {
+                      if (hoverTimeout) {
+                        clearTimeout(hoverTimeout);
+                        setHoverTimeout(null);
+                      }
+                      setActiveDropdown(l.label);
+                      setChevronHovered(l.label);
+                    }}
+                    onMouseLeave={() => {
+                      const timeout = setTimeout(() => {
+                        setActiveDropdown(null);
+                        setChevronHovered(null);
+                        setHoveredDropdownItem(null);
+                      }, 100);
+                      setHoverTimeout(timeout);
+                    }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
@@ -340,7 +346,7 @@ export default function Navbar() {
                         "text-sm font-medium transition-all duration-300 ease-out",
                         isActive
                           ? "text-brand-gold font-semibold"
-                          : "text-gray-800 hover:text-brand-gold",
+                          : "text-black hover:text-brand-gold",
                       ].join(" ")}
                     >
                       {l.label}
@@ -351,56 +357,96 @@ export default function Navbar() {
                     <AnimatePresence>
                       {isDropdownOpen && l.dropdown && (
                         <motion.div
-                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          initial={{ opacity: 0, y: 15, scale: 0.9, rotateX: -10 }}
+                          animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                          exit={{ opacity: 0, y: 15, scale: 0.9, rotateX: -10 }}
                           transition={{ 
-                            duration: 0.2, 
-                            ease: "easeOut" 
+                            duration: 0.4, 
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30
                           }}
                           className="absolute top-full left-0 mt-2 z-50"
                           style={{
                             display: 'flex',
                             gap: '10px'
                           }}
-                          onMouseEnter={() => setChevronHovered(l.label)}
-                          onMouseLeave={() => setChevronHovered(null)}
                         >
                           {/* DROPDOWN MENU ITEMS */}
                           <div 
-                            className="w-48 rounded-xl backdrop-blur-md shadow-lg"
+                            className="w-56 rounded-2xl shadow-2xl overflow-hidden"
                             style={{
-                              backgroundColor: isScrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.15)',
+                              backgroundColor: 'rgba(255,255,255,0.25)',
                               borderWidth: '1px',
                               borderStyle: 'solid',
-                              borderColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)',
-                              boxShadow: isScrolled 
-                                ? '0 8px 32px rgba(0,0,0,0.08)' 
-                                : '0 10px 30px rgba(0,0,0,0.15)'
+                              borderColor: 'rgba(255,255,255,0.4)',
+                              backdropFilter: 'blur(20px)',
+                              WebkitBackdropFilter: 'blur(20px)',
+                              boxShadow: '0 20px 40px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.05)'
                             }}
                           >
-                            <div className="py-2">
+                            {/* Subtle top highlight */}
+                            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                            
+                            <div className="py-3">
                               {l.dropdown.map((item, index) => (
                                 <motion.div
                                   key={item.label}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
+                                  initial={{ opacity: 0, x: -15, y: 5 }}
+                                  animate={{ opacity: 1, x: 0, y: 0 }}
                                   transition={{ 
-                                    delay: index * 0.05, 
-                                    duration: 0.2 
+                                    delay: index * 0.08, 
+                                    duration: 0.3,
+                                    ease: [0.25, 0.46, 0.45, 0.94]
                                   }}
                                 >
                                   <Link
                                     href={item.href}
-                                    className={`block px-4 py-2 text-sm transition-all duration-200 ease-out ${
+                                    className={`group relative block px-5 py-3 text-sm font-medium transition-all duration-300 ease-out ${
                                       hoveredDropdownItem === `${l.label}-${item.label}`
-                                        ? 'text-yellow-500 hover:text-yellow-600 hover:bg-yellow-50' 
-                                        : 'text-black hover:text-brand-gold hover:bg-white/10'
+                                        ? 'text-brand-gold bg-white/20 shadow-sm' 
+                                        : 'text-gray-900 hover:text-brand-gold hover:bg-white/15'
                                     }`}
-                                    onMouseEnter={() => setHoveredDropdownItem(`${l.label}-${item.label}`)}
-                                    onMouseLeave={() => setHoveredDropdownItem(null)}
+                                    onMouseEnter={() => {
+                                      if (hoverTimeout) {
+                                        clearTimeout(hoverTimeout);
+                                        setHoverTimeout(null);
+                                      }
+                                      setHoveredDropdownItem(`${l.label}-${item.label}`);
+                                    }}
+                                    onMouseLeave={() => {
+                                      const timeout = setTimeout(() => {
+                                        setHoveredDropdownItem(null);
+                                      }, 50);
+                                      setHoverTimeout(timeout);
+                                    }}
                                   >
-                                    {item.label}
+                                    {/* Hover indicator */}
+                                    <motion.div
+                                      className="absolute left-0 top-0 bottom-0 w-1 bg-brand-gold rounded-r-full"
+                                      initial={{ scaleY: 0 }}
+                                      animate={{ 
+                                        scaleY: hoveredDropdownItem === `${l.label}-${item.label}` ? 1 : 0 
+                                      }}
+                                      transition={{ duration: 0.2 }}
+                                    />
+                                    
+                                    <span className="relative z-10 capitalize tracking-wide">
+                                      {item.label}
+                                    </span>
+                                    
+                                    {/* Subtle arrow on hover */}
+                                    <motion.div
+                                      className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gold opacity-0"
+                                      animate={{ 
+                                        opacity: hoveredDropdownItem === `${l.label}-${item.label}` ? 1 : 0,
+                                        x: hoveredDropdownItem === `${l.label}-${item.label}` ? 0 : -5
+                                      }}
+                                      transition={{ duration: 0.2 }}
+                                    >
+                                      →
+                                    </motion.div>
                                   </Link>
                                 </motion.div>
                               ))}
@@ -432,10 +478,12 @@ export default function Navbar() {
                                       borderRadius: '3px', // 8px - 60% = 3px
                                       padding: '3px 5px', // 8px 12px - 60% = 3px 5px
                                       gap: '3px', // 7px - 60% = 3px
-                                      backgroundColor: isScrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.15)',
+                                      backgroundColor: 'rgba(255,255,255,0.2)',
                                       borderWidth: '1px',
                                       borderStyle: 'solid',
-                                      borderColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)',
+                                      borderColor: 'rgba(255,255,255,0.35)',
+                                      backdropFilter: 'blur(20px)',
+                                      WebkitBackdropFilter: 'blur(20px)',
                                       boxShadow: 'none !important',
                                       filter: 'none',
                                       zIndex: isSelected ? 10 : (isHovered ? 5 : 1)
@@ -533,7 +581,7 @@ export default function Navbar() {
               {/* SEARCH ICON BUTTON */}
     
               <motion.button
-                className="grid h-8 w-8 place-items-center text-gray-800 hover:text-brand-gold transition-all duration-300 ease-out"
+                className="grid h-8 w-8 place-items-center text-black hover:text-brand-gold transition-all duration-300 ease-out"
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
                 whileHover={{ scale: 1.1, rotate: 5 }}
@@ -631,10 +679,10 @@ export default function Navbar() {
                         setActiveDropdown(isDropdownOpen ? null : l.label);
                         setChevronHovered(isDropdownOpen ? null : l.label);
                       }}
-                       className={`w-full flex items-center justify-between rounded-xl px-4 py-4 text-black transition-all duration-300 ease-out min-h-[48px] ${
+                       className={`group w-full flex items-center justify-between rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
                          isActive
-                           ? "bg-white/20 text-brand-gold"
-                           : "hover:text-brand-gold hover:bg-white/10"
+                           ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
+                           : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
                        }`}
                        style={isActive ? {
                          borderWidth: '1px',
@@ -661,52 +709,95 @@ export default function Navbar() {
                     <AnimatePresence>
                       {isDropdownOpen && l.dropdown && (
                         <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3, ease: "easeOut" }}
+                          initial={{ opacity: 0, height: 0, y: -10 }}
+                          animate={{ opacity: 1, height: "auto", y: 0 }}
+                          exit={{ opacity: 0, height: 0, y: -10 }}
+                          transition={{ 
+                            duration: 0.4, 
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30
+                          }}
                           className="overflow-hidden"
-                          onMouseEnter={() => setChevronHovered(l.label)}
-                          onMouseLeave={() => setChevronHovered(null)}
                         >
                           <div className="ml-2 space-y-3">
                             {/* DROPDOWN MENU ITEMS */}
                             <div 
-                              className="space-y-1 rounded-xl backdrop-blur-md shadow-lg p-3"
+                              className="space-y-1 rounded-2xl shadow-2xl p-4 overflow-hidden"
                               role="menu"
                               aria-label={`${l.label} submenu`}
                               style={{
-                                backgroundColor: isScrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.15)',
+                                backgroundColor: 'rgba(255,255,255,0.25)',
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
-                                borderColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)',
-                                boxShadow: isScrolled 
-                                  ? '0 8px 32px rgba(0,0,0,0.08)' 
-                                  : '0 10px 30px rgba(0,0,0,0.15)'
+                                borderColor: 'rgba(255,255,255,0.4)',
+                                backdropFilter: 'blur(20px)',
+                                WebkitBackdropFilter: 'blur(20px)',
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.05)'
                               }}
                             >
+                              {/* Subtle top highlight */}
+                              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                              
                               {l.dropdown.map((item, subIndex) => (
                                 <motion.div
                                   key={item.label}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
+                                  initial={{ opacity: 0, x: -15, y: 5 }}
+                                  animate={{ opacity: 1, x: 0, y: 0 }}
                                   transition={{ 
-                                    delay: subIndex * 0.05, 
-                                    duration: 0.2 
+                                    delay: subIndex * 0.08, 
+                                    duration: 0.3,
+                                    ease: [0.25, 0.46, 0.45, 0.94]
                                   }}
                                 >
                                   <Link
                                     href={item.href}
-                                    className={`block rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out min-h-[44px] flex items-center ${
+                                    className={`group relative block rounded-xl px-5 py-4 text-sm font-medium transition-all duration-300 ease-out min-h-[48px] flex items-center ${
                                       hoveredDropdownItem === `${l.label}-${item.label}`
-                                        ? 'text-brand-gold bg-white/20' 
-                                        : 'text-black/80 hover:text-brand-gold hover:bg-white/10'
+                                        ? 'text-brand-gold bg-white/20 shadow-sm' 
+                                        : 'text-gray-900 hover:text-brand-gold hover:bg-white/15'
                                     }`}
-                                    onMouseEnter={() => setHoveredDropdownItem(`${l.label}-${item.label}`)}
-                                    onMouseLeave={() => setHoveredDropdownItem(null)}
+                                    onMouseEnter={() => {
+                                      if (hoverTimeout) {
+                                        clearTimeout(hoverTimeout);
+                                        setHoverTimeout(null);
+                                      }
+                                      setHoveredDropdownItem(`${l.label}-${item.label}`);
+                                    }}
+                                    onMouseLeave={() => {
+                                      const timeout = setTimeout(() => {
+                                        setHoveredDropdownItem(null);
+                                      }, 50);
+                                      setHoverTimeout(timeout);
+                                    }}
                                     role="menuitem"
                                   >
-                                    {item.label}
+                                    {/* Hover indicator */}
+                                    <motion.div
+                                      className="absolute left-0 top-0 bottom-0 w-1 bg-brand-gold rounded-r-full"
+                                      initial={{ scaleY: 0 }}
+                                      animate={{ 
+                                        scaleY: hoveredDropdownItem === `${l.label}-${item.label}` ? 1 : 0 
+                                      }}
+                                      transition={{ duration: 0.2 }}
+                                    />
+                                    
+                                    <span className="relative z-10 capitalize tracking-wide flex-1">
+                                      {item.label}
+                                    </span>
+                                    
+                                    {/* Subtle arrow on hover */}
+                                    <motion.div
+                                      className="text-brand-gold opacity-0 ml-2"
+                                      animate={{ 
+                                        opacity: hoveredDropdownItem === `${l.label}-${item.label}` ? 1 : 0,
+                                        x: hoveredDropdownItem === `${l.label}-${item.label}` ? 0 : -5
+                                      }}
+                                      transition={{ duration: 0.2 }}
+                                    >
+                                      →
+                                    </motion.div>
                                   </Link>
                                 </motion.div>
                               ))}
@@ -737,10 +828,12 @@ export default function Navbar() {
                                            opacity: 1,
                                            borderRadius: '10px',
                                            padding: '8px 8px 12px 8px',
-                                           backgroundColor: isScrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.15)',
+                                           backgroundColor: 'rgba(255,255,255,0.2)',
                                            borderWidth: '1px',
                                            borderStyle: 'solid',
-                                           borderColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)',
+                                           borderColor: 'rgba(255,255,255,0.35)',
+                                           backdropFilter: 'blur(20px)',
+                                           WebkitBackdropFilter: 'blur(20px)',
                                            boxShadow: 'none !important',
                                            filter: 'none',
                                            zIndex: isSelected ? 10 : (isHovered ? 5 : 1)
@@ -797,7 +890,7 @@ export default function Navbar() {
               }}
             >
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-white/90 px-2">Search</h3>
+                <h3 className="text-sm font-semibold text-black px-2">Search</h3>
                 <div className="relative">
                   <input
                     type="text"
