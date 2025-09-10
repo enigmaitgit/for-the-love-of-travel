@@ -58,74 +58,36 @@ const FramerCard = ({
         duration: 0.6,
         delay: index * 0.15
       }}
+      className="w-full max-w-xs sm:w-72 lg:w-[291.87px] h-80 sm:h-96 lg:h-[353.5px] p-4 sm:p-6 lg:p-7 gap-2 lg:gap-2 rounded-2xl flex flex-col relative overflow-hidden cursor-pointer shadow-lg backdrop-blur-sm border border-white/10"
       style={{
-        width: '291.87px',
-        height: '353.5px',
-        opacity: 1,
-        padding: '26.92px 31.17px',
-        gap: '7.08px',
-        borderRadius: '17px',
         background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
         backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%), url('${image}')`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255,255,255,0.1)'
+        backgroundPosition: 'center'
       }}
     >
       {/* Top Left Category Button */}
-      <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 'auto' }}>
-        <button style={{
-          width: '88.55px',
-          height: '28.34px',
-          borderRadius: '14.17px',
-          border: '0.71px solid #FFFFFF',
-          padding: '7.08px',
-          background: 'transparent',
-          color: '#FFFFFF',
-          fontSize: '7px',
-          fontWeight: '500',
-          cursor: 'pointer'
-        }}>
+      <div className="flex justify-start mb-auto">
+        <button className="w-20 sm:w-24 lg:w-[88.55px] h-6 sm:h-7 lg:h-[28.34px] rounded-2xl border border-white px-2 sm:px-3 lg:px-2 bg-transparent text-white text-xs sm:text-sm lg:text-xs font-medium cursor-pointer hover:bg-white hover:text-black transition-colors duration-200">
           {category}
         </button>
       </div>
 
       {/* Title + Description */}
-      <div style={{ width: '234px', height: '190.5px', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginBottom: 'auto' }}>
-        <h3 style={{
-          fontFamily: 'Inter',
-          fontWeight: 600,
-          fontSize: '27px',
-          lineHeight: '37px',
-          color: '#FFFFFF',
-          margin: 0,
-          textShadow: '1px 1px 2px rgba(0,0,0,0.7)'
-        }}>
+      <div className="w-full flex flex-col justify-center mb-auto">
+        <h3 className="font-inter font-semibold text-lg sm:text-xl lg:text-2xl xl:text-3xl leading-tight text-white mb-2 text-shadow-lg">
           {title}
         </h3>
         {selected === id && ( // only show description when selected
-          <p style={{
-            fontSize: '8px',
-            color: '#FFFFFF',
-            margin: 0,
-            lineHeight: '1.5',
-            textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)'
-          }}>
+          <p className="text-xs sm:text-sm text-white leading-relaxed text-shadow-md">
             {description}
           </p>
         )}
       </div>
 
       {/* Metadata Bottom Right */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '7.08px', fontSize: '6px', color: '#FFFFFF', textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' }}>
+      <div className="flex justify-end items-end">
+        <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-white text-shadow-md">
           <span>{readTime}</span>
           <span>|</span>
           <span>{date}</span>

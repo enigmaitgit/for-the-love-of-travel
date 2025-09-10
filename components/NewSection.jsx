@@ -1,105 +1,46 @@
 export default function NewSection() {
   return (
-    <div style={{
-      width: '495px', // 550px * 0.9 = 495px (10% smaller)
-      padding: '29px', // 32px * 0.9 = 29px (10% smaller)
-      background: '#FFFFFF',
-      border: '1px solid #E8E8EA',
-      borderRadius: '23px', // 25px * 0.9 = 23px (10% smaller)
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '22px' // 24px * 0.9 = 22px (10% smaller)
-    }}>
+    <div className="w-full max-w-lg lg:w-[495px] p-6 lg:p-8 bg-white border border-gray-200 rounded-3xl flex flex-col gap-6 lg:gap-8">
       {/* Header Section with Title and Description */}
-      <div style={{
-        textAlign: 'center',
-        marginBottom: '14px' // 16px * 0.9 = 14px (10% smaller)
-      }}>
-        <h1 style={{
-          fontSize: '25px', // 28px * 0.9 = 25px (10% smaller)
-          fontWeight: 'bold',
-          color: '#000000',
-          margin: '0 0 11px 0' // 12px * 0.9 = 11px (10% smaller)
-        }}>
+      <div className="text-center mb-4 lg:mb-6">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-black mb-3 lg:mb-4">
           Featured Destination
         </h1>
-        <p style={{
-          fontSize: '14px', // 16px * 0.9 = 14px (10% smaller)
-          color: '#666666',
-          margin: 0,
-          lineHeight: '1.5'
-        }}>
+        <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed">
           Discover the hidden gems of Sri Lanka with our exclusive travel experiences
         </p>
       </div>
 
       {/* Main Card */}
-      <div style={{
-        width: '405px', // 450px * 0.9 = 405px (10% smaller)
-        height: '387px', // 430px * 0.9 = 387px (10% smaller)
-        borderRadius: '14px', // 16px * 0.9 = 14px (10% smaller)
-        overflow: 'hidden',
-        position: 'relative',
-        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) -2.14%, rgba(0,0,0,0.55) 64.58%), url('/news1.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: '18px', // 20px * 0.9 = 18px (10% smaller)
-        alignSelf: 'center' 
-      }}>
+      <div 
+        className="w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden relative flex flex-col justify-between p-4 lg:p-6 mx-auto"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) -2.14%, rgba(0,0,0,0.55) 64.58%), url('/news1.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
         {/* Tours Button */}
-        <div style={{
-          alignSelf: 'flex-start'
-        }}>
-          <button style={{
-            padding: '5px 9px', // 5px 10px * 0.9 = 5px 9px (10% smaller)
-            borderRadius: '12px', // 13px * 0.9 = 12px (10% smaller)
-            border: '1px solid white',
-            background: 'transparent',
-            color: 'white',
-            fontSize: '9px', // 10px * 0.9 = 9px (10% smaller)
-            fontWeight: '500',
-            cursor: 'pointer'
-          }}>
+        <div className="self-start">
+          <button className="px-3 py-2 rounded-xl border border-white bg-transparent text-white text-xs font-medium cursor-pointer hover:bg-white hover:text-black transition-colors duration-200">
             Tours
           </button>
         </div>
 
         {/* Content Section */}
-        <div style={{
-          color: 'white',
-          textAlign: 'left'
-        }}>
+        <div className="text-white text-left">
           {/* Main Title */}
-          <h2 style={{
-            fontSize: '19px', // 21px * 0.9 = 19px (10% smaller)
-            fontWeight: 'bold',
-            margin: '0 0 9px 0', // 10px * 0.9 = 9px (10% smaller)
-            lineHeight: '1.2'
-          }}>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 lg:mb-3 leading-tight">
             Waves & Whispers: Sri Lanka's Hidden Coves
           </h2>
           
           {/* Description */}
-          <p style={{
-            fontSize: '10px', // 11px * 0.9 = 10px (10% smaller)
-            margin: '0 0 14px 0', // 16px * 0.9 = 14px (10% smaller)
-            opacity: 0.9,
-            lineHeight: '1.4'
-          }}>
+          <p className="text-sm sm:text-base opacity-90 mb-3 lg:mb-4 leading-relaxed">
             A barefoot journey through quiet blue shores
           </p>
 
           {/* Metadata */}
-          <div style={{
-            fontSize: '9px', // 10px * 0.9 = 9px (10% smaller)
-            opacity: 0.8,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px' // 5px * 0.9 = 4.5px, keeping 5px for readability
-          }}>
+          <div className="text-xs sm:text-sm opacity-80 flex items-center gap-2">
             <span>14 min read</span>
             <span>|</span>
             <span>May 28, 2025</span>

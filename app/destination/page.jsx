@@ -46,32 +46,26 @@ export default function DestinationPage() {
       {/* Content Section */}
       <motion.div 
         ref={contentRef}
-        className="p-6 sm:p-10 relative z-10"
+        className="p-4 sm:p-6 lg:p-10 relative z-10"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <motion.div 
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Destination Page
           </h2>
         </motion.div>
         
-        {/* NewSection and NewsCards - Vertical Layout */}
+        {/* NewSection and NewsCards - Responsive Layout */}
         <motion.div 
           ref={newSectionRef}
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            gap: '1rem',
-            marginTop: '2rem'
-          }}
+          className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6 mt-8 lg:mt-12"
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -79,6 +73,7 @@ export default function DestinationPage() {
         >
           {/* NewSection Component - Left side */}
           <motion.div
+            className="w-full lg:w-auto lg:flex-shrink-0"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -87,13 +82,9 @@ export default function DestinationPage() {
             <NewSection />
           </motion.div>
 
-          {/* NewsCards  */}
+          {/* NewsCards */}
           <motion.div 
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem'
-            }}
+            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -133,13 +124,7 @@ export default function DestinationPage() {
 
         {/* Latest Post Title - Below NewsCards */}
         <motion.div 
-          style={{
-            marginTop: '3rem',
-            marginBottom: '2rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem'
-          }}
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-12 lg:mt-16 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -147,14 +132,7 @@ export default function DestinationPage() {
         >
           {/* Title */}
           <motion.h2 
-            style={{
-              color: '#000000',
-              fontWeight: 'bold',
-              fontSize: '1.5rem',
-              margin: 0,
-              textAlign: 'left',
-              marginLeft: '6%'
-            }}
+            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-left ml-0 sm:ml-6 lg:ml-12"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -165,14 +143,9 @@ export default function DestinationPage() {
 
           {/* Golden Line */}
           <motion.div 
-            style={{
-              width: '200px',
-              height: '0px',
-              borderTop: '15px solid #D2AD3F',
-              borderRadius: '8px'
-            }}
+            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
             initial={{ width: 0 }}
-            whileInView={{ width: '200px' }}
+            whileInView={{ width: '100%' }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
@@ -193,28 +166,14 @@ export default function DestinationPage() {
 
         {/* Pagination */}
         <motion.div 
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '1rem',
-            marginTop: '-80px',
-            marginBottom: '2rem'
-          }}
+          className="flex justify-center items-center gap-2 sm:gap-4 -mt-16 sm:-mt-20 lg:-mt-20 mb-8 lg:mb-12 px-4"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <motion.button 
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#666666',
-              fontSize: '18px',
-              cursor: 'pointer',
-              padding: '8px'
-            }}
+            className="bg-transparent border-none text-gray-600 text-sm sm:text-lg cursor-pointer p-2 hover:text-[#D2AD3F]"
             whileHover={{ scale: 1.2, color: '#D2AD3F' }}
             whileTap={{ scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -223,64 +182,46 @@ export default function DestinationPage() {
           </motion.button>
           
           <motion.div 
-            style={{
-              display: 'flex',
-              gap: '1rem',
-              alignItems: 'center'
-            }}
+            className="flex gap-2 sm:gap-4 items-center"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <motion.span 
-              style={{ color: '#666666', fontSize: '16px' }}
+              className="text-gray-600 text-sm sm:text-base cursor-pointer"
               whileHover={{ scale: 1.2, color: '#D2AD3F' }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >1</motion.span>
             <motion.span 
-              style={{ color: '#666666', fontSize: '16px' }}
+              className="text-gray-600 text-sm sm:text-base cursor-pointer"
               whileHover={{ scale: 1.2, color: '#D2AD3F' }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >2</motion.span>
             <motion.span 
-              style={{ 
-                color: '#000000', 
-                fontSize: '16px', 
-                fontWeight: 'bold',
-                background: '#D2AD3F',
-                padding: '4px 8px',
-                borderRadius: '4px'
-              }}
+              className="text-black text-sm sm:text-base font-bold bg-[#D2AD3F] px-2 py-1 rounded cursor-pointer"
               whileHover={{ scale: 1.1 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >3</motion.span>
             <motion.span 
-              style={{ color: '#666666', fontSize: '16px' }}
+              className="text-gray-600 text-sm sm:text-base cursor-pointer"
               whileHover={{ scale: 1.2, color: '#D2AD3F' }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >4</motion.span>
             <motion.span 
-              style={{ color: '#666666', fontSize: '16px' }}
+              className="text-gray-600 text-sm sm:text-base cursor-pointer"
               whileHover={{ scale: 1.2, color: '#D2AD3F' }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >5</motion.span>
             <motion.span 
-              style={{ color: '#666666', fontSize: '16px' }}
+              className="text-gray-600 text-sm sm:text-base cursor-pointer"
               whileHover={{ scale: 1.2, color: '#D2AD3F' }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >6</motion.span>
           </motion.div>
           
           <motion.button 
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#666666',
-              fontSize: '18px',
-              cursor: 'pointer',
-              padding: '8px'
-            }}
+            className="bg-transparent border-none text-gray-600 text-sm sm:text-lg cursor-pointer p-2 hover:text-[#D2AD3F]"
             whileHover={{ scale: 1.2, color: '#D2AD3F' }}
             whileTap={{ scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -294,11 +235,9 @@ export default function DestinationPage() {
       {/* Popular Post Section with Gradient Background */}
       <motion.div 
         ref={popularPostRef}
+        className="py-8 lg:py-12 my-0 mb-8 lg:mb-12"
         style={{
-          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
-          padding: '2rem 0',
-          marginTop: '0rem',
-          marginBottom: '2rem'
+          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -306,12 +245,7 @@ export default function DestinationPage() {
         transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <motion.div 
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '2rem'
-          }}
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -319,14 +253,7 @@ export default function DestinationPage() {
         >
           {/* Title  popular post*/}
           <motion.h2 
-            style={{
-              color: '#000000',
-              fontWeight: 'bold',
-              fontSize: '1.5rem',
-              margin: 0,
-              textAlign: 'left',
-              marginLeft: '6%'
-            }}
+            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-left ml-0 sm:ml-6 lg:ml-12"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -337,14 +264,9 @@ export default function DestinationPage() {
 
           {/* Golden Line */}
           <motion.div 
-            style={{
-              width: '200px',
-              height: '0px',
-              borderTop: '15px solid #D2AD3F',
-              borderRadius: '8px'
-            }}
+            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
             initial={{ width: 0 }}
-            whileInView={{ width: '200px' }}
+            whileInView={{ width: '100%' }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
@@ -353,12 +275,7 @@ export default function DestinationPage() {
 
         {/* Popular Post Cards */}
         <motion.div 
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '2rem'
-          }}
+          className="flex flex-col items-center gap-6 lg:gap-8 px-4 sm:px-6 lg:px-0"
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -433,7 +350,7 @@ export default function DestinationPage() {
       {/* Framer Card Section with Left Content */}
       <motion.div 
         ref={framerCardRef}
-        style={{ display: "flex", gap: "2rem", justifyContent: "flex-start", alignItems: "center", height: "100vh", marginLeft: "55px" }}
+        className="flex flex-col lg:flex-row gap-4 lg:gap-8 justify-start items-center min-h-screen lg:h-screen px-4 sm:px-6 lg:px-14 py-8 lg:py-0"
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
@@ -441,29 +358,14 @@ export default function DestinationPage() {
       >
         {/* Content Section - Left Side */}
         <motion.div 
-          style={{ 
-            display: "flex", 
-            flexDirection: "column", 
-            gap: "1rem",
-            maxWidth: "400px"
-          }}
+          className="flex flex-col gap-4 max-w-full lg:max-w-md order-2 lg:order-1"
           initial={{ opacity: 0, x: -100, rotateY: -15 }}
           whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <motion.h1 
-            style={{
-              fontFamily: "Inter",
-              fontWeight: 600,
-              fontStyle: "small-caps",
-              fontSize: "20px",
-              lineHeight: "24px",
-              letterSpacing: "2%",
-              verticalAlign: "top",
-              color: "#000000",
-              marginTop: "-120px"
-            }}
+            className="font-inter font-semibold text-sm sm:text-base lg:text-xl leading-tight tracking-wide text-black -mt-0 lg:-mt-32"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -472,17 +374,7 @@ export default function DestinationPage() {
             Waves & Whispers: Sri Lanka's Hidden Coves
           </motion.h1>
           <motion.p 
-            style={{
-              fontFamily: "Inter",
-              fontWeight: 400,
-              fontStyle: "normal",
-              fontSize: "10px",
-              lineHeight: "20px",
-              letterSpacing: "2%",
-              verticalAlign: "middle",
-              color: "#545454",
-              marginTop: "10px"
-            }}
+            className="font-inter font-normal text-xs sm:text-sm leading-5 tracking-wide text-gray-600 mt-2"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -495,7 +387,7 @@ export default function DestinationPage() {
 
         {/* FramerCard Section - Right Side */}
         <motion.div 
-          style={{ display: "flex", gap: "1rem" }}
+          className="flex flex-col sm:flex-row lg:flex-row gap-4 lg:gap-6 order-1 lg:order-2 w-full lg:w-auto"
           initial={{ opacity: 0, x: 100, rotateY: 15 }}
           whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -524,11 +416,9 @@ export default function DestinationPage() {
       {/* Popular Videos Section with Gradient Background */}
       <motion.div 
         ref={videoSectionRef}
+        className="py-8 lg:py-12 my-0 mb-0"
         style={{
-          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
-          padding: '2rem 0',
-          marginTop: '0rem',
-          marginBottom: '0rem'
+          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -536,12 +426,7 @@ export default function DestinationPage() {
         transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <motion.div 
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '2rem'
-          }}
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -549,14 +434,7 @@ export default function DestinationPage() {
         >
           {/* Title Popular Videos */}
           <motion.h2 
-            style={{
-              color: '#000000',
-              fontWeight: 'bold',
-              fontSize: '1.5rem',
-              margin: 0,
-              textAlign: 'left',
-              marginLeft: '6%'
-            }}
+            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-left ml-0 sm:ml-6 lg:ml-12"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -567,14 +445,9 @@ export default function DestinationPage() {
 
           {/* Golden Line */}
           <motion.div 
-            style={{
-              width: '200px',
-              height: '0px',
-              borderTop: '15px solid #D2AD3F',
-              borderRadius: '8px'
-            }}
+            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
             initial={{ width: 0 }}
-            whileInView={{ width: '200px' }}
+            whileInView={{ width: '100%' }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
@@ -582,21 +455,9 @@ export default function DestinationPage() {
         </motion.div>
 
         {/* Video Card Section */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginTop: '2rem',
-          marginBottom: '2rem',
-          paddingLeft: '6%',
-          paddingRight: '10%',
-          gap: '1rem'
-        }}>
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-8">
           {/* Left Side - 3 Video Cards Vertical */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.8rem'
-          }}>
+          <div className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto lg:max-w-md">
             <VideoCard 
               videoSrc=""
               thumbnail="/vi.png"
@@ -627,50 +488,28 @@ export default function DestinationPage() {
           </div>
 
           {/* Right Side - Main Video Card */}
-          <VideoCard 
-            videoSrc=""
-            thumbnail="/vi.png"
-            title="Amazing Travel Destinations"
-            description="Watch this incredible video showcasing the most beautiful destinations around the world."
-            duration="3:45"
-            size="large"
-          />
+          <div className="w-full lg:w-auto lg:flex-1 flex justify-center lg:justify-end">
+            <VideoCard 
+              videoSrc=""
+              thumbnail="/vi.png"
+              title="Amazing Travel Destinations"
+              description="Watch this incredible video showcasing the most beautiful destinations around the world."
+              duration="3:45"
+              size="large"
+            />
+          </div>
         </div>
         
         {/* View More Button */}
         <motion.div 
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginTop: '1.5rem',
-            paddingRight: '10%'
-          }}
+          className="flex justify-center lg:justify-end mt-6 lg:mt-8 px-4 sm:px-6 lg:px-12 xl:px-16"
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <motion.button 
-            style={{
-              width: '192px',
-              height: '50px',
-              paddingTop: '10px',
-              paddingRight: '15px',
-              paddingBottom: '10px',
-              paddingLeft: '15px',
-              gap: '10px',
-              borderRadius: '20px',
-              background: '#3514EE',
-              border: 'none',
-              color: 'white',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(53, 20, 238, 0.3)'
-            }}
+            className="w-40 sm:w-48 lg:w-52 h-12 lg:h-14 px-4 lg:px-6 py-2 lg:py-3 gap-2 lg:gap-3 rounded-2xl bg-[#3514EE] border-none text-white text-sm lg:text-base font-semibold cursor-pointer flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300"
             whileHover={{ 
               scale: 1.05,
               y: -3,
