@@ -275,26 +275,45 @@ export default function Navbar() {
         {/* Desktop: liquid glass nav positioned closer to logo */}
         <div className="hidden md:block absolute left-[240px] right-32 mt-6">
           <motion.nav
-            className="w-full flex items-center justify-between rounded-[18px] px-8 py-4"
+            className="relative w-full flex items-center justify-between rounded-[18px] px-8 py-4"
             animate={{
-              backgroundColor: isScrolled ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.7)',
+              // more transparent to let the background come through
+              backgroundColor: isScrolled ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.15)',
+
+              // white-ish border sells the glass better than a dark border
               borderWidth: '1px',
               borderStyle: 'solid',
-              borderColor: isScrolled ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.2)',
-              backdropFilter: isScrolled ? 'blur(24px)' : 'blur(12px)',
-              boxShadow: isScrolled 
-                ? '0 8px 32px rgba(0,0,0,0.15)' 
-                : '0 10px 30px rgba(0,0,0,0.2)',
+              borderColor: isScrolled ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.18)',
+
+              // stronger blur + saturation (include the webkit prop for Safari)
+              backdropFilter: isScrolled ? 'blur(28px) saturate(160%)' : 'blur(22px) saturate(160%)',
+              WebkitBackdropFilter: isScrolled ? 'blur(28px) saturate(160%)' : 'blur(22px) saturate(160%)',
+
+              // a touch more glow
+              boxShadow: isScrolled
+                ? '0 12px 40px rgba(0,0,0,0.12)'
+                : '0 14px 46px rgba(0,0,0,0.15)',
             }}
-            transition={{ 
-              duration: 0.5, 
+            transition={{
+              duration: 0.5,
               ease: [0.25, 0.46, 0.45, 0.94],
-              backgroundColor: { duration: 0.4 },
-              borderColor: { duration: 0.4 },
-              backdropFilter: { duration: 0.4 },
-              boxShadow: { duration: 0.4 }
+              backgroundColor: { duration: 0.35 },
+              borderColor: { duration: 0.35 },
+              backdropFilter: { duration: 0.35 },
+              boxShadow: { duration: 0.35 },
             }}
           >
+            {/* subtle highlight/glare (purely visual) */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 rounded-[18px]"
+              style={{
+                // faint vertical sheen + tiny top-left glare
+                background:
+                  'linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.04) 100%), radial-gradient(200px 60px at 20% -20%, rgba(255,255,255,0.25), rgba(255,255,255,0))',
+                opacity: 0.12,
+              }}
+            />
             {/* DESKTOP NAVIGATION LINKS */}
         
              <div className="flex items-center gap-8">
@@ -470,17 +489,14 @@ export default function Navbar() {
              
               <AnimatePresence initial={false}>
                 {searchOpen && (
-                  <motion.input
-                    key="nav-search"
-                    type="text"
-                    placeholder="Search..."
+                  <motion.div
+                    key="nav-search-container"
+                    className="relative"
                     initial={{ width: 0, opacity: 0, scale: 0.8 }}
                     animate={{ 
-                      width: 160, 
+                      width: 200, 
                       opacity: 1, 
-                      scale: 1,
-                      backgroundColor: 'rgba(255,255,255,0.2)',
-                      borderColor: 'rgba(255,255,255,0.3)'
+                      scale: 1
                     }}
                     exit={{ 
                       width: 0, 
@@ -495,16 +511,22 @@ export default function Navbar() {
                       mass: 0.6,
                       duration: 0.4
                     }}
-                    className="
-                      rounded-full backdrop-blur-md
-                      px-4 py-2 text-sm
-                      text-black placeholder-black/70
-                      outline-none focus:ring-2 ring-brand-gold focus:ring-opacity-50
-                      transition-all duration-300 ease-out
-                    "
-                    onFocus={() => setSearchOpen(true)}
-                    onBlur={() => setSearchOpen(false)}
-                  />
+                  >
+                    <input
+                      type="text"
+                      placeholder="Search Blog Post"
+                      className="
+                        w-full rounded-full pl-10 pr-3 py-3
+                        text-black placeholder-black/70 text-sm
+                        border border-white/35 bg-white/20 backdrop-blur-md
+                        outline-none focus:ring-2 ring-brand-gold focus:border-white/60
+                        shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]
+                      "
+                      onFocus={() => setSearchOpen(true)}
+                      onBlur={() => setSearchOpen(false)}
+                    />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/70" />
+                  </motion.div>
                 )}
               </AnimatePresence>
 
@@ -564,10 +586,10 @@ export default function Navbar() {
               opacity: 1, 
               y: 0, 
               scale: 1,
-              backgroundColor: isScrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.15)',
+              backgroundColor: isScrolled ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)',
               borderWidth: '1px',
               borderStyle: 'solid',
-              borderColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)'
+              borderColor: isScrolled ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.18)'
             }}
             exit={{ 
               opacity: 0, 
@@ -775,23 +797,22 @@ export default function Navbar() {
               }}
             >
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-black/80 px-2">Search</h3>
-                <div 
-                  className="flex items-center gap-3 rounded-xl bg-white/15 px-4 py-3 text-black transition-all duration-300 ease-out hover:bg-white/20"
-                  style={{
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    borderColor: 'rgba(255,255,255,0.3)'
-                  }}
-                >
-                  <Search className="h-5 w-5 opacity-80" />
+                <h3 className="text-sm font-semibold text-white/90 px-2">Search</h3>
+                <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search destinations, articles..."
-                    className="flex-1 bg-transparent text-sm placeholder-black/60 outline-none"
+                    placeholder="Search Blog Post"
+                    className="
+                      w-full rounded-full pl-10 pr-3 py-3
+                      text-black placeholder-black/70 text-sm
+                      border border-white/35 bg-white/20 backdrop-blur-md
+                      outline-none focus:ring-2 ring-brand-gold focus:border-white/60
+                      shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]
+                    "
                     onFocus={() => setSearchOpen(true)}
                     onBlur={() => setSearchOpen(false)}
                   />
+                  <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/70" />
                 </div>
               </div>
             </motion.div>
@@ -802,4 +823,5 @@ export default function Navbar() {
     </motion.header>
   );
 }
+
 

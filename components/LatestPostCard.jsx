@@ -1,20 +1,22 @@
 "use client";
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png' }) {
   return (
-    <motion.div 
-      style={{
-        width: width,
-        height: height,
-        borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '12px', // 24px * 0.5 = 12px (50% smaller)
-        cursor: 'pointer'
-      }}
+    <Link href="/content" className="block">
+      <motion.div 
+        style={{
+          width: width,
+          height: height,
+          borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
+          overflow: 'hidden',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '12px', // 24px * 0.5 = 12px (50% smaller)
+          cursor: 'pointer'
+        }}
       initial={{ scale: 1, y: 0 }}
       whileHover={{ 
         scale: 1.02,
@@ -140,5 +142,6 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         </div>
       </div>
     </motion.div>
+    </Link>
   );
 }

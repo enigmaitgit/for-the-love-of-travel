@@ -13,27 +13,50 @@ const FramerCard = ({
   selected,
   setSelected,
   hovered,
-  setHovered
+  setHovered,
+  index = 0
 }) => {
   return (
     <motion.div
       onMouseEnter={() => setHovered && setHovered(id)}
       onMouseLeave={() => setHovered && setHovered(null)}
       onClick={() => setSelected && setSelected(selected === id ? null : id)}
-      whileHover={{ 
-        scale: 1.5,
-        zIndex: 10,
-        transition: { duration: 0.2 }
+      initial={{ 
+        opacity: 0, 
+        y: 50, 
+        scale: 0.8,
+        rotateY: -15
       }}
-      animate={{
+      animate={{ 
+        opacity: 1, 
+        y: 0, 
         scale: selected === id ? 1.05 : 1,
+        rotateY: 0,
         zIndex: selected === id ? 5 : 1,
+      }}
+      whileHover={{ 
+        scale: 1.08,
+        y: -15,
+        rotateY: 8,
+        zIndex: 10,
+        boxShadow: '0 20px 40px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.2)',
+        transition: { 
+          type: "spring", 
+          stiffness: 300, 
+          damping: 20,
+          duration: 0.4
+        }
+      }}
+      whileTap={{ 
+        scale: 0.95,
+        transition: { duration: 0.1 }
       }}
       transition={{ 
         type: "spring", 
-        stiffness: 400, 
-        damping: 25,
-        duration: 0.3
+        stiffness: 200, 
+        damping: 20,
+        duration: 0.6,
+        delay: index * 0.15
       }}
       style={{
         width: '291.87px',
@@ -50,7 +73,10 @@ const FramerCard = ({
         flexDirection: 'column',
         position: 'relative',
         overflow: 'hidden',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255,255,255,0.1)'
       }}
     >
       {/* Top Left Category Button */}
