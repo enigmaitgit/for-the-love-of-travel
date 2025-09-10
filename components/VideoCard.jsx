@@ -26,17 +26,17 @@ const VideoCard = ({
 
   // Size-based styling (for second version)
   const cardStyles = size === "large" ? {
-    width: 'w-full max-w-2xl lg:w-[666.18px]',
-    height: 'h-64 sm:h-80 lg:h-[540.86px]',
-    borderRadius: 'rounded-3xl',
-    playIconSize: 'w-24 h-24 sm:w-32 sm:h-32 lg:w-[136px] lg:h-[136px]',
-    contentPadding: 'p-6 sm:p-8 lg:p-9',
-    titleFontSize: 'text-lg sm:text-xl lg:text-2xl xl:text-3xl',
-    descriptionFontSize: 'text-sm sm:text-base lg:text-lg xl:text-xl',
-    durationFontSize: 'text-sm sm:text-base lg:text-lg',
-    contentMargin: 'mb-3 sm:mb-4 lg:mb-5',
-    durationPadding: 'px-3 py-1 sm:px-4 sm:py-2 lg:px-5 lg:py-2',
-    durationBorderRadius: 'rounded-lg'
+    width: 'w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:w-[666.18px]',
+    height: 'h-48 sm:h-64 md:h-80 lg:h-96 xl:h-[540.86px]',
+    borderRadius: 'rounded-2xl sm:rounded-3xl',
+    playIconSize: 'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-[136px] xl:h-[136px]',
+    contentPadding: 'p-4 sm:p-6 md:p-8 lg:p-9',
+    titleFontSize: 'text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl',
+    descriptionFontSize: 'text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl',
+    durationFontSize: 'text-sm sm:text-base md:text-lg lg:text-xl',
+    contentMargin: 'mb-2 sm:mb-3 md:mb-4 lg:mb-5',
+    durationPadding: 'px-2 py-1 sm:px-3 sm:py-2 md:px-4 md:py-2 lg:px-5 lg:py-2',
+    durationBorderRadius: 'rounded-md sm:rounded-lg'
   } : {
     width: 'w-full max-w-xs sm:w-56 lg:w-[214.51px]',
     height: 'h-32 sm:h-36 lg:h-[150px]',
@@ -79,13 +79,14 @@ const VideoCard = ({
 
   // --- Otherwise use the second implementation ---
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       <div 
         className={`${cardStyles.width} ${cardStyles.height} ${cardStyles.borderRadius} overflow-hidden relative cursor-pointer flex flex-col justify-center items-center`}
         style={{
           backgroundImage: `url('${thumbnail}')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          minHeight: size === "large" ? '200px' : '120px'
         }}
         onClick={handleCardClick}
       >

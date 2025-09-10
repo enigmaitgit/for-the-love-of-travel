@@ -455,9 +455,9 @@ export default function DestinationPage() {
         </motion.div>
 
         {/* Video Card Section */}
-        <div className="flex flex-col lg:flex-row justify-between mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-8">
           {/* Left Side - 3 Video Cards Vertical */}
-          <div className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto">
+          <div className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto lg:max-w-md">
             <VideoCard 
               videoSrc=""
               thumbnail="/vi.png"
@@ -488,7 +488,7 @@ export default function DestinationPage() {
           </div>
 
           {/* Right Side - Main Video Card */}
-          <div className="w-full lg:w-auto flex justify-center lg:justify-end">
+          <div className="w-full lg:w-auto lg:flex-1 flex justify-center lg:justify-end">
             <VideoCard 
               videoSrc=""
               thumbnail="/vi.png"
