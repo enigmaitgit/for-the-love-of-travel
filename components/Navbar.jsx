@@ -100,10 +100,10 @@ const links = [
       }
     ],
     dropdown: [
-      { href: "#europe", label: "Europe" },
-      { href: "#asia", label: "popular1" },
-      { href: "#americas", label: "popular2" },
-      { href: "#africa", label: "popular3" }
+      { href: "/destination?region=europe", label: "Europe" },
+      { href: "/destination?region=asia", label: "Asia" },
+      { href: "/destination?region=americas", label: "Americas" },
+      { href: "/destination?region=africa", label: "Africa" }
     ]
   },
   { 
@@ -626,35 +626,42 @@ export default function Navbar() {
                   {/* MOBILE NAVIGATION BUTTON */}
            
                   <div className="space-y-1">
-                    <button
-                      onClick={() => {
-                        setActiveDropdown(isDropdownOpen ? null : l.label);
-                        setChevronHovered(isDropdownOpen ? null : l.label);
-                      }}
-                       className={`w-full flex items-center justify-between rounded-xl px-4 py-4 text-black transition-all duration-300 ease-out min-h-[48px] ${
-                         isActive
-                           ? "bg-white/20 text-brand-gold"
-                           : "hover:text-brand-gold hover:bg-white/10"
-                       }`}
-                       style={isActive ? {
-                         borderWidth: '1px',
-                         borderStyle: 'solid',
-                         borderColor: 'rgba(255,255,255,0.3)'
-                       } : {}}
-                      aria-expanded={isDropdownOpen}
-                      aria-haspopup="true"
-                    >
-                      <span className="font-medium text-base">{l.label}</span>
+                    <div className="flex items-center">
+                      <Link
+                        href={l.href}
+                        className={`flex-1 rounded-xl px-4 py-4 text-black transition-all duration-300 ease-out min-h-[48px] flex items-center ${
+                          isActive
+                            ? "bg-white/20 text-brand-gold"
+                            : "hover:text-brand-gold hover:bg-white/10"
+                        }`}
+                        style={isActive ? {
+                          borderWidth: '1px',
+                          borderStyle: 'solid',
+                          borderColor: 'rgba(255,255,255,0.3)'
+                        } : {}}
+                      >
+                        <span className="font-medium text-base">{l.label}</span>
+                      </Link>
                       {l.dropdown && (
-                        <motion.div
-                          animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="w-5 h-5 flex items-center justify-center"
+                        <button
+                          onClick={() => {
+                            setActiveDropdown(isDropdownOpen ? null : l.label);
+                            setChevronHovered(isDropdownOpen ? null : l.label);
+                          }}
+                          className="p-2 text-black hover:text-brand-gold transition-all duration-300 ease-out"
+                          aria-expanded={isDropdownOpen}
+                          aria-haspopup="true"
                         >
-                          <ChevronDown className="h-4 w-4" />
-                        </motion.div>
+                          <motion.div
+                            animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                            className="w-5 h-5 flex items-center justify-center"
+                          >
+                            <ChevronDown className="h-4 w-4" />
+                          </motion.div>
+                        </button>
                       )}
-                    </button>
+                    </div>
 
                     {/* MOBILE DROPDOWN MENU WITH CARD */}
               
