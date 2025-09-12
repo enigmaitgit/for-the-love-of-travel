@@ -1,39 +1,41 @@
 "use client";
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
-export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png' }) {
+export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png', onClick }) {
   return (
-    <motion.div
-      className="latest-post-card"
-      style={{
-        width: width,
-        height: height,
-        borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '12px', // 24px * 0.5 = 12px (50% smaller)
-        cursor: 'pointer'
-      }}
-      initial={{ scale: 1, y: 0 }}
-      whileHover={{ 
-        scale: 1.02,
-        y: -5,
-        transition: { 
+    <Link href="/content" onClick={onClick}>
+      <motion.div
+        className="latest-post-card"
+        style={{
+          width: width,
+          height: height,
+          borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
+          overflow: 'hidden',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '12px', // 24px * 0.5 = 12px (50% smaller)
+          cursor: 'pointer'
+        }}
+        initial={{ scale: 1, y: 0 }}
+        whileHover={{ 
+          scale: 1.02,
+          y: -5,
+          transition: { 
+            type: "spring", 
+            stiffness: 300, 
+            damping: 20,
+            duration: 0.3
+          }
+        }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ 
           type: "spring", 
           stiffness: 300, 
-          damping: 20,
-          duration: 0.3
-        }
-      }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 300, 
-        damping: 20 
-      }}
-    >
+          damping: 20 
+        }}
+      >
       {/* Background Image with Zoom Effect */}
       <motion.div
         style={{
@@ -215,6 +217,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           }
         }
       `}</style>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }
