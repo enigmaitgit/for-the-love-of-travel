@@ -2,6 +2,9 @@ import React from "react";
 import LatestPostCard from "./LatestPostCard";
 
 const DestinationGrid = () => {
+  const handleCardClick = (cardId) => {
+    console.log(`Card ${cardId} clicked - navigating to content page`);
+  };
   return (
     <div className="destination-grid-container" style={{
       maxWidth: '90%',
@@ -23,7 +26,7 @@ const DestinationGrid = () => {
           gap: '10px',
           marginRight: '20px'
         }}>
-          <LatestPostCard width="520px" height="200px" image="/lt1.png" />
+          <LatestPostCard width="520px" height="200px" image="/lt1.png" onClick={() => handleCardClick(1)} />
         </div>
         <div className="card-2" style={{
           position: 'absolute',
@@ -32,7 +35,7 @@ const DestinationGrid = () => {
           zIndex: 1,
           marginLeft: '20px'
         }}>
-          <LatestPostCard width="520px" height="200px" image="/lt2.png" />
+          <LatestPostCard width="520px" height="200px" image="/lt2.png" onClick={() => handleCardClick(2)} />
         </div>
       </div>
 
@@ -45,9 +48,9 @@ const DestinationGrid = () => {
         marginTop: '-290px',
         marginBottom: '20px'
       }}>
-        <LatestPostCard width="450px" height="250px" image="/lt3.png" />
-        <LatestPostCard width="350px" height="250px" image="/lt4.png" />
-        <LatestPostCard width="250px" height="200px" image="/lt5.png" />
+        <LatestPostCard width="450px" height="250px" image="/lt3.png" onClick={() => handleCardClick(3)} />
+        <LatestPostCard width="350px" height="250px" image="/lt4.png" onClick={() => handleCardClick(4)} />
+        <LatestPostCard width="250px" height="200px" image="/lt5.png" onClick={() => handleCardClick(5)} />
       </div>
 
 
@@ -58,7 +61,7 @@ const DestinationGrid = () => {
         marginTop: '15px'
       }}>
         <div className="card-6">
-          <LatestPostCard width="820px" height="280px" image="/lt6.png" />
+          <LatestPostCard width="820px" height="280px" image="/lt6.png" onClick={() => handleCardClick(6)} />
         </div>
         <div className="card-7" style={{
           position: 'absolute',
@@ -66,7 +69,7 @@ const DestinationGrid = () => {
           left: '835px',
           zIndex: 1
         }}>
-          <LatestPostCard width="250px" height="330px" image="/lt7.png" />
+          <LatestPostCard width="250px" height="330px" image="/lt7.png" onClick={() => handleCardClick(7)} />
         </div>
       </div>
 
