@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Menu, X, ChevronDown } from "lucide-react";
+import { Search, Menu, X, ChevronDown, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 // import FramerCard from "./FramerCard"; // unused
 import DropdownFramerCard from "./DropdownFramerCard";
@@ -619,52 +619,53 @@ export default function Navbar() {
                     {/* MOBILE NAVIGATION BUTTON */}
                     <div className="space-y-1">
                       {l.dropdown && l.dropdown.length > 0 ? (
-                        // Has submenu: separate main link and dropdown toggle
-                        <div className="space-y-2">
-                          {/* Main Navigation Link */}
-                          <Link
-                            href={l.href}
-                            onClick={() => setOpen(false)} // Close mobile menu on navigation
-                            className={`group w-full flex items-center justify-between rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
-                              isActive
-                                ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
-                                : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
-                            }`}
-                            style={
-                              isActive
-                                ? {
-                                    borderWidth: "1px",
-                                    borderStyle: "solid",
-                                    borderColor: "rgba(255,255,255,0.3)",
-                                  }
-                                : {}
-                            }
-                          >
-                            <span className="font-medium text-base">{l.label}</span>
-                            <motion.div
-                              animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                              transition={{ duration: 0.2, ease: "easeOut" }}
-                              className="w-5 h-5 flex items-center justify-center"
+                        // Has submenu: integrated main link with dropdown toggle
+                        <div className="space-y-1">
+                          {/* Main Navigation Link with Integrated Dropdown Toggle */}
+                          <div className="flex items-center gap-2">
+                            <Link
+                              href={l.href}
+                              onClick={() => setOpen(false)} // Close mobile menu on navigation
+                              className={`group flex-1 flex items-center gap-3 rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
+                                isActive
+                                  ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
+                                  : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
+                              }`}
+                              style={
+                                isActive
+                                  ? {
+                                      borderWidth: "1px",
+                                      borderStyle: "solid",
+                                      borderColor: "rgba(255,255,255,0.3)",
+                                    }
+                                  : {}
+                              }
                             >
-                              <ChevronDown className="h-4 w-4" />
-                            </motion.div>
-                          </Link>
-                          
-                          {/* Dropdown Toggle Button */}
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setActiveDropdown(isDropdownOpen ? null : l.label);
-                              setChevronHovered(isDropdownOpen ? null : l.label);
-                            }}
-                            className="w-full flex items-center justify-center rounded-lg px-3 py-2 text-xs text-black/70 hover:text-brand-gold hover:bg-white/10 transition-all duration-200"
-                            aria-expanded={isDropdownOpen}
-                            aria-haspopup="true"
-                            aria-controls={`menu-${l.label}`}
-                          >
-                            <span className="text-xs">View {l.label} Options</span>
-                          </button>
+                              <span className="font-medium text-base">{l.label}</span>
+                            </Link>
+                            
+                            {/* Dropdown Toggle Button */}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setActiveDropdown(isDropdownOpen ? null : l.label);
+                                setChevronHovered(isDropdownOpen ? null : l.label);
+                              }}
+                              className="flex items-center justify-center rounded-lg px-3 py-4 text-black/70 hover:text-brand-gold hover:bg-white/10 transition-all duration-200 min-h-[52px]"
+                              aria-expanded={isDropdownOpen}
+                              aria-haspopup="true"
+                              aria-controls={`menu-${l.label}`}
+                            >
+                              <motion.div
+                                animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                className="w-5 h-5 flex items-center justify-center"
+                              >
+                                <ChevronDown className="h-4 w-4" />
+                              </motion.div>
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         // No submenu: just navigate
