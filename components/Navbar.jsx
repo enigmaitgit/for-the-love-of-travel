@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Menu, X, ChevronDown } from "lucide-react";
+import { Search, Menu, X, ChevronDown, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 // import FramerCard from "./FramerCard"; // unused
 import DropdownFramerCard from "./DropdownFramerCard";
@@ -222,14 +222,24 @@ export default function Navbar() {
       setIsScrolled(scrollTop > 50);
     };
 
+    const handleClickOutside = (event) => {
+      if (open && !event.target.closest('.mobile-menu-container')) {
+        setOpen(false);
+        setActiveDropdown(null);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
+    
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
       if (hoverTimeout) {
         clearTimeout(hoverTimeout);
       }
     };
-  }, [hoverTimeout]);
+  }, [hoverTimeout, open]);
 
   return (
     <motion.header
@@ -542,7 +552,7 @@ export default function Navbar() {
 
         {/* Mobile menu toggle */}
         <motion.button
-          className="ml-auto md:hidden text-black transition-all duration-300 ease-out mr-2 p-2 rounded-lg hover:bg-white/10"
+          className="mobile-menu-container ml-auto md:hidden text-black transition-all duration-300 ease-out mr-2 p-2 rounded-lg hover:bg-white/10"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen(!open)}
@@ -564,7 +574,7 @@ export default function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="md:hidden mx-4 rounded-2xl backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.15)]"
+            className="mobile-menu-container md:hidden mx-4 rounded-2xl backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.15)]"
             initial={{
               opacity: 0,
               y: -30,
@@ -609,43 +619,59 @@ export default function Navbar() {
                     {/* MOBILE NAVIGATION BUTTON */}
                     <div className="space-y-1">
                       {l.dropdown && l.dropdown.length > 0 ? (
-                        // Has submenu: use a button to toggle it
-                        <button
-                          onClick={() => {
-                            setActiveDropdown(isDropdownOpen ? null : l.label);
-                            setChevronHovered(isDropdownOpen ? null : l.label);
-                          }}
-                          className={`group w-full flex items-center justify-between rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
-                            isActive
-                              ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
-                              : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
-                          }`}
-                          style={
-                            isActive
-                              ? {
-                                  borderWidth: "1px",
-                                  borderStyle: "solid",
-                                  borderColor: "rgba(255,255,255,0.3)",
-                                }
-                              : {}
-                          }
-                          aria-expanded={isDropdownOpen}
-                          aria-haspopup="true"
-                          aria-controls={`menu-${l.label}`}
-                        >
-                          <span className="font-medium text-base">{l.label}</span>
-                          <motion.div
-                            animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                            transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="w-5 h-5 flex items-center justify-center"
-                          >
-                            <ChevronDown className="h-4 w-4" />
-                          </motion.div>
-                        </button>
+                        // Has submenu: integrated main link with dropdown toggle
+                        <div className="space-y-1">
+                          {/* Main Navigation Link with Integrated Dropdown Toggle */}
+                          <div className="flex items-center gap-2">
+                            <Link
+                              href={l.href}
+                              onClick={() => setOpen(false)} // Close mobile menu on navigation
+                              className={`group flex-1 flex items-center gap-3 rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
+                                isActive
+                                  ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
+                                  : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
+                              }`}
+                              style={
+                                isActive
+                                  ? {
+                                      borderWidth: "1px",
+                                      borderStyle: "solid",
+                                      borderColor: "rgba(255,255,255,0.3)",
+                                    }
+                                  : {}
+                              }
+                            >
+                              <span className="font-medium text-base">{l.label}</span>
+                            </Link>
+                            
+                            {/* Dropdown Toggle Button */}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setActiveDropdown(isDropdownOpen ? null : l.label);
+                                setChevronHovered(isDropdownOpen ? null : l.label);
+                              }}
+                              className="flex items-center justify-center rounded-lg px-3 py-4 text-black/70 hover:text-brand-gold hover:bg-white/10 transition-all duration-200 min-h-[52px]"
+                              aria-expanded={isDropdownOpen}
+                              aria-haspopup="true"
+                              aria-controls={`menu-${l.label}`}
+                            >
+                              <motion.div
+                                animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                className="w-5 h-5 flex items-center justify-center"
+                              >
+                                <ChevronDown className="h-4 w-4" />
+                              </motion.div>
+                            </button>
+                          </div>
+                        </div>
                       ) : (
                         // No submenu: just navigate
                         <Link
                           href={l.href}
+                          onClick={() => setOpen(false)} // Close mobile menu on navigation
                           className={`flex-1 rounded-xl px-4 py-4 text-black transition-all duration-300 ease-out min-h-[48px] flex items-center ${
                             isActive
                               ? "bg-white/20 text-brand-gold"
@@ -714,6 +740,10 @@ export default function Navbar() {
                                 >
                                   <Link
                                     href={item.href}
+                                    onClick={() => {
+                                      setOpen(false); // Close mobile menu on navigation
+                                      setActiveDropdown(null); // Close dropdown
+                                    }}
                                     className={`group relative block rounded-xl px-5 py-4 text-sm font-medium transition-all duration-300 ease-out min-h-[48px] flex items-center ${
                                       hoveredDropdownItem === `${l.label}-${item.label}`
                                         ? "text-brand-gold bg-white/20 shadow-sm"
