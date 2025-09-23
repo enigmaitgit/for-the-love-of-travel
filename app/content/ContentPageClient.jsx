@@ -3,6 +3,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Newsletter from "../../components/Newsletter";
 import ArticleWithPinnedImage from "../../components/ArticleWithPinnedImage";
+import Comments from "../../components/Comments";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Share2, Facebook, Twitter, Linkedin, Copy, Play } from "lucide-react";
@@ -290,6 +291,9 @@ export default function ContentPageClient() {
           </div>
         </div>
       </section>
+
+      {/* Comments Section */}
+      <Comments />
 
       {/* Popular Posts Section */}
       <section className="py-16 bg-white">
