@@ -21,9 +21,8 @@ export default function HomePageClient() {
     closePopup, 
     showAuthPopup,
     resetCTA
-  } = useScrollTrigger(2000); // Show CTA after 2 seconds on page load
+  } = useScrollTrigger(0.2, 1000); // Trigger at 20% scroll, 1 second delay
 
-  console.log('HomePageClient render:', { showCTA, showPopup });
 
   return (
     <main>

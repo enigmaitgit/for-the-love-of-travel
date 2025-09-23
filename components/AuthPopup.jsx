@@ -33,7 +33,6 @@ export default function AuthPopup({ isOpen, onClose, onSwitchMode }) {
   };
 
   const handleClose = () => {
-    console.log("Close button clicked");
     onClose();
   };
 

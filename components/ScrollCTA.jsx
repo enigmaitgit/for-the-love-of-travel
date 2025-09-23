@@ -6,21 +6,16 @@ import { X, Users, Heart } from "lucide-react";
 export default function ScrollCTA({ isVisible, onJoinClick, onDismiss }) {
   const [isDismissed, setIsDismissed] = useState(false);
 
-  console.log('ScrollCTA render:', { isVisible, isDismissed });
-
   const handleDismiss = () => {
-    console.log('ScrollCTA: handleDismiss called');
     setIsDismissed(true);
     onDismiss();
   };
 
   const handleJoinClick = () => {
-    console.log('ScrollCTA: handleJoinClick called');
     onJoinClick();
   };
 
   if (isDismissed) {
-    console.log('ScrollCTA: isDismissed is true, returning null');
     return null;
   }
 
