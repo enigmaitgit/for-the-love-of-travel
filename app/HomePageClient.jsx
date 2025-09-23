@@ -6,11 +6,25 @@ import PostCard from "../components/PostCard";
 import VideoCard from "../components/VideoCard";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
+import AuthPopup from "../components/AuthPopup";
+import ScrollCTA from "../components/ScrollCTA";
+import { useScrollTrigger } from "../hooks/useScrollTrigger";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { featuredPosts, latestPosts, videos } from "../lib/data";
 
 export default function HomePageClient() {
+  const { 
+    showCTA, 
+    showPopup, 
+    closeCTA, 
+    closePopup, 
+    showAuthPopup,
+    resetCTA
+  } = useScrollTrigger(2000); // Show CTA after 2 seconds on page load
+
+  console.log('HomePageClient render:', { showCTA, showPopup });
+
   return (
     <main>
       <Navbar />
@@ -381,6 +395,42 @@ export default function HomePageClient() {
 
       <Newsletter />
       <Footer />
+      
+      {/* Scroll-triggered CTA */}
+      <ScrollCTA 
+        isVisible={showCTA} 
+        onJoinClick={showAuthPopup}
+        onDismiss={closeCTA}
+      />
+      
+      {/* Authentication Popup */}
+      <AuthPopup 
+        isOpen={showPopup} 
+        onClose={closePopup} 
+      />
+      
+      {/* Debug buttons - only in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 left-4 z-[10001] flex flex-col gap-2">
+          <button
+            onClick={resetCTA}
+            className="bg-red-500 text-white px-3 py-2 rounded text-xs"
+          >
+            Reset CTA
+          </button>
+          <button
+            onClick={() => {
+              console.log('Force showing CTA');
+              // Force show CTA for testing
+              sessionStorage.removeItem('auth-cta-shown');
+              window.location.reload();
+            }}
+            className="bg-blue-500 text-white px-3 py-2 rounded text-xs"
+          >
+            Show CTA
+          </button>
+        </div>
+      )}
     </main>
   );
 }
