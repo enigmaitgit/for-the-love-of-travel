@@ -30,34 +30,69 @@ export default function ContentPageClient() {
       }
       
       // Fetch posts with filters
-      const postsResponse = await postsApi.getPosts({
-        page: currentPage,
-        limit: 12,
-        category: selectedCategory || undefined,
-        query: searchQuery || undefined,
-        sortBy: 'publishedAt',
-        sortOrder: 'desc'
-      });
+      try {
+        console.log('🔍 Fetching posts with params:', {
+          page: currentPage,
+          limit: 12,
+          category: selectedCategory || undefined,
+          query: searchQuery || undefined,
+          sortBy: 'publishedAt',
+          sortOrder: 'desc'
+        });
+        const postsResponse = await postsApi.getPosts({
+          page: currentPage,
+          limit: 12,
+          category: selectedCategory || undefined,
+          query: searchQuery || undefined,
+          sortBy: 'publishedAt',
+          sortOrder: 'desc'
+        });
 
-      if (postsResponse.success) {
-        setPosts(postsResponse.data);
-        setTotalPages(postsResponse.meta?.pagination?.pages || 1);
+        if (postsResponse.success) {
+          console.log('📄 Posts data from backend:', postsResponse.data);
+          setPosts(postsResponse.data);
+          setTotalPages(postsResponse.meta?.pagination?.pages || 1);
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        // Set empty array as fallback
+        setPosts([]);
+        setTotalPages(1);
       }
 
-      // Fetch categories
-      const categoriesResponse = await categoriesApi.getCategories();
-      if (categoriesResponse.success) {
-        setCategories(categoriesResponse.data);
-      }
+      // Fetch categories - COMMENTED OUT (endpoint not available on backend)
+      // try {
+      //   console.log('🔍 Fetching categories...');
+      //   const categoriesResponse = await categoriesApi.getCategories();
+      //   if (categoriesResponse.success) {
+      //     console.log('📂 Categories data from backend:', categoriesResponse.data);
+      //     setCategories(categoriesResponse.data);
+      //   }
+      // } catch (error) {
+      //   console.error('Error fetching categories:', error);
+      //   // Set empty array as fallback
+      //   setCategories([]);
+      // }
+      
+      // Set empty categories array since endpoint is not available
+      setCategories([]);
 
       // Fetch featured posts
-      const featuredResponse = await postsApi.getFeaturedPosts(3);
-      if (featuredResponse.success) {
-        setFeaturedPosts(featuredResponse.data);
+      try {
+        console.log('🔍 Fetching featured posts...');
+        const featuredResponse = await postsApi.getFeaturedPosts(3);
+        if (featuredResponse.success) {
+          console.log('⭐ Featured posts data from backend:', featuredResponse.data);
+          setFeaturedPosts(featuredResponse.data);
+        }
+      } catch (error) {
+        console.error('Error fetching featured posts:', error);
+        // Set empty array as fallback
+        setFeaturedPosts([]);
       }
 
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error in fetchData:', error);
     } finally {
       setLoading(false);
     }
@@ -197,8 +232,8 @@ export default function ContentPageClient() {
                   <Link href={`/content/${post.slug}`}>
                     <div className="relative h-48 overflow-hidden">
                       <Image
-                        src={post.featuredImage.url}
-                        alt={post.featuredImage.alt || post.title}
+                        src={post.featuredImage?.url || '/images/placeholder.jpg'}
+                        alt={post.featuredImage?.alt || post.title}
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-300"
                       />
@@ -219,7 +254,7 @@ export default function ContentPageClient() {
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1">
                             <User className="w-4 h-4" />
-                            <span>{post.author.name}</span>
+                            <span>{post.author?.name || 'Unknown Author'}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
@@ -277,8 +312,8 @@ export default function ContentPageClient() {
                     <Link href={`/content/${post.slug}`}>
                       <div className="relative h-48 overflow-hidden">
                         <Image
-                          src={post.featuredImage.url}
-                          alt={post.featuredImage.alt || post.title}
+                          src={post.featuredImage?.url || '/images/placeholder.jpg'}
+                          alt={post.featuredImage?.alt || post.title}
                           fill
                           className="object-cover hover:scale-105 transition-transform duration-300"
                         />
@@ -292,16 +327,16 @@ export default function ContentPageClient() {
                       </div>
                       <div className="p-6">
                         <div className="flex flex-wrap gap-2 mb-3">
-                          {post.categories.slice(0, 2).map((category) => (
+                          {post.categories?.slice(0, 2).map((category) => (
                             <span
-                              key={category._id}
+                              key={category?._id || Math.random()}
                               className="px-3 py-1 rounded-full text-xs font-medium"
                               style={{ 
-                                backgroundColor: `${category.color}20`,
-                                color: category.color
+                                backgroundColor: `${category?.color || '#3B82F6'}20`,
+                                color: category?.color || '#3B82F6'
                               }}
                             >
-                              {category.name}
+                              {category?.name || 'Uncategorized'}
                             </span>
                           ))}
                         </div>
@@ -315,7 +350,7 @@ export default function ContentPageClient() {
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-1">
                               <User className="w-4 h-4" />
-                              <span>{post.author.name}</span>
+                              <span>{post.author?.name || 'Unknown Author'}</span>
                             </div>
                             <div className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />

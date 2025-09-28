@@ -32,13 +32,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: post.seo?.metaTitle || post.title,
         description: post.seo?.metaDescription || post.excerpt,
         keywords: post.seo?.keywords?.join(', '),
-        authors: [{ name: post.author.name }],
+        authors: [{ name: post.author?.name || 'Unknown Author' }],
         openGraph: {
           title: post.seo?.metaTitle || post.title,
           description: post.seo?.metaDescription || post.excerpt,
           type: 'article',
           publishedTime: post.publishedAt,
-          authors: [post.author.name],
+          authors: [post.author?.name || 'Unknown Author'],
           images: post.featuredImage?.url ? [{
             url: post.featuredImage.url,
             width: post.featuredImage.width || 1200,

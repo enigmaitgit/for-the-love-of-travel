@@ -16,6 +16,9 @@ interface ContentPageClientProps {
 }
 
 export default function ContentPageClient({ post }: ContentPageClientProps) {
+  // Debug logging
+  console.log('📄 Individual post data from backend:', post);
+  
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, -200]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
@@ -107,8 +110,8 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
           className="w-full h-full"
         >
           <Image
-            src={post.featuredImage.url}
-            alt={post.featuredImage.alt || post.title}
+            src={post.featuredImage?.url || '/images/placeholder.jpg'}
+            alt={post.featuredImage?.alt || post.title}
             fill
             className="object-cover"
           />
@@ -135,7 +138,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
             >
               <div className="flex items-center gap-2">
                 <User className="w-5 h-5" />
-                <span>{post.author.name}</span>
+                <span>{post.author?.name || 'Unknown Author'}</span>
               </div>
               <span className="hidden md:block">•</span>
               <div className="flex items-center gap-2">
@@ -199,10 +202,10 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
             <Link href="/" className="text-gray-500 hover:text-gray-700 transition-colors">
               Home
             </Link>
-            {post.breadcrumb.map((item, index) => (
+            {post.breadcrumb?.map((item, index) => (
               <div key={index} className="flex items-center space-x-2">
                 <span className="text-gray-400">&gt;</span>
-                {index === post.breadcrumb.length - 1 ? (
+                {index === (post.breadcrumb?.length || 0) - 1 ? (
                   <span className="text-gray-900 font-medium">
                     {item.title}
                   </span>
@@ -293,27 +296,27 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                 {/* Author Info */}
                 <div className="bg-gray-50 rounded-xl p-6">
                   <div className="flex items-center gap-4 mb-4">
-                    {post.author.avatar && (
+                    {post.author?.avatar && (
                       <Image
                         src={post.author.avatar.url}
-                        alt={post.author.name}
+                        alt={post.author?.name || 'Author'}
                         width={60}
                         height={60}
                         className="rounded-full object-cover"
                       />
                     )}
                     <div>
-                      <h3 className="font-semibold text-gray-900">{post.author.name}</h3>
+                      <h3 className="font-semibold text-gray-900">{post.author?.name || 'Unknown Author'}</h3>
                       <p className="text-sm text-gray-600">Author</p>
                     </div>
                   </div>
-                  {post.author.bio && (
+                  {post.author?.bio && (
                     <p className="text-sm text-gray-600 mb-4">{post.author.bio}</p>
                   )}
                   <div className="flex gap-3">
-                    {post.author.socialLinks?.twitter && (
+                    {post.author?.socialLinks?.twitter && (
                       <a
-                        href={`https://twitter.com/${post.author.socialLinks.twitter}`}
+                        href={`https://twitter.com/${post.author?.socialLinks?.twitter}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-blue-500 transition-colors"
@@ -321,9 +324,9 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                         <Twitter className="w-5 h-5" />
                       </a>
                     )}
-                    {post.author.socialLinks?.linkedin && (
+                    {post.author?.socialLinks?.linkedin && (
                       <a
-                        href={`https://linkedin.com/in/${post.author.socialLinks.linkedin}`}
+                        href={`https://linkedin.com/in/${post.author?.socialLinks?.linkedin}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-blue-600 transition-colors"

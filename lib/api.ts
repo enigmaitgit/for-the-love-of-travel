@@ -18,12 +18,15 @@ import type {
   SearchResponse
 } from '../types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+
+// Debug logging for API calls
+const DEBUG_API = process.env.NODE_ENV === 'development';
 
 // API Endpoints
 export const API_ENDPOINTS = {
-  contact: '/api/contact/contact',
-  newsletter: '/api/contact/newsletter',
+  contact: '/api/contact',
+  newsletter: '/api/newsletter',
   posts: '/api/posts',
   categories: '/api/categories',
   tags: '/api/tags',
@@ -34,9 +37,15 @@ export const API_ENDPOINTS = {
 };
 
 // API Response handler
-export const handleApiResponse = async <T = any>(response: Response): Promise<T> => {
+export const handleApiResponse = async <T = any>(response: Response, url?: string): Promise<T> => {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    console.error(`❌ API Error for ${url}:`, {
+      status: response.status,
+      statusText: response.statusText,
+      url: url,
+      errorData: errorData
+    });
     throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
   }
   return response.json();
@@ -45,6 +54,10 @@ export const handleApiResponse = async <T = any>(response: Response): Promise<T>
 // Generic API request function
 export const apiRequest = async <T = any>(endpoint: string, options: RequestInit = {}): Promise<T> => {
   const url = `${API_BASE_URL}${endpoint}`;
+  
+  if (DEBUG_API) {
+    console.log(`🌐 API Request: ${options.method || 'GET'} ${url}`);
+  }
   
   const defaultOptions: RequestInit = {
     headers: {
@@ -63,9 +76,16 @@ export const apiRequest = async <T = any>(endpoint: string, options: RequestInit
 
   try {
     const response = await fetch(url, config);
-    return await handleApiResponse<T>(response);
+    
+    if (DEBUG_API) {
+      console.log(`📡 API Response: ${response.status} ${response.statusText} for ${url}`);
+    }
+    
+    return await handleApiResponse<T>(response, url);
   } catch (error) {
-    console.error('API request failed:', error);
+    if (DEBUG_API) {
+      console.error(`❌ API request failed for ${url}:`, error);
+    }
     throw error;
   }
 };
