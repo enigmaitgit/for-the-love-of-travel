@@ -142,6 +142,9 @@ export const postsApi = {
   getRecentPosts: async (limit: number = 10): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/recent?limit=${limit}`);
   },
+  getLatestPostCards: async (limit: number = 7): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}?limit=${limit}&sortBy=createdAt&sortOrder=desc`);
+  },
   getRelatedPosts: async (postId: string, limit: number = 5): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/${postId}/related?limit=${limit}`);
   },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import Navbar from '../../components/Navbar.jsx'
 import HeroSection from '../../components/HeroSection.jsx'
@@ -12,12 +12,15 @@ import FramerCard from '../../components/FramerCard.jsx'
 import VideoCard from '../../components/VideoCard.jsx'
 import Newsletter from '../../components/Newsletter.jsx'
 import Footer from '../../components/Footer.jsx'
+import { postsApi } from '../../lib/api'
 
 
 
 export default function DestinationPage() {
   const [selected, setSelected] = useState(null);
   const [hovered, setHovered] = useState(null);
+  const [cards, setCards] = useState([]);
+  const [popularPosts, setPopularPosts] = useState([]);
   
   // Refs for scroll animations
   const contentRef = useRef(null);
@@ -31,12 +34,76 @@ export default function DestinationPage() {
   const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
-  const cards = [
+  const framerCards = [
     { id: 1, image: "/framer1.png", title: "Explore Destinations", description: "Discover amazing places", category: "Tour", readTime: "8 min read", date: "Dec 15, 2024" },
     { id: 2, image: "/framer2.png", title: "Adventure Guide", description: "Thrilling activities await", category: "Adventure", readTime: "6 min read", date: "Dec 12, 2024" },
     { id: 3, image: "/framer3.png", title: "Cultural Experiences", description: "Immerse in local traditions", category: "Culture", readTime: "7 min read", date: "Dec 10, 2024" },
   ];
 
+  // Fetch data from backend using postsApi
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const response = await postsApi.getLatestPostCards(7); // Get 7 latest post cards for the grid
+        const posts = response.data || [];
+        
+        // Map backend Post data to card format expected by DestinationGrid
+        const mappedCards = posts.map((post) => ({
+          id: post._id,
+          image: post.featuredImage?.url,
+          title: post.title,
+          description: post.excerpt,
+          readTime: post.readingTimeText || `${post.readingTime} min read`,
+          category: post.categories?.[0]?.name || 'Travel',
+          publishedDate: post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+          })
+        }));
+        
+        setCards(mappedCards);
+      } catch (err) {
+        console.error("Error fetching cards:", err);
+        // Set empty array as fallback to prevent errors
+        setCards([]);
+      }
+    };
+
+    fetchCards();
+  }, []);
+
+  // Fetch popular posts
+  useEffect(() => {
+    const fetchPopularPosts = async () => {
+      try {
+        const response = await postsApi.getPopularPosts(4, '30d'); // Get 4 popular posts from last 30 days
+        const posts = response.data || [];
+        
+        // Map backend Post data to popular post format
+        const mappedPopularPosts = posts.map((post) => ({
+          id: post._id,
+          image: post.featuredImage?.url || "/popular1.jpg",
+          title: post.title,
+          description: post.excerpt,
+          category: post.categories?.[0]?.name || 'Travel',
+          readTime: post.readingTimeText || `${post.readingTime} min read`,
+          date: post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+          })
+        }));
+        
+        setPopularPosts(mappedPopularPosts);
+      } catch (err) {
+        console.error("Error fetching popular posts:", err);
+        setPopularPosts([]);
+      }
+    };
+
+    fetchPopularPosts();
+  }, []);
 
   return (
     <main className="min-h-screen overflow-x-hidden">
@@ -152,82 +219,117 @@ export default function DestinationPage() {
           </motion.div>
         </motion.div>
 
-        {/* LatestPostCard Grid - Simple responsive grid */}
-        <motion.div 
-          style={{ marginTop: '80px' }}
+        {/* LatestPostCard Grid with Data Fetching and Pagination */}
+        <motion.div
+          style={{ marginTop: "80px" }}
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{
+            duration: 0.7,
+            delay: 0.4,
+            ease: [0.25, 0.46, 0.45, 0.94],
+          }}
         >
-          <DestinationGrid />
-        </motion.div>
-        
+          {/* Pass fetched data as props */}
+          <DestinationGrid
+            card1={cards[0]}
+            card2={cards[1]}
+            card3={cards[2]}
+            card4={cards[3]}
+            card5={cards[4]}
+            card6={cards[5]}
+            card7={cards[6]}
+          />
 
-        {/* Pagination */}
-        <motion.div 
-          className="flex justify-center items-center gap-2 sm:gap-4 -mt-16 sm:-mt-20 lg:-mt-20 mb-8 lg:mb-12 px-4"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          <motion.button 
-            className="bg-transparent border-none text-gray-600 text-sm sm:text-lg cursor-pointer p-2 hover:text-[#D2AD3F]"
-            whileHover={{ scale: 1.2, color: '#D2AD3F' }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            {'<'}
-          </motion.button>
-          
-          <motion.div 
-            className="flex gap-2 sm:gap-4 items-center"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+          {/* Pagination */}
+          <motion.div
+            className="flex justify-center items-center gap-2 sm:gap-4 -mt-16 sm:-mt-20 lg:-mt-20 mb-8 lg:mb-12 px-4"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{
+              duration: 0.6,
+              delay: 0.5,
+              ease: [0.25, 0.46, 0.45, 0.94],
+            }}
           >
-            <motion.span 
-              className="text-gray-600 text-sm sm:text-base cursor-pointer"
-              whileHover={{ scale: 1.2, color: '#D2AD3F' }}
+            {/* left arrow */}
+            <motion.button
+              className="bg-transparent border-none text-gray-600 text-sm sm:text-lg cursor-pointer p-2 hover:text-[#D2AD3F]"
+              whileHover={{ scale: 1.2, color: "#D2AD3F" }}
+              whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >1</motion.span>
-            <motion.span 
-              className="text-gray-600 text-sm sm:text-base cursor-pointer"
-              whileHover={{ scale: 1.2, color: '#D2AD3F' }}
+            >
+              {"<"}
+            </motion.button>
+
+            {/* numbers */}
+            <motion.div
+              className="flex gap-2 sm:gap-4 items-center"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 0.6,
+                delay: 0.6,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+            >
+              <motion.span
+                className="text-gray-600 text-sm sm:text-base cursor-pointer"
+                whileHover={{ scale: 1.2, color: "#D2AD3F" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                1
+              </motion.span>
+              <motion.span
+                className="text-gray-600 text-sm sm:text-base cursor-pointer"
+                whileHover={{ scale: 1.2, color: "#D2AD3F" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                2
+              </motion.span>
+              <motion.span
+                className="text-black text-sm sm:text-base font-bold bg-[#D2AD3F] px-2 py-1 rounded cursor-pointer"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                3
+              </motion.span>
+              <motion.span
+                className="text-gray-600 text-sm sm:text-base cursor-pointer"
+                whileHover={{ scale: 1.2, color: "#D2AD3F" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                4
+              </motion.span>
+              <motion.span
+                className="text-gray-600 text-sm sm:text-base cursor-pointer"
+                whileHover={{ scale: 1.2, color: "#D2AD3F" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                5
+              </motion.span>
+              <motion.span
+                className="text-gray-600 text-sm sm:text-base cursor-pointer"
+                whileHover={{ scale: 1.2, color: "#D2AD3F" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                6
+              </motion.span>
+            </motion.div>
+
+            {/* right arrow */}
+            <motion.button
+              className="bg-transparent border-none text-gray-600 text-sm sm:text-lg cursor-pointer p-2 hover:text-[#D2AD3F]"
+              whileHover={{ scale: 1.2, color: "#D2AD3F" }}
+              whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >2</motion.span>
-            <motion.span 
-              className="text-black text-sm sm:text-base font-bold bg-[#D2AD3F] px-2 py-1 rounded cursor-pointer"
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >3</motion.span>
-            <motion.span 
-              className="text-gray-600 text-sm sm:text-base cursor-pointer"
-              whileHover={{ scale: 1.2, color: '#D2AD3F' }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >4</motion.span>
-            <motion.span 
-              className="text-gray-600 text-sm sm:text-base cursor-pointer"
-              whileHover={{ scale: 1.2, color: '#D2AD3F' }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >5</motion.span>
-            <motion.span 
-              className="text-gray-600 text-sm sm:text-base cursor-pointer"
-              whileHover={{ scale: 1.2, color: '#D2AD3F' }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >6</motion.span>
+            >
+              {">"}
+            </motion.button>
           </motion.div>
-          
-          <motion.button 
-            className="bg-transparent border-none text-gray-600 text-sm sm:text-lg cursor-pointer p-2 hover:text-[#D2AD3F]"
-            whileHover={{ scale: 1.2, color: '#D2AD3F' }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            {'>'}
-          </motion.button>
         </motion.div>
         
       </motion.div>
@@ -281,69 +383,24 @@ export default function DestinationPage() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 50, rotateX: -10 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            <PopularPostCard 
-              image="/popular1.jpg"
-              title="Discover Amazing Destinations Around the World"
-              description="Explore breathtaking locations, hidden gems, and cultural experiences that will create unforgettable memories. From tropical beaches to mountain peaks, discover the perfect destination for your next adventure."
-              category="Travel"
-              readTime="8 min read"
-              date="Dec 15, 2024"
-            />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 50, rotateX: -10 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.3, delay: 0.7 }}
-          >
-            <PopularPostCard 
-              image="/popular2.jpg"
-              title="Ultimate Guide to Adventure Travel"
-              description="Embark on thrilling adventures with our comprehensive guide to adventure travel. From hiking trails to water sports, discover adrenaline-pumping activities and destinations that will challenge and inspire you."
-              category="Adventure"
-              readTime="6 min read"
-              date="Dec 12, 2024"
-            />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 50, rotateX: -10 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.3, delay: 0.8 }}
-          >
-            <PopularPostCard 
-              image="/popular3.jpg"
-              title="Cultural Heritage and Local Experiences"
-              description="Immerse yourself in rich cultural traditions and authentic local experiences. Discover ancient temples, traditional festivals, and local cuisines that tell the story of each destination's unique heritage."
-              category="Culture"
-              readTime="7 min read"
-              date="Dec 10, 2024"
-            />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 50, rotateX: -10 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.3, delay: 0.9 }}
-          >
-            <PopularPostCard 
-              image="/popular3.jpg"
-              title="Hidden Gems and Off-the-Beaten-Path Destinations"
-              description="Explore secret destinations that most travelers never discover. From secluded beaches to mountain villages, uncover hidden gems that offer authentic experiences away from tourist crowds."
-              category="Hidden Gems"
-              readTime="9 min read"
-              date="Dec 8, 2024"
-            />
-          </motion.div>
+          {popularPosts.map((post, index) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 50, rotateX: -10 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.6 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <PopularPostCard 
+                image={post.image}
+                title={post.title}
+                description={post.description}
+                category={post.category}
+                readTime={post.readTime}
+                date={post.date}
+              />
+            </motion.div>
+          ))}
         </motion.div>
       </motion.div>
 
@@ -393,7 +450,7 @@ export default function DestinationPage() {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          {cards.map((card, index) => (
+          {framerCards.map((card, index) => (
             <FramerCard
               key={card.id}
               id={card.id}

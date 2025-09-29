@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-export default function LatestPostCard({ width = '382px', height = '146px', image = '/images/balloon4to.png', onClick }) {
+export default function LatestPostCard({ width = '382px', height = '146px', image, title, description, readTime, category, publishedDate, onClick }) {
   return (
     <Link href="/content" onClick={onClick}>
       <motion.div
@@ -37,29 +37,31 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         }}
       >
       {/* Background Image with Zoom Effect */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("${image}")`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          zIndex: -1
-        }}
-        initial={{ scale: 1 }}
-        whileHover={{ 
-          scale: 1.1,
-          transition: { 
-            type: "spring", 
-            stiffness: 200, 
-            damping: 25,
-            duration: 0.4
-          }
-        }}
-      />
+      {image && (
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("${image}")`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            zIndex: -1
+          }}
+          initial={{ scale: 1 }}
+          whileHover={{ 
+            scale: 1.1,
+            transition: { 
+              type: "spring", 
+              stiffness: 200, 
+              damping: 25,
+              duration: 0.4
+            }
+          }}
+        />
+      )}
       {/* Top Section with Tour Button */}
       <div style={{
         display: 'flex',
@@ -105,7 +107,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           lineHeight: '1.3',
           textShadow: '1px 1px 2px rgba(0,0,0,0.7)' // 2px * 0.5 = 1px (50% smaller)
         }}>
-          Discover Hidden Gems: Sri Lanka's Secret Beaches
+          {title || "Discover Hidden Gems: Sri Lanka's Secret Beaches"}
         </h3>
         <p className="card-description" style={{
           fontSize: '8px', // 16px * 0.5 = 8px (50% smaller)
@@ -114,7 +116,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           lineHeight: '1.5',
           textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' // 1px * 0.5 = 0.5px (50% smaller)
         }}>
-          Explore the untouched beauty of Sri Lanka's hidden coastal treasures. From pristine white sand beaches to crystal clear waters, discover the island's best-kept secrets that offer tranquility away from the crowds.
+          {description || "Explore the untouched beauty of Sri Lanka's hidden coastal treasures. From pristine white sand beaches to crystal clear waters, discover the island's best-kept secrets that offer tranquility away from the crowds."}
         </p>
       </div>
 
@@ -135,11 +137,11 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           color: '#FFFFFF',
           textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' // 1px * 0.5 = 0.5px (50% smaller)
         }}>
-          <span>8 min read</span>
+          <span>{readTime || "8 min read"}</span>
           <span>|</span>
-          <span>Travel Guide</span>
+          <span>{category || "Travel Guide"}</span>
           <span>|</span>
-          <span>Dec 15, 2024</span>
+          <span>{publishedDate || "Dec 15, 2024"}</span>
         </div>
       </div>
 
