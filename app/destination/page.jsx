@@ -12,7 +12,7 @@ import FramerCard from '../../components/FramerCard.jsx'
 import VideoCard from '../../components/VideoCard.jsx'
 import Newsletter from '../../components/Newsletter.jsx'
 import Footer from '../../components/Footer.jsx'
-import { postsApi } from '../../lib/api'
+import { postsApi, videosApi } from '../../lib/api'
 
 
 
@@ -21,6 +21,7 @@ export default function DestinationPage() {
   const [hovered, setHovered] = useState(null);
   const [cards, setCards] = useState([]);
   const [popularPosts, setPopularPosts] = useState([]);
+  const [videos, setVideos] = useState([]);
   
   // Refs for scroll animations
   const contentRef = useRef(null);
@@ -40,6 +41,90 @@ export default function DestinationPage() {
     { id: 3, image: "/framer3.png", title: "Cultural Experiences", description: "Immerse in local traditions", category: "Culture", readTime: "7 min read", date: "Dec 10, 2024" },
   ];
 
+  // Mock data for popular posts as fallback
+  const mockPopularPosts = [
+    {
+      id: "mock-1",
+      image: "/popular1.jpg",
+      title: "Hidden Gems of Southeast Asia: 10 Secret Destinations You Must Visit",
+      description: "Discover breathtaking locations off the beaten path that most travelers never see. From pristine beaches to ancient temples, explore the untouched beauty of Southeast Asia.",
+      category: "Adventure",
+      readTime: "8 min read",
+      date: "Dec 20, 2024"
+    },
+    {
+      id: "mock-2", 
+      image: "/popular2.jpg",
+      title: "The Ultimate Guide to Solo Travel: Safety Tips and Must-Visit Places",
+      description: "Everything you need to know about traveling alone safely and confidently. Learn essential tips, best destinations for solo travelers, and how to make meaningful connections on the road.",
+      category: "Travel",
+      readTime: "12 min read", 
+      date: "Dec 18, 2024"
+    },
+    {
+      id: "mock-3",
+      image: "/popular3.jpg", 
+      title: "Culinary Adventures: Street Food Tours Around the World",
+      description: "Embark on a delicious journey through the world's most vibrant street food scenes. From Bangkok's night markets to Mexico City's taco stands, taste authentic flavors that define cultures.",
+      category: "Food",
+      readTime: "6 min read",
+      date: "Dec 16, 2024"
+    },
+    {
+      id: "mock-4",
+      image: "/popular1.jpg",
+      title: "Sustainable Travel: How to Explore the World Responsibly",
+      description: "Learn how to minimize your environmental impact while traveling. Discover eco-friendly accommodations, carbon offset programs, and sustainable tourism practices that help preserve our planet.",
+      category: "Sustainability", 
+      readTime: "10 min read",
+      date: "Dec 14, 2024"
+    }
+  ];
+
+  // Mock data for popular videos as fallback
+  const mockPopularVideos = [
+    {
+      id: "video-mock-1",
+      videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+      thumbnail: "/vi.png",
+      title: "Amazing Waterfalls of Iceland: A Cinematic Journey",
+      description: "Experience the raw power and beauty of Iceland's most spectacular waterfalls through stunning cinematography and immersive storytelling.",
+      duration: "8:45",
+      content: "Join us on an epic adventure through Iceland's most breathtaking waterfalls, from the mighty Gullfoss to the hidden gems of the Highlands.",
+      metadata: "Views: 2.3M • Likes: 45K • 2 days ago"
+    },
+    {
+      id: "video-mock-2",
+      videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4",
+      thumbnail: "/vi.png",
+      title: "Tokyo Street Food Adventure: 24 Hours of Delicious Discoveries",
+      description: "Dive into Tokyo's vibrant street food scene as we explore hidden alleys and taste authentic Japanese flavors that will blow your mind.",
+      duration: "12:30",
+      content: "From sizzling takoyaki to fresh sushi, discover the best street food spots in Tokyo that locals don't want tourists to know about.",
+      metadata: "Views: 1.8M • Likes: 32K • 5 days ago"
+    },
+    {
+      id: "video-mock-3",
+      videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4",
+      thumbnail: "/vi.png",
+      title: "Safari in Kenya: Close Encounters with Africa's Big Five",
+      description: "Get up close and personal with Africa's most magnificent wildlife in this thrilling safari adventure through Kenya's national parks.",
+      duration: "15:20",
+      content: "Witness lions, elephants, rhinos, and more in their natural habitat as we explore the vast savannas of Kenya's most famous wildlife reserves.",
+      metadata: "Views: 3.1M • Likes: 67K • 1 week ago"
+    },
+    {
+      id: "video-mock-4",
+      videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_10mb.mp4",
+      thumbnail: "/vi.png",
+      title: "Santorini Sunset Magic: A Greek Island Paradise",
+      description: "Experience the legendary sunsets of Santorini as we explore this iconic Greek island's white-washed villages and crystal-clear waters.",
+      duration: "6:15",
+      content: "From Oia's famous sunset views to hidden beaches and traditional villages, discover why Santorini is considered one of the world's most romantic destinations.",
+      metadata: "Views: 4.2M • Likes: 89K • 3 days ago"
+    }
+  ];
+
   // Fetch data from backend using postsApi
   useEffect(() => {
     const fetchCards = async () => {
@@ -47,13 +132,18 @@ export default function DestinationPage() {
         const response = await postsApi.getLatestPostCards(7); // Get 7 latest post cards for the grid
         const posts = response.data || [];
         
+        // Debug: Log the first post to see the data structure
+        if (posts.length > 0) {
+          console.log('Sample post data:', posts[0]);
+        }
+        
         // Map backend Post data to card format expected by DestinationGrid
         const mappedCards = posts.map((post) => ({
           id: post._id,
           image: post.featuredImage?.url,
           title: post.title,
           description: post.excerpt,
-          readTime: post.readingTimeText || `${post.readingTime} min read`,
+          readTime: post.readingTimeText || (post.readingTime ? `${post.readingTime} min read` : '5 min read'),
           category: post.categories?.[0]?.name || 'Travel',
           publishedDate: post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
             month: 'short', 
@@ -87,7 +177,7 @@ export default function DestinationPage() {
           title: post.title,
           description: post.excerpt,
           category: post.categories?.[0]?.name || 'Travel',
-          readTime: post.readingTimeText || `${post.readingTime} min read`,
+          readTime: post.readingTimeText || (post.readingTime ? `${post.readingTime} min read` : '5 min read'),
           date: post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
             month: 'short', 
             day: 'numeric', 
@@ -95,20 +185,66 @@ export default function DestinationPage() {
           })
         }));
         
-        setPopularPosts(mappedPopularPosts);
+        // Use backend data if available, otherwise use mock data
+        setPopularPosts(mappedPopularPosts.length > 0 ? mappedPopularPosts : mockPopularPosts);
       } catch (err) {
         console.error("Error fetching popular posts:", err);
-        setPopularPosts([]);
+        // Use mock data as fallback when API fails
+        setPopularPosts(mockPopularPosts);
       }
     };
 
     fetchPopularPosts();
   }, []);
 
+  // Fetch popular videos
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await videosApi.getPopularVideos(4); // Get 4 popular videos
+        const posts = response.data || [];
+        
+        // Map backend Post data to video format
+        const mappedVideos = posts.map((post) => ({
+          id: post._id,
+          videoSrc: post.videoUrl || "",
+          thumbnail: post.featuredImage?.url || "/vi.png",
+          title: post.title,
+          description: post.excerpt,
+          duration: post.videoDuration || "5:30",
+          content: post.excerpt,
+          metadata: `Views: ${post.viewCount || 0} • Likes: ${post.likeCount || 0} • ${post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric' 
+          })} ago`
+        }));
+        
+        // Use backend data if available, otherwise use mock data
+        setVideos(mappedVideos.length > 0 ? mappedVideos : mockPopularVideos);
+      } catch (err) {
+        console.error("Error fetching videos:", err);
+        // Use mock data as fallback when API fails
+        setVideos(mockPopularVideos);
+      }
+    };
+
+    fetchVideos();
+  }, []);
+
   return (
     <main className="min-h-screen overflow-x-hidden">
-      <Navbar />
-      <HeroSection title="Destinations" />
+      <div 
+        className="w-full h-full"
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+          transformOrigin: 'top left'
+        }}
+      >
+        <Navbar />
+        <HeroSection title="Destinations" />
       
       {/* Content Section */}
       <motion.div 
@@ -145,47 +281,39 @@ export default function DestinationPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              width: '100%',
+              maxWidth: '400px',
+              marginLeft: '80px'
+            }}
           >
             <NewSection />
           </motion.div>
 
-          {/* NewsCards */}
+          {/* NewsCards - Merged Section */}
           <motion.div 
-            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto"
+            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto items-start"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              width: '90%',
+              maxWidth: '450px',
+              marginRight: '320px'
+            }}
           >
-            {/* First NewsCard Component */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <NewsCard />
-            </motion.div>
-            
-            {/* Second NewsCard Component */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <NewsCard />
-            </motion.div>
-            
-            {/* Third NewsCard Component */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <NewsCard />
-            </motion.div>
+            <NewsCard />
+            <NewsCard />
+            <NewsCard />
           </motion.div>
         </motion.div>
 
@@ -221,7 +349,7 @@ export default function DestinationPage() {
 
         {/* LatestPostCard Grid with Data Fetching and Pagination */}
         <motion.div
-          style={{ marginTop: "80px" }}
+          style={{ marginTop: "220px", marginBottom: "60px" }}
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -337,9 +465,10 @@ export default function DestinationPage() {
       {/* Popular Post Section with Gradient Background */}
       <motion.div 
         ref={popularPostRef}
-        className="py-8 lg:py-12 my-0 mb-8 lg:mb-12"
+        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24"
         style={{
-          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)'
+          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
+          minHeight: '150vh'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -348,6 +477,7 @@ export default function DestinationPage() {
       >
         <motion.div 
           className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0"
+          style={{ marginTop: '-80px', marginBottom: '80px' }}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -377,7 +507,8 @@ export default function DestinationPage() {
 
         {/* Popular Post Cards */}
         <motion.div 
-          className="flex flex-col items-center gap-6 lg:gap-8 px-4 sm:px-6 lg:px-0"
+          className="flex flex-col items-center px-4 sm:px-6 lg:px-0"
+          style={{ gap: '180px' }}
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -402,12 +533,48 @@ export default function DestinationPage() {
             </motion.div>
           ))}
         </motion.div>
+        
+        {/* View More Button */}
+        <motion.div 
+          className="flex items-end px-4 sm:px-6 lg:px-0"
+          style={{
+            width: '100%',
+            maxWidth: '1200px',
+            margin: '0 auto',
+            marginTop: '50px',
+            marginBottom: '-50px',
+            marginRight: '-50px',
+            marginLeft: '350px',
+            paddingTop: '40px',
+            justifyContent: 'center',
+            paddingLeft: '50%'
+          }}
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <motion.button 
+            className="w-40 sm:w-48 lg:w-52 h-12 lg:h-14 px-4 lg:px-6 py-2 lg:py-3 gap-2 lg:gap-3 rounded-2xl bg-[#3514EE] border-none text-white text-sm lg:text-base font-semibold cursor-pointer flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300"
+            whileHover={{ 
+              scale: 1.05,
+              y: -3,
+              boxShadow: '0 8px 20px rgba(53, 20, 238, 0.4)',
+              background: '#2A0FCC'
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          >
+            View More
+          </motion.button>
+        </motion.div>
       </motion.div>
 
       {/* Framer Card Section with Left Content */}
       <motion.div 
         ref={framerCardRef}
         className="flex flex-col lg:flex-row gap-4 lg:gap-8 justify-start items-center min-h-screen lg:h-screen px-4 sm:px-6 lg:px-14 py-8 lg:py-0"
+        style={{ marginTop: '-150px',marginBottom: '-105px' }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
@@ -514,52 +681,75 @@ export default function DestinationPage() {
         {/* Video Card Section */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-8">
           {/* Left Side - 3 Video Cards Vertical */}
-          <div className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto lg:max-w-md">
-            <VideoCard 
-              videoSrc=""
-              thumbnail="/vi.png"
-              title="Travel Guide 1"
-              description="Essential tips for your next adventure."
-              duration="2:30"
-              content="Learn the best travel hacks and insider secrets from experienced travelers around the globe."
-              metadata="Views: 125K • Likes: 8.2K • 2 days ago"
-            />
-            <VideoCard 
-              videoSrc=""
-              thumbnail="/vi.png"
-              title="Travel Guide 2"
-              description="Discover hidden gems around the world."
-              duration="4:15"
-              content="Explore off-the-beaten-path destinations that most tourists never get to see."
-              metadata="Views: 89K • Likes: 6.1K • 1 week ago"
-            />
-            <VideoCard 
-              videoSrc=""
-              thumbnail="/vi.png"
-              title="Travel Guide 3"
-              description="Budget travel tips and tricks."
-              duration="3:20"
-              content="Save money while traveling with these proven strategies and budget-friendly recommendations."
-              metadata="Views: 156K • Likes: 12.3K • 3 days ago"
-            />
+          <div 
+            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto lg:max-w-md"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              marginRight: '250px',
+              marginLeft: '-130px',
+              width: '600px',
+              maxWidth: '5000px',
+              marginRight: '50px',
+              padding: '20px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '15px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            {videos.slice(0, 3).map((video, index) => (
+              <VideoCard 
+                key={video.id}
+                videoSrc={video.videoSrc}
+                thumbnail={video.thumbnail}
+                title={video.title}
+                
+                duration={video.duration}
+                
+                metadata={video.metadata}
+                size="small"
+              />
+            ))}
           </div>
 
           {/* Right Side - Main Video Card */}
-          <div className="w-full lg:w-auto lg:flex-1 flex justify-center lg:justify-end">
-            <VideoCard 
-              videoSrc=""
-              thumbnail="/vi.png"
-              title="Amazing Travel Destinations"
-              description="Watch this incredible video showcasing the most beautiful destinations around the world."
-              duration="3:45"
-              size="large"
-            />
+          <div 
+            className="w-full lg:w-auto lg:flex-1 flex justify-center lg:justify-end"
+            style={{ 
+              transform: 'scale(1.45)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              width: '100%',
+              maxWidth: '800px',
+              marginLeft: '-250px',
+              marginRight: '90px',
+              padding: '20px',
+              position: 'relative'
+            }}
+          >
+            {videos.slice(3, 4).map((video, index) => (
+              <VideoCard 
+                key={video.id}
+                videoSrc={video.videoSrc}
+                thumbnail={video.thumbnail}
+                title={video.title}
+                description={video.description}
+                duration={video.duration}
+                content={video.content}
+                metadata={video.metadata}
+                size="large"
+              />
+            ))}
           </div>
         </div>
         
         {/* View More Button */}
         <motion.div 
-          className="flex justify-center lg:justify-end mt-6 lg:mt-8 px-4 sm:px-6 lg:px-12 xl:px-16"
+          className="flex justify-center lg:justify-end px-4 sm:px-6 lg:px-12 xl:px-16"
+          style={{ marginTop: '100px', marginBottom: '0px' }}
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -582,8 +772,9 @@ export default function DestinationPage() {
 
       </motion.div>
 
-      <Newsletter />
-      <Footer />
+        <Newsletter />
+        <Footer />
+      </div>
     </main>
   )
 }

@@ -64,12 +64,26 @@ export default function ContactUs() {
     return (
         <div>
             <Navbar />
-            <HeroSection title="Contact Us" />
+            
+            {/* Main Container */}
+            <div 
+                className="container"
+                style={{
+                    width: '100%',
+                    maxWidth: '1800px',
+                    margin: '0 auto',
+                    padding: '0 1rem',
+                    marginLeft: '10px',
+                    marginRight: '20px',
+                    marginTop: '-50px'
+                }}
+            >
+                <HeroSection title="Contact Us" />
 
             {/* Contact Form Section */}
             <div className="contact-form-section" style={{
                 width: '100%',
-                maxWidth: '2050.5px',
+                maxWidth: '2550.5px',
                 minHeight: '749px',
                 opacity: 1,
                 gap: '10px',
@@ -80,7 +94,8 @@ export default function ContactUs() {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: '-50px',
+                marginTop: '100px',
+                marginBottom: '50px',
                 borderTopLeftRadius: '20px',
                 borderTopRightRadius: '20px'
             }}>
@@ -105,7 +120,7 @@ export default function ContactUs() {
 
                     <form onSubmit={handleSubmit}>
                         {/* Name and Email Row (Parallel on desktop, stacked on mobile) */}
-                        <div className="form-row" style={{
+                        <div className="form-row form-grid" style={{
                             display: 'flex',
                             flexDirection: 'row',
                             gap: '20px',
@@ -344,6 +359,26 @@ export default function ContactUs() {
 
             {/* Mobile-specific CSS */}
             <style jsx>{`
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 0 1rem;
+                    marginLeft: '10px',
+                }
+                
+                .card-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 1.5rem;
+                }
+                
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1.5rem;
+                    
+                }
+                
                 @media (max-width: 768px) {
                     .contact-form-section {
                         padding-left: 20px !important;
@@ -380,6 +415,7 @@ export default function ContactUs() {
                     }
                 }
             `}</style>
+            </div>
         </div>
     );
 }

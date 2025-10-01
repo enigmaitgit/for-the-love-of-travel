@@ -7,12 +7,13 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
   };
   return (
     <div className="destination-grid-container" style={{
-      maxWidth: '90%',
+      maxWidth: '114.3%',
       margin: '0 auto',
-      marginTop: '22px',
-      marginLeft: '12%',
+      marginTop: '27px',
+      marginLeft: '15.2%',
       position: 'relative',
-      minHeight: '100vh'
+      minHeight: '127vh',
+      transform: 'scale(1.26)'
     }}>
 
 
@@ -48,7 +49,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           <LatestPostCard 
             width="520px" 
             height="200px" 
-            image={card2?.image } 
+            image={card2?.image || "/lt2.png" } 
             title={card2?.title}
             description={card2?.description}
             readTime={card2?.readTime}

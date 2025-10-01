@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   contact: '/api/contact',
   newsletter: '/api/newsletter',
   posts: '/api/posts',
+  videos: '/api/videos',
   categories: '/api/categories',
   tags: '/api/tags',
   authors: '/api/authors',
@@ -171,6 +172,74 @@ export const postsApi = {
     return apiRequest<ApiResponse>(`${API_ENDPOINTS.posts}/${postId}/share`, {
       method: 'POST',
       body: JSON.stringify({ platform }),
+    });
+  },
+};
+
+// Videos API functions
+export const videosApi = {
+  getPopularVideos: async (limit: number = 4): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/popular?limit=${limit}`);
+  },
+  getFeaturedVideos: async (limit: number = 3): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/featured?limit=${limit}`);
+  },
+  getRecentVideos: async (limit: number = 6): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/recent?limit=${limit}`);
+  },
+  getVideos: async (params: SearchFilters = {}): Promise<PostsResponse> => {
+    const queryString = new URLSearchParams(
+      Object.entries(params)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    const endpoint = queryString ? `${API_ENDPOINTS.videos}?${queryString}` : API_ENDPOINTS.videos;
+    return apiRequest<PostsResponse>(endpoint);
+  },
+  getVideoById: async (videoId: string): Promise<PostResponse> => {
+    return apiRequest<PostResponse>(`${API_ENDPOINTS.videos}/${videoId}`);
+  },
+  searchVideos: async (query: string, params: SearchFilters = {}): Promise<PostsResponse> => {
+    const searchParams = { q: query, ...params };
+    const queryString = new URLSearchParams(
+      Object.entries(searchParams)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/search?${queryString}`);
+  },
+  likeVideo: async (videoId: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/like`, {
+      method: 'POST',
+    });
+  },
+  unlikeVideo: async (videoId: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/unlike`, {
+      method: 'POST',
+    });
+  },
+  shareVideo: async (videoId: string, platform: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/share`, {
+      method: 'POST',
+      body: JSON.stringify({ platform }),
+    });
+  },
+  getVideoStats: async (videoId: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/stats`);
+  },
+  getVideoComments: async (videoId: string, params: { page?: number; limit?: number } = {}): Promise<ApiResponse> => {
+    const queryString = new URLSearchParams(
+      Object.entries(params)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    const endpoint = queryString ? `${API_ENDPOINTS.videos}/${videoId}/comments?${queryString}` : `${API_ENDPOINTS.videos}/${videoId}/comments`;
+    return apiRequest<ApiResponse>(endpoint);
+  },
+  addVideoComment: async (videoId: string, commentData: { content: string; parentId?: string }): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/comments`, {
+      method: 'POST',
+      body: JSON.stringify(commentData),
     });
   },
 };
@@ -323,6 +392,7 @@ const api = {
   contactApi,
   newsletterApi,
   postsApi,
+  videosApi,
   categoriesApi,
   authorsApi,
   tagsApi,
