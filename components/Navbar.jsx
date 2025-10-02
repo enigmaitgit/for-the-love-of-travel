@@ -107,7 +107,7 @@ const links = [
     ]
   },
   { 
-    href: "#vacations", 
+    href: "/vacation", 
     label: "Vacations",
     cards: [
       {
@@ -311,7 +311,8 @@ export default function Navbar() {
              <div className="flex items-center gap-8">
                {links.map((l) => {
                  const isActive = (l.label === "Home" && pathname === "/") || 
-                                 (l.label === "Destinations" && pathname === "/destination");
+                                 (l.label === "Destinations" && pathname === "/destination") ||
+                                 (l.label === "Vacations" && pathname === "/vacation");
                  const isDropdownOpen = activeDropdown === l.label;
                 
                 return (
@@ -657,7 +658,8 @@ export default function Navbar() {
            <nav className="px-4 py-4 space-y-1" role="navigation" aria-label="Mobile navigation">
              {links.map((l, index) => {
                const isActive = (l.label === "Home" && pathname === "/") || 
-                               (l.label === "Destinations" && pathname === "/destination");
+                               (l.label === "Destinations" && pathname === "/destination") ||
+                               (l.label === "Vacations" && pathname === "/vacation");
                const isDropdownOpen = activeDropdown === l.label;
               
               return (
