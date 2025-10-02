@@ -151,6 +151,9 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             max-width: 95% !important;
             min-height: auto !important;
             padding: 0 10px !important;
+            margin-right: 35px !important;
+            margin-left: 5px !important;
+            margin-top: -20px !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 20px !important;
@@ -159,6 +162,8 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           .row-1 {
             height: auto !important;
             margin-bottom: 0 !important;
+            margin-right: 15px !important;
+            margin-left: 25px !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 20px !important;
