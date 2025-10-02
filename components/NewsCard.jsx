@@ -1,8 +1,11 @@
 export default function NewsCard() {
   return (
-    <div className="w-full max-w-2xl lg:w-[600px] h-auto lg:h-[163px] border border-gray-200 rounded-xl p-3 lg:p-4 bg-white flex flex-col sm:flex-row items-stretch sm:items-center gap-4 lg:gap-6">
+    <div 
+      className="w-full max-w-2xl lg:w-[667px] h-auto lg:h-[181px] border border-gray-200 rounded-xl p-3 lg:p-4 bg-white flex flex-col sm:flex-row items-stretch sm:items-center gap-4 lg:gap-6"
+      style={{ transform: 'scale(1.11)' }}
+    >
       {/* Image Section */}
-      <div className="w-full sm:w-32 lg:w-[120px] h-32 sm:h-28 lg:h-[139px] rounded-lg overflow-hidden flex-shrink-0">
+      <div className="w-full sm:w-37 lg:w-[138px] h-32 sm:h-28 lg:h-[139px] rounded-lg overflow-hidden flex-shrink-0">
         <img
           src="/news2.jpg"
           alt="News Image"
@@ -23,7 +26,7 @@ export default function NewsCard() {
         </div>
 
         {/* Metadata Section - Positioned at right bottom */}
-        <div className="flex items-center gap-2 text-xs text-gray-500 mt-2 lg:mt-0 lg:absolute lg:bottom-1 lg:right-1">
+        <div className="flex items-center gap-2 text-xs text-gray-500 mt-14 lg:mt-0 lg:absolute lg:bottom-[-15%] lg:right-0">
           <span>5 min read</span>
           <span>|</span>
           <span>Travel News</span>
