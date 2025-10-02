@@ -649,16 +649,16 @@ export default function Navbar() {
                       aria-haspopup="true"
                     >
                       <span className="font-medium text-base">{l.label}</span>
-                      {l.dropdown && (
-                        <motion.div
-                          animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="w-5 h-5 flex items-center justify-center"
+                  {l.dropdown && (
+  <motion.div
+    animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+    transition={{ duration: 0.2, ease: "easeOut" }}
+    className="w-5 h-5 flex items-center justify-center"
+  >
+    <ChevronDown className="w-5 h-5" aria-hidden="true" />
+  </motion.div>
+)}
 
-                        >
-                          <span className="font-medium text-base">{l.label}</span>
-                        </Link>
-                      )}
                     </div>
 
                     {/* MOBILE DROPDOWN MENU WITH CARD */}
