@@ -180,18 +180,20 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             margin-bottom: 0 !important;
           }
           
-          /* Show only first 2 cards in row-2, hide the third */
+          /* Show only first 2 cards in row-2 for mobile (total 4 posts) */
           .row-2 > :nth-child(1),
           .row-2 > :nth-child(2) {
             display: flex !important;
             justify-content: center !important;
+            width: 100% !important;
           }
           
+          /* Hide the third card in row-2 on mobile */
           .row-2 > :nth-child(3) {
             display: none !important;
           }
           
-          /* Hide entire row-3 on mobile */
+          /* Hide entire row-3 on mobile to keep only 4 posts total */
           .row-3 {
             display: none !important;
           }

@@ -8,7 +8,7 @@ const VideoCard = ({
   // Props for second implementation
   videoSrc = "/video.mp4",
   thumbnail = "/vi.png",
-  title = "Video Title",
+  title = "",
   description = "",
   duration = "5:30",
   size = "small", // "small" or "large"

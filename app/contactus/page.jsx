@@ -363,7 +363,6 @@ export default function ContactUs() {
                     max-width: 1200px;
                     margin: 0 auto;
                     padding: 0 1rem;
-                    marginLeft: '10px',
                 }
                 
                 .card-grid {

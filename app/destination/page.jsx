@@ -232,7 +232,278 @@ export default function DestinationPage() {
   }, []);
 
   return (
-    <main className="min-h-screen overflow-x-hidden">
+    <>
+      <style jsx>{`
+      
+        .container {
+          width: 100%;
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 0 1rem;
+        }
+
+       
+        .news-section,
+        .hero-section,
+        .content-section,
+        .popular-post-section,
+        .framer-section,
+        .video-section {
+          width: 100%;
+          max-width: 100%;
+          margin: 0 auto;
+          padding: 0 1rem;
+        }
+
+      
+        .new-section {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 auto !important; 
+          padding: 0 1rem !important;
+        }
+
+        .main-video {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 10px auto !important;
+          transform: scale(1.45) !important;
+        }
+
+        /* ==============================
+           Responsive (Tablet: ≤1024px)
+        ================================ */
+        @media (max-width: 1024px) {
+          .container {
+            padding: 0 1rem;
+          }
+
+          .news-section {
+            flex-direction: column !important;
+            gap: 2rem !important;
+          }
+
+          .news-cards,
+          .new-section {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+        }
+
+        /* ==============================
+           Responsive (Mobile: ≤768px)
+        ================================ */
+        @media (max-width: 768px) {
+          .container {
+            padding: 0 0.5rem;
+          }
+
+          .hero-section {
+            margin: 0 auto !important;
+            padding: 0 1rem !important;
+          }
+
+          .content-section {
+            padding: 1rem !important;
+          }
+
+          .news-section {
+            margin-top: 2rem !important;
+            gap: 1.5rem !important;
+          }
+
+          .news-cards,
+          .new-section {
+            margin: 0 auto !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+
+          .latest-post-title {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 1rem !important;
+            margin: 2rem auto 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+            text-align: center !important;
+          }
+
+          /* More specific selector to override Tailwind */
+          .flex.latest-post-title {
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+          }
+
+          /* Target the h2 element specifically for mobile centering */
+          .latest-post-title h2 {
+            text-align: center !important;
+            margin: 0 auto !important;
+          }
+
+          .destination-grid {
+            margin: 1rem 0 2rem !important;
+          }
+
+          .popular-post-section {
+            padding: 2rem 1rem !important;
+            min-height: auto !important;
+            margin-top: 6rem !important;
+          }
+
+          .popular-post-title {
+            margin: 0 0 2rem 0 !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+          }
+
+          .popular-post-cards {
+            gap: 2rem !important;
+          }
+
+          /* Hide 5th card in popular posts on mobile */
+          .popular-post-cards > div:nth-child(5) {
+            display: none !important;
+          }
+
+          .framer-section {
+            flex-direction: column !important;
+            min-height: auto !important;
+            padding: 2rem 1rem !important;
+            margin-top: 4rem !important;
+          }
+
+          /* Override inline style for mobile */
+          .framer-section[style*="marginTop"] {
+            margin-top: 4rem !important;
+          }
+
+          .framer-content {
+            order: 2 !important;
+            max-width: 100% !important;
+            margin-top: 2rem !important;
+          }
+
+          .framer-cards {
+            order: 1 !important;
+            width: 100% !important;
+          }
+
+          .video-section {
+            padding: 2rem 1rem !important;
+            margin-top: 6rem !important;
+          }
+
+          .video-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+          }
+
+          .video-sidebar {
+            grid-template-rows: repeat(3, auto) !important;
+            gap: 1rem !important;
+          }
+
+          .main-video {
+            margin: 1rem auto !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            transform: none !important;
+          }
+        }
+
+        /* ==============================
+           Responsive (Small Mobile: ≤480px)
+        ================================ */
+        @media (max-width: 480px) {
+          .container {
+            padding: 0 0.25rem;
+          }
+
+          .content-section {
+            padding: 0.5rem !important;
+          }
+
+          .news-section {
+            margin-top: 1rem !important;
+            gap: 1rem !important;
+          }
+
+          .news-cards,
+          .new-section {
+            margin: 0 auto !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+
+          .latest-post-title h2 {
+            font-size: 1.5rem !important;
+          }
+
+          .latest-post-title {
+            align-items: center !important;
+            display: flex !important;
+            justify-content: center !important;
+            text-align: center !important;
+          }
+
+          /* More specific selector to override Tailwind */
+          .flex.latest-post-title {
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+          }
+
+          /* Target the h2 element specifically for mobile centering */
+          .latest-post-title h2 {
+            text-align: center !important;
+            margin: 0 auto !important;
+          }
+
+          .popular-post-section {
+            padding: 1rem 0.5rem !important;
+            margin-top: 7.5rem !important;
+          }
+
+          .popular-post-title h2 {
+            font-size: 1.5rem !important;
+          }
+
+          /* Hide 5th card in popular posts on small mobile */
+          .popular-post-cards > div:nth-child(5) {
+            display: none !important;
+          }
+
+          .framer-section {
+            padding: 1rem 0.5rem !important;
+            margin-top: 5rem !important;
+          }
+
+          /* Override inline style for small mobile */
+          .framer-section[style*="marginTop"] {
+            margin-top: 5rem !important;
+          }
+
+          .video-section {
+            padding: 1rem 0.5rem !important;
+            margin-top: 6rem !important;
+          }
+
+          .main-video {
+            margin: 0.5rem auto !important;
+            width: 100% !important;
+            transform: none !important;
+          }
+        }
+      `}</style>
+      <main className="min-h-screen overflow-x-hidden">
       <div 
         className="w-full h-full"
         style={{
@@ -268,7 +539,7 @@ export default function DestinationPage() {
         {/* NewSection and NewsCards - Responsive Layout */}
         <motion.div 
           ref={newSectionRef}
-          className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6 mt-8 lg:mt-12"
+          className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6 mt-8 lg:mt-12 news-section"
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -276,7 +547,7 @@ export default function DestinationPage() {
         >
           {/* NewSection Component - Left side */}
           <motion.div
-            className="w-full lg:w-auto lg:flex-shrink-0"
+            className="w-full lg:w-auto lg:flex-shrink-0 new-section new-section-desktop"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -284,11 +555,12 @@ export default function DestinationPage() {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
+              alignItems: 'center',
+              justifyContent: 'center',
               width: '100%',
               maxWidth: '400px',
-              marginLeft: '80px'
+              margin: '0 auto',
+              gap: '1200px'
             }}
           >
             <NewSection />
@@ -296,7 +568,7 @@ export default function DestinationPage() {
 
           {/* NewsCards - Merged Section */}
           <motion.div 
-            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto items-start"
+            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto items-start news-cards news-cards-desktop"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -304,11 +576,12 @@ export default function DestinationPage() {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
+              alignItems: 'center',
+              justifyContent: 'center',
               width: '90%',
               maxWidth: '450px',
-              marginRight: '320px'
+              margin: '0 auto',
+              gap: '35px'
             }}
           >
             <NewsCard />
@@ -319,15 +592,22 @@ export default function DestinationPage() {
 
         {/* Latest Post Title - Below NewsCards */}
         <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-12 lg:mt-16 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0"
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-0 latest-post-title"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{
+            marginTop: '2rem',
+            display: 'flex !important',
+            justifyContent: 'center !important',
+            alignItems: 'center !important',
+            textAlign: 'center !important'
+          }}
         >
           {/* Title */}
           <motion.h2 
-            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-left ml-0 sm:ml-6 lg:ml-12"
+            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left ml-0 sm:ml-6 lg:ml-12"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -349,6 +629,7 @@ export default function DestinationPage() {
 
         {/* LatestPostCard Grid with Data Fetching and Pagination */}
         <motion.div
+          className="destination-grid"
           style={{ marginTop: "220px", marginBottom: "60px" }}
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -465,10 +746,11 @@ export default function DestinationPage() {
       {/* Popular Post Section with Gradient Background */}
       <motion.div 
         ref={popularPostRef}
-        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24"
+        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24 popular-post-section"
         style={{
           background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
-          minHeight: '150vh'
+          minHeight: '150vh',
+          marginTop: '6rem'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -476,7 +758,7 @@ export default function DestinationPage() {
         transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0"
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0 popular-post-title"
           style={{ marginTop: '-80px', marginBottom: '80px' }}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -507,7 +789,7 @@ export default function DestinationPage() {
 
         {/* Popular Post Cards */}
         <motion.div 
-          className="flex flex-col items-center px-4 sm:px-6 lg:px-0"
+          className="flex flex-col items-center px-4 sm:px-6 lg:px-0 popular-post-cards"
           style={{ gap: '180px' }}
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -573,7 +855,7 @@ export default function DestinationPage() {
       {/* Framer Card Section with Left Content */}
       <motion.div 
         ref={framerCardRef}
-        className="flex flex-col lg:flex-row gap-4 lg:gap-8 justify-start items-center min-h-screen lg:h-screen px-4 sm:px-6 lg:px-14 py-8 lg:py-0"
+        className="flex flex-col lg:flex-row gap-4 lg:gap-8 justify-start items-center min-h-screen lg:h-screen px-4 sm:px-6 lg:px-14 py-8 lg:py-0 framer-section"
         style={{ marginTop: '-150px',marginBottom: '-105px' }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -582,7 +864,7 @@ export default function DestinationPage() {
       >
         {/* Content Section - Left Side */}
         <motion.div 
-          className="flex flex-col gap-4 max-w-full lg:max-w-md order-2 lg:order-1"
+          className="flex flex-col gap-4 max-w-full lg:max-w-md order-2 lg:order-1 framer-content"
           initial={{ opacity: 0, x: -100, rotateY: -15 }}
           whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -611,7 +893,7 @@ export default function DestinationPage() {
 
         {/* FramerCard Section - Right Side */}
         <motion.div 
-          className="flex flex-col sm:flex-row lg:flex-row gap-4 lg:gap-6 order-1 lg:order-2 w-full lg:w-auto"
+          className="flex flex-col sm:flex-row lg:flex-row gap-4 lg:gap-6 order-1 lg:order-2 w-full lg:w-auto framer-cards"
           initial={{ opacity: 0, x: 100, rotateY: 15 }}
           whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -640,9 +922,10 @@ export default function DestinationPage() {
       {/* Popular Videos Section with Gradient Background */}
       <motion.div 
         ref={videoSectionRef}
-        className="py-8 lg:py-12 my-0 mb-0"
+        className="py-8 lg:py-12 my-0 mb-0 video-section"
         style={{
-          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)'
+          background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
+          marginTop: '6rem'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -679,16 +962,16 @@ export default function DestinationPage() {
         </motion.div>
 
         {/* Video Card Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-8 video-container">
           {/* Left Side - 3 Video Cards Vertical */}
           <div 
-            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto lg:max-w-md"
+            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto lg:max-w-md video-sidebar"
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start',
               justifyContent: 'flex-start',
-              marginRight: '250px',
+              marginRight: '1250px',
               marginLeft: '-130px',
               width: '600px',
               maxWidth: '5000px',
@@ -716,15 +999,15 @@ export default function DestinationPage() {
 
           {/* Right Side - Main Video Card */}
           <div 
-            className="w-full lg:w-auto lg:flex-1 flex justify-center lg:justify-end"
+            className="w-full lg:w-auto lg:flex-1 flex justify-center lg:justify-end main-video"
             style={{ 
-              transform: 'scale(1.45)',
               display: 'flex',
+              transform: 'scale(1.45)',
               alignItems: 'center',
               justifyContent: 'flex-end',
               width: '100%',
               maxWidth: '800px',
-              marginLeft: '-250px',
+              marginLeft: '-200px',
               marginRight: '90px',
               padding: '20px',
               position: 'relative'
@@ -776,5 +1059,6 @@ export default function DestinationPage() {
         <Footer />
       </div>
     </main>
+    </>
   )
 }
