@@ -492,3 +492,4 @@ export interface CommentsResponse extends ApiResponse<Comment[]> {}
 export interface CommentResponse extends ApiResponse<Comment> {}
 export interface SearchResponse extends ApiResponse<SearchResult> {}
 export interface AnalyticsResponse extends ApiResponse<Analytics[]> {}
+

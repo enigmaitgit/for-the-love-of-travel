@@ -18,6 +18,7 @@ import type {
   SearchResponse
 } from '../types';
 
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
 
 // Debug logging for API calls
@@ -29,6 +30,7 @@ export const API_ENDPOINTS = {
   newsletter: '/api/newsletter',
   posts: '/api/posts',
   videos: '/api/videos',
+
   categories: '/api/categories',
   tags: '/api/tags',
   authors: '/api/authors',
@@ -38,6 +40,7 @@ export const API_ENDPOINTS = {
 };
 
 // API Response handler
+
 export const handleApiResponse = async <T = any>(response: Response, url?: string): Promise<T> => {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
@@ -47,6 +50,7 @@ export const handleApiResponse = async <T = any>(response: Response, url?: strin
       url: url,
       errorData: errorData
     });
+
     throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
   }
   return response.json();
@@ -56,10 +60,12 @@ export const handleApiResponse = async <T = any>(response: Response, url?: strin
 export const apiRequest = async <T = any>(endpoint: string, options: RequestInit = {}): Promise<T> => {
   const url = `${API_BASE_URL}${endpoint}`;
   
+
   if (DEBUG_API) {
     console.log(`🌐 API Request: ${options.method || 'GET'} ${url}`);
   }
   
+
   const defaultOptions: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
@@ -76,6 +82,7 @@ export const apiRequest = async <T = any>(endpoint: string, options: RequestInit
   };
 
   try {
+
     const response = await fetch(url, config);
     
     if (DEBUG_API) {
@@ -87,6 +94,7 @@ export const apiRequest = async <T = any>(endpoint: string, options: RequestInit
     if (DEBUG_API) {
       console.error(`❌ API request failed for ${url}:`, error);
     }
+
     throw error;
   }
 };
@@ -143,9 +151,11 @@ export const postsApi = {
   getRecentPosts: async (limit: number = 10): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/recent?limit=${limit}`);
   },
+
   getLatestPostCards: async (limit: number = 7): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}?limit=${limit}&sortBy=createdAt&sortOrder=desc`);
   },
+
   getRelatedPosts: async (postId: string, limit: number = 5): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/${postId}/related?limit=${limit}`);
   },
@@ -175,6 +185,7 @@ export const postsApi = {
     });
   },
 };
+
 
 // Videos API functions
 export const videosApi = {
@@ -243,6 +254,7 @@ export const videosApi = {
     });
   },
 };
+
 
 // Categories API functions
 export const categoriesApi = {
@@ -392,7 +404,9 @@ const api = {
   contactApi,
   newsletterApi,
   postsApi,
+
   videosApi,
+
   categoriesApi,
   authorsApi,
   tagsApi,

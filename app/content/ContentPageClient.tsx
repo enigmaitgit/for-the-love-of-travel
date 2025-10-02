@@ -1,110 +1,176 @@
 "use client";
-import { useState, useEffect, useCallback } from 'react';
+
+import { useState, useEffect, useCallback } from "react";
+
+/* --- Shared UI (Fix/UI-fixes) --- */
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Newsletter from "../../components/Newsletter";
+import ArticleWithPinnedImage from "../../components/ArticleWithPinnedImage";
+import Comments from "../../components/Comments";
+
+/* --- Next / Motion / Icons --- */
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Clock, User, Calendar, Heart, MessageCircle, ArrowRight, Search, Filter } from "lucide-react";
-import { postsApi, categoriesApi, authorsApi } from "../../lib/api";
-import type { Post, Category, Author } from "../../types";
+import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  Facebook,
+  Twitter,
+  Linkedin,
+  Copy,
+  Play,
+  Clock,
+  User,
+  Calendar,
+  Heart,
+  MessageCircle,
+  ArrowRight,
+  Search,
+} from "lucide-react";
 
-export default function ContentPageClient() {
+/* --- Data / Types --- */
+import { postsApi, categoriesApi } from "../../lib/api";
+import type { Post, Category } from "../../types";
+import type {
+  ContentPageProps,
+  ShareButtonProps,
+} from "../../types/content";
+
+interface ContentPageClientProps {
+  content?: ContentPageProps;
+}
+
+export default function ContentPageClient({ content }: ContentPageClientProps) {
+  /* ---------- UI-Fixes: default hero/article content ---------- */
+  const defaultContent: ContentPageProps = {
+    title:
+      "The Impact of Technology on the Workplace: How Technology is Changing",
+    author: "John Smith",
+    publishDate: "May 28, 2019",
+    readTime: "5 min read",
+    heroImage: "/images/07734c5955830a5ec32606611af0eba2c88b8f45.png",
+    content:
+      "Embarking on the journey through the significant trends in recreation for designers...",
+    category: "Technology",
+    tags: ["technology", "workplace", "innovation"],
+  };
+
+  /* ---------- main: posts/filters/featured ---------- */
   const [posts, setPosts] = useState<Post[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
 
+  /* ---------- Motion values for parallax hero ---------- */
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, -200]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0.9]);
+  const scale = useTransform(scrollY, [0, 500], [1, 1.08]);
+
+  /* ---------- Utils ---------- */
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // Prefer first featured post for hero; fallback to provided content/default
+  const [articleContent, setArticleContent] = useState<ContentPageProps>(
+    content || defaultContent
+  );
+
+  /* ---------- Data fetching ---------- */
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      
-      // Only make API calls on the client side
-      if (typeof window === 'undefined') {
-        return;
-      }
-      
-      // Fetch posts with filters
+      if (typeof window === "undefined") return;
+
+      // Posts (with filters/search)
       try {
-        console.log('🔍 Fetching posts with params:', {
-          page: currentPage,
-          limit: 12,
-          category: selectedCategory || undefined,
-          query: searchQuery || undefined,
-          sortBy: 'publishedAt',
-          sortOrder: 'desc'
-        });
         const postsResponse = await postsApi.getPosts({
           page: currentPage,
           limit: 12,
           category: selectedCategory || undefined,
           query: searchQuery || undefined,
-          sortBy: 'publishedAt',
-          sortOrder: 'desc'
+          sortBy: "publishedAt",
+          sortOrder: "desc",
         });
 
-        if (postsResponse.success) {
-          console.log('📄 Posts data from backend:', postsResponse.data);
-          setPosts(postsResponse.data);
+        if ((postsResponse as any)?.success) {
+          setPosts(postsResponse.data || []);
           setTotalPages(postsResponse.meta?.pagination?.pages || 1);
+        } else {
+          // Support both shapes (with/without success)
+          const data = (postsResponse as any)?.data ?? [];
+          const pages =
+            (postsResponse as any)?.meta?.pagination?.pages ?? 1;
+          setPosts(Array.isArray(data) ? data : []);
+          setTotalPages(Number.isFinite(pages) ? pages : 1);
         }
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-        // Set empty array as fallback
+      } catch (err) {
+        console.error("Error fetching posts:", err);
         setPosts([]);
         setTotalPages(1);
       }
 
-      // Fetch categories - COMMENTED OUT (endpoint not available on backend)
-      // try {
-      //   console.log('🔍 Fetching categories...');
-      //   const categoriesResponse = await categoriesApi.getCategories();
-      //   if (categoriesResponse.success) {
-      //     console.log('📂 Categories data from backend:', categoriesResponse.data);
-      //     setCategories(categoriesResponse.data);
-      //   }
-      // } catch (error) {
-      //   console.error('Error fetching categories:', error);
-      //   // Set empty array as fallback
-      //   setCategories([]);
-      // }
-      
-      // Set empty categories array since endpoint is not available
-      setCategories([]);
-
-      // Fetch featured posts
+      // Categories
       try {
-        console.log('🔍 Fetching featured posts...');
-        const featuredResponse = await postsApi.getFeaturedPosts(3);
-        if (featuredResponse.success) {
-          console.log('⭐ Featured posts data from backend:', featuredResponse.data);
-          setFeaturedPosts(featuredResponse.data);
+        const categoriesResponse = await categoriesApi.getCategories();
+        if ((categoriesResponse as any)?.success) {
+          setCategories(categoriesResponse.data || []);
+        } else {
+          setCategories((categoriesResponse as any)?.data || []);
         }
-      } catch (error) {
-        console.error('Error fetching featured posts:', error);
-        // Set empty array as fallback
-        setFeaturedPosts([]);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+        setCategories([]);
       }
 
+      // Featured posts -> hydrate hero
+      try {
+        const featuredResponse = await postsApi.getFeaturedPosts(3);
+        const fp = (featuredResponse as any)?.data || [];
+        setFeaturedPosts(Array.isArray(fp) ? fp : []);
+
+        const first = fp?.[0];
+        if (first) {
+          setArticleContent((prev) => ({
+            title: first.title || prev.title,
+            author: first.author?.name || prev.author,
+            publishDate: formatDate(first.publishedAt) || prev.publishDate,
+            readTime:
+              first.readingTimeText || `${first.readingTime || 5} min read`,
+            heroImage: first.featuredImage?.url || prev.heroImage,
+            content: prev.content,
+            category: first.categories?.[0]?.name || prev.category,
+            tags: prev.tags,
+          }));
+        }
+      } catch (err) {
+        console.error("Error fetching featured posts:", err);
+        setFeaturedPosts([]);
+      }
     } catch (error) {
-      console.error('Error in fetchData:', error);
+      console.error("Error in fetchData:", error);
     } finally {
       setLoading(false);
     }
   }, [currentPage, selectedCategory, searchQuery]);
 
-  // Fetch data on component mount
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
+  /* ---------- Filters / Search ---------- */
   const handleCategoryFilter = (categorySlug: string) => {
-    setSelectedCategory(categorySlug === selectedCategory ? '' : categorySlug);
+    setSelectedCategory(categorySlug === selectedCategory ? "" : categorySlug);
     setCurrentPage(1);
   };
 
@@ -113,51 +179,184 @@ export default function ContentPageClient() {
     setCurrentPage(1);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  /* ---------- Share actions (UI-fixes) ---------- */
+  const handleShare = async (platform: ShareButtonProps["platform"]) => {
+    if (typeof window === "undefined") return;
+    const url = window.location.href;
+    const title = articleContent.title;
+
+    switch (platform) {
+      case "facebook":
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        break;
+      case "twitter":
+        window.open(
+          `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(
+            title
+          )}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        break;
+      case "linkedin":
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        break;
+      case "copy":
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch (err) {
+          console.error("Failed to copy URL: ", err);
+        }
+        break;
+    }
   };
+
+  /* ================== RENDER ================== */
 
   return (
     <main className="overflow-x-hidden">
       <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative h-[60vh] bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
+
+      {/* Hero Section - UPSCALED */}
+      <motion.section
+        className="relative h-[calc(100vh+150px)] md:h-[90vh] lg:h-[95vh] overflow-hidden"
+        style={{ y, opacity }}
+      >
+        <motion.div style={{ scale }} className="w-full h-full">
+          <Image
+            src={articleContent.heroImage}
+            alt={articleContent.title}
+            fill
+            className="object-cover"
+            priority
+          />
+        </motion.div>
+        <div className="absolute inset-0 bg-black/30" />
+
+        {/* Content Overlay - UPSCALED */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white max-w-4xl px-4">
-            <motion.h1 
-              className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+          <div className="text-center text-white max-w-6xl px-4">
+            <motion.h1
+              className="mb-8"
+              style={{
+                fontFamily: "Roboto",
+                fontWeight: 600,
+                fontSize: "60px",
+                lineHeight: "60px",
+              }}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Discover Amazing Travel Stories
+              {articleContent.title}
             </motion.h1>
-            <motion.p 
-              className="text-xl md:text-2xl mb-8 text-gray-200"
+
+            <motion.div
+              className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-xl md:text-2xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Explore destinations, get inspired, and plan your next adventure
-            </motion.p>
+              <span>By {articleContent.author}</span>
+              <span className="hidden md:block">•</span>
+              <span>{articleContent.publishDate}</span>
+              <span className="hidden md:block">•</span>
+              <span>{articleContent.readTime}</span>
+            </motion.div>
           </div>
+        </div>
+
+        {/* Share Icons - STYLED */}
+        <div className="absolute bottom-12 right-12">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 flex items-center gap-4">
+            <span className="text-white text-lg font-medium">Share:</span>
+            <motion.button
+              className="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center hover:bg-white/50 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleShare("facebook")}
+              title="Share on Facebook"
+            >
+              <Facebook className="w-5 h-5 text-white" />
+            </motion.button>
+            <motion.button
+              className="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center hover:bg-white/50 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleShare("twitter")}
+              title="Share on Twitter"
+            >
+              <Twitter className="w-5 h-5 text-white" />
+            </motion.button>
+            <motion.button
+              className="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center hover:bg-white/50 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleShare("linkedin")}
+              title="Share on LinkedIn"
+            >
+              <Linkedin className="w-5 h-5 text-white" />
+            </motion.button>
+            <motion.button
+              className="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center hover:bg-white/50 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleShare("copy")}
+              title="Copy link"
+            >
+              <Copy className="w-5 h-5 text-white" />
+            </motion.button>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Breadcrumb Navigation - UPSCALED */}
+      <section className="py-6 bg-white">
+        <div className="container max-w-6xl mx-auto px-4">
+          <nav className="flex items-center space-x-3 text-base">
+            <Link
+              href="/"
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              Home
+            </Link>
+            <span className="text-gray-400">&gt;</span>
+            {/* Hash link is fine to remain an <a> */}
+            <a
+              href="#destinations"
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              {articleContent.category || "Destinations"}
+            </a>
+            <span className="text-gray-400">&gt;</span>
+            <span className="text-gray-900 font-medium">
+              {articleContent.title.length > 30
+                ? `${articleContent.title.substring(0, 30)}...`
+                : articleContent.title}
+            </span>
+          </nav>
         </div>
       </section>
 
-      {/* Search and Filter Section */}
+      {/* Article Content with Pinned Image Overlay */}
+      <ArticleWithPinnedImage />
+
+      {/* ===== Search & Category Filter (from main, now wired to API) ===== */}
       <section className="py-8 bg-white border-b">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="flex-1 max-w-md">
+            <form onSubmit={handleSearch} className="flex-1 max-w-md w-full">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Search posts..."
@@ -171,27 +370,32 @@ export default function ContentPageClient() {
             {/* Category Filters */}
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => handleCategoryFilter('')}
+                onClick={() => handleCategoryFilter("")}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  selectedCategory === '' 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  selectedCategory === ""
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 All
               </button>
-              {categories.slice(0, 6).map((category) => (
+
+              {categories.slice(0, 12).map((category) => (
                 <button
                   key={category._id}
                   onClick={() => handleCategoryFilter(category.slug)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category.slug 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    selectedCategory === category.slug
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
-                  style={{ 
-                    backgroundColor: selectedCategory === category.slug ? category.color : undefined,
-                    color: selectedCategory === category.slug ? 'white' : undefined
+                  style={{
+                    backgroundColor:
+                      selectedCategory === category.slug
+                        ? category.color
+                        : undefined,
+                    color:
+                      selectedCategory === category.slug ? "white" : undefined,
                   }}
                 >
                   {category.name}
@@ -232,7 +436,7 @@ export default function ContentPageClient() {
                   <Link href={`/content/${post.slug}`}>
                     <div className="relative h-48 overflow-hidden">
                       <Image
-                        src={post.featuredImage?.url || '/images/placeholder.jpg'}
+                        src={post.featuredImage?.url || "/images/placeholder.jpg"}
                         alt={post.featuredImage?.alt || post.title}
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-300"
@@ -254,7 +458,7 @@ export default function ContentPageClient() {
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1">
                             <User className="w-4 h-4" />
-                            <span>{post.author?.name || 'Unknown Author'}</span>
+                            <span>{post.author?.name || "Unknown Author"}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
@@ -263,7 +467,9 @@ export default function ContentPageClient() {
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
-                          <span>{post.readingTimeText || `${post.readingTime} min`}</span>
+                          <span>
+                            {post.readingTimeText || `${post.readingTime} min`}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -295,7 +501,10 @@ export default function ContentPageClient() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[...Array(6)].map((_, index) => (
-                <div key={index} className="bg-gray-200 rounded-xl h-80 animate-pulse"></div>
+                <div
+                  key={index}
+                  className="bg-gray-200 rounded-xl h-80 animate-pulse"
+                />
               ))}
             </div>
           ) : posts.length > 0 ? (
@@ -312,7 +521,9 @@ export default function ContentPageClient() {
                     <Link href={`/content/${post.slug}`}>
                       <div className="relative h-48 overflow-hidden">
                         <Image
-                          src={post.featuredImage?.url || '/images/placeholder.jpg'}
+                          src={
+                            post.featuredImage?.url || "/images/placeholder.jpg"
+                          }
                           alt={post.featuredImage?.alt || post.title}
                           fill
                           className="object-cover hover:scale-105 transition-transform duration-300"
@@ -329,14 +540,19 @@ export default function ContentPageClient() {
                         <div className="flex flex-wrap gap-2 mb-3">
                           {post.categories?.slice(0, 2).map((category) => (
                             <span
-                              key={category?._id || Math.random()}
+                              key={
+                                category?._id ||
+                                `${post._id}-${category?.slug || "cat"}`
+                              }
                               className="px-3 py-1 rounded-full text-xs font-medium"
-                              style={{ 
-                                backgroundColor: `${category?.color || '#3B82F6'}20`,
-                                color: category?.color || '#3B82F6'
+                              style={{
+                                backgroundColor: `${
+                                  category?.color || "#3B82F6"
+                                }20`,
+                                color: category?.color || "#3B82F6",
                               }}
                             >
-                              {category?.name || 'Uncategorized'}
+                              {category?.name || "Uncategorized"}
                             </span>
                           ))}
                         </div>
@@ -350,7 +566,7 @@ export default function ContentPageClient() {
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-1">
                               <User className="w-4 h-4" />
-                              <span>{post.author?.name || 'Unknown Author'}</span>
+                              <span>{post.author?.name || "Unknown Author"}</span>
                             </div>
                             <div className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
@@ -359,7 +575,10 @@ export default function ContentPageClient() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
-                            <span>{post.readingTimeText || `${post.readingTime} min`}</span>
+                            <span>
+                              {post.readingTimeText ||
+                                `${post.readingTime} min`}
+                            </span>
                           </div>
                         </div>
                         <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
@@ -386,42 +605,55 @@ export default function ContentPageClient() {
                 <div className="flex justify-center mt-12">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(1, prev - 1))
+                      }
                       disabled={currentPage === 1}
                       className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
                       Previous
                     </button>
-                    
+
                     {[...Array(totalPages)].map((_, index) => {
                       const page = index + 1;
                       const isCurrentPage = page === currentPage;
-                      const isNearCurrentPage = Math.abs(page - currentPage) <= 2;
+                      const isNearCurrentPage =
+                        Math.abs(page - currentPage) <= 2;
                       const isFirstOrLast = page === 1 || page === totalPages;
-                      
-                      if (!isCurrentPage && !isNearCurrentPage && !isFirstOrLast) {
+
+                      if (
+                        !isCurrentPage &&
+                        !isNearCurrentPage &&
+                        !isFirstOrLast
+                      ) {
                         return page === 2 || page === totalPages - 1 ? (
-                          <span key={page} className="px-2">...</span>
+                          <span key={page} className="px-2">
+                            ...
+                          </span>
                         ) : null;
                       }
-                      
+
                       return (
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
                           className={`px-4 py-2 rounded-lg transition-colors ${
                             isCurrentPage
-                              ? 'bg-blue-600 text-white'
-                              : 'hover:bg-gray-100'
+                              ? "bg-blue-600 text-white"
+                              : "hover:bg-gray-100"
                           }`}
                         >
                           {page}
                         </button>
                       );
                     })}
-                    
+
                     <button
-                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      onClick={() =>
+                        setCurrentPage((prev) =>
+                          Math.min(totalPages, prev + 1)
+                        )
+                      }
                       disabled={currentPage === totalPages}
                       className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
@@ -433,17 +665,21 @@ export default function ContentPageClient() {
             </>
           ) : (
             <div className="text-center py-16">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No posts found</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                No posts found
+              </h3>
               <p className="text-gray-600">
-                {searchQuery || selectedCategory 
-                  ? 'Try adjusting your search or filter criteria'
-                  : 'No posts are available at the moment'
-                }
+                {searchQuery || selectedCategory
+                  ? "Try adjusting your search or filter criteria"
+                  : "No posts are available at the moment"}
               </p>
             </div>
           )}
         </div>
       </section>
+
+      {/* Keep comments section from Fix/UI-fixes */}
+      <Comments />
 
       <Newsletter />
       <Footer />

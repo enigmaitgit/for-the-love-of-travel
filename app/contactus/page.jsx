@@ -64,6 +64,7 @@ export default function ContactUs() {
     return (
         <div>
             <Navbar />
+
             
             {/* Main Container */}
             <div 
@@ -80,6 +81,7 @@ export default function ContactUs() {
             >
                 <HeroSection title="Contact Us" />
 
+
             {/* Contact Form Section */}
             <div className="contact-form-section" style={{
                 width: '100%',
@@ -94,8 +96,10 @@ export default function ContactUs() {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
+
                 marginTop: '100px',
                 marginBottom: '50px',
+
                 borderTopLeftRadius: '20px',
                 borderTopRightRadius: '20px'
             }}>
@@ -120,7 +124,9 @@ export default function ContactUs() {
 
                     <form onSubmit={handleSubmit}>
                         {/* Name and Email Row (Parallel on desktop, stacked on mobile) */}
+
                         <div className="form-row form-grid" style={{
+
                             display: 'flex',
                             flexDirection: 'row',
                             gap: '20px',
