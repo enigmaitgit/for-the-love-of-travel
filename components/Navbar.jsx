@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Menu, X, ChevronDown, Home } from "lucide-react";
+import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 // import FramerCard from "./FramerCard"; // unused
 import DropdownFramerCard from "./DropdownFramerCard";
@@ -105,8 +105,9 @@ const links = [
       { href: "/destination?region=africa", label: "Africa" },
     ],
   },
+
   {
-    href: "#vacations",
+    href: "/vacation",
     label: "Vacations",
     cards: [
       {
@@ -223,7 +224,7 @@ export default function Navbar() {
     };
 
     const handleClickOutside = (event) => {
-      if (open && !event.target.closest('.mobile-menu-container')) {
+      if (open && !event.target.closest(".mobile-menu-container")) {
         setOpen(false);
         setActiveDropdown(null);
       }
@@ -231,7 +232,7 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
@@ -268,23 +269,23 @@ export default function Navbar() {
         borderBottomColor: { duration: 0.3 },
       }}
     >
-      <div className="container relative flex h-28 items-center">
+      <div className="container relative flex h-24 items-center">
         {/* Logo */}
-        <Link href="/" className="relative z-50 flex items-center mt-6 -ml-10 ml-2 md:ml-0">
+        <Link href="/" className="relative z-50 flex items-center mt-6 ml-2 md:ml-0">
           <Image
             src="/icon.png"
             alt="For the Love of Travel Logo"
-            width={220}
-            height={80}
-            className="h-20 w-auto"
+            width={180}
+            height={60}
+            className="h-16 w-auto"
             priority
           />
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:block absolute left-[280px] right-32 mt-6">
+        <div className="hidden md:block absolute left-[240px] right-32 mt-6">
           <motion.nav
-            className="relative w-full flex items-center justify-between rounded-[18px] px-10 py-5"
+            className="relative w-full flex items-center justify-between rounded-[18px] px-8 py-4"
             animate={{
               backgroundColor: "rgba(255,255,255,0.4)",
               borderWidth: "1px",
@@ -302,12 +303,13 @@ export default function Navbar() {
               backdropFilter: { duration: 0.2 },
             }}
           >
-            {/* Desktop links */}
-            <div className="flex items-center gap-10">
+            {/* DESKTOP NAVIGATION LINKS */}
+            <div className="flex items-center gap-8">
               {links.map((l) => {
                 const isActive =
                   (l.label === "Home" && pathname === "/") ||
-                  (l.label === "Destinations" && pathname === "/destination");
+                  (l.label === "Destinations" && pathname === "/destination") ||
+                  (l.label === "Vacations" && pathname === "/vacation");
                 const isDropdownOpen = activeDropdown === l.label;
 
                 return (
@@ -337,7 +339,7 @@ export default function Navbar() {
                     <Link
                       href={l.href}
                       className={[
-                        "text-base font-medium transition-all duration-300 ease-out",
+                        "text-sm font-medium transition-all duration-300 ease-out",
                         isActive ? "text-brand-gold font-semibold" : "text-black hover:text-brand-gold",
                       ].join(" ")}
                     >
@@ -469,7 +471,7 @@ export default function Navbar() {
                                       borderColor: "rgba(255,255,255,0.35)",
                                       backdropFilter: "blur(20px)",
                                       WebkitBackdropFilter: "blur(20px)",
-                                      boxShadow: "none !important",
+                                      boxShadow: "none",
                                       filter: "none",
                                       zIndex: isSelected ? 10 : isHovered ? 5 : 1,
                                     }}
@@ -477,7 +479,10 @@ export default function Navbar() {
                                       scale: isSelected ? 1.1 : isHovered ? 0.95 : 1,
                                       y: isSelected ? -4 : 0,
                                     }}
-                                    whileHover={{ scale: 0.95, transition: { duration: 0.2, ease: "easeOut" } }}
+                                    whileHover={{
+                                      scale: 0.95,
+                                      transition: { duration: 0.2, ease: "easeOut" },
+                                    }}
                                     whileTap={{ scale: 0.8 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                     onClick={() => setSelectedCard(isSelected ? null : card.id)}
@@ -510,7 +515,7 @@ export default function Navbar() {
 
             {/* Desktop search */}
             <div
-              className="flex items-center gap-4 w-56 justify-end"
+              className="flex items-center gap-3 w-56 justify-end"
               onMouseEnter={() => setSearchOpen(true)}
               onMouseLeave={() => setSearchOpen(false)}
             >
@@ -521,30 +526,41 @@ export default function Navbar() {
                     className="relative"
                     initial={{ width: 0, opacity: 0, scale: 0.8 }}
                     animate={{ width: 200, opacity: 1, scale: 1 }}
-                    exit={{ width: 0, opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
-                    transition={{ type: "spring", stiffness: 400, damping: 35, mass: 0.6, duration: 0.4 }}
+                    exit={{
+                      width: 0,
+                      opacity: 0,
+                      scale: 0.8,
+                      transition: { duration: 0.2 },
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 35,
+                      mass: 0.6,
+                      duration: 0.4,
+                    }}
                   >
                     <input
                       type="text"
                       placeholder="Search Blog Post"
-                      className="w-full rounded-full pl-12 pr-4 py-4 text-black placeholder-black/70 text-base border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
+                      className="w-full rounded-full pl-10 pr-3 py-3 text-black placeholder-black/70 text-sm border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
                       onFocus={() => setSearchOpen(true)}
                       onBlur={() => setSearchOpen(false)}
                     />
-                    <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-black/70" />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/70" />
                   </motion.div>
                 )}
               </AnimatePresence>
 
               <motion.button
-                className="grid h-10 w-10 place-items-center text-black hover:text-brand-gold transition-all duration-300 ease-out"
+                className="grid h-8 w-8 place-items-center text-black hover:text-brand-gold transition-all duration-300 ease-out"
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                <Search className="h-6 w-6" />
+                <Search className="h-5 w-5" />
               </motion.button>
             </div>
           </motion.nav>
@@ -552,7 +568,7 @@ export default function Navbar() {
 
         {/* Mobile menu toggle */}
         <motion.button
-          className="mobile-menu-container ml-auto md:hidden text-black transition-all duration-300 ease-out mr-2 p-3 rounded-lg hover:bg-white/10"
+          className="mobile-menu-container ml-auto md:hidden text-black transition-all duration-300 ease-out mr-2 p-2 rounded-lg hover:bg-white/10"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen(!open)}
@@ -563,9 +579,9 @@ export default function Navbar() {
           <motion.div
             animate={{ rotate: open ? 180 : 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="w-8 h-8 flex items-center justify-center"
+            className="w-6 h-6 flex items-center justify-center"
           >
-            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </motion.div>
         </motion.button>
       </div>
@@ -593,7 +609,12 @@ export default function Navbar() {
               borderStyle: "solid",
               borderColor: isScrolled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.18)",
             }}
-            exit={{ opacity: 0, y: -30, scale: 0.95, transition: { duration: 0.2, ease: "easeIn" } }}
+            exit={{
+              opacity: 0,
+              y: -30,
+              scale: 0.95,
+              transition: { duration: 0.2, ease: "easeIn" },
+            }}
             transition={{
               duration: 0.4,
               ease: [0.25, 0.46, 0.45, 0.94],
@@ -601,12 +622,17 @@ export default function Navbar() {
               borderColor: { duration: 0.3 },
             }}
           >
-            {/* Mobile links */}
-            <nav className="px-6 py-6 space-y-2" role="navigation" aria-label="Mobile navigation">
+            {/* MOBILE NAVIGATION LINKS */}
+            <nav
+              className="px-4 py-4 space-y-1"
+              role="navigation"
+              aria-label="Mobile navigation"
+            >
               {links.map((l, index) => {
                 const isActive =
                   (l.label === "Home" && pathname === "/") ||
-                  (l.label === "Destinations" && pathname === "/destination");
+                  (l.label === "Destinations" && pathname === "/destination") ||
+                  (l.label === "Vacations" && pathname === "/vacation");
                 const isDropdownOpen = activeDropdown === l.label;
 
                 return (
@@ -614,257 +640,258 @@ export default function Navbar() {
                     key={l.label}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.3, ease: "easeOut" }}
+                    transition={{
+                      delay: index * 0.1,
+                      duration: 0.3,
+                      ease: "easeOut",
+                    }}
                   >
                     {/* MOBILE NAVIGATION BUTTON */}
                     <div className="space-y-1">
-                      {l.dropdown && l.dropdown.length > 0 ? (
-                        // Has submenu: integrated main link with dropdown toggle
-                        <div className="space-y-1">
-                          {/* Main Navigation Link with Integrated Dropdown Toggle */}
-                          <div className="flex items-center gap-2">
-                            <Link
-                              href={l.href}
-                              onClick={() => setOpen(false)} // Close mobile menu on navigation
-                              className={`group flex-1 flex items-center gap-4 rounded-xl px-6 py-5 text-black transition-all duration-300 ease-out min-h-[60px] ${
-                                isActive
-                                  ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
-                                  : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
-                              }`}
-                              style={
-                                isActive
-                                  ? {
-                                      borderWidth: "1px",
-                                      borderStyle: "solid",
-                                      borderColor: "rgba(255,255,255,0.3)",
-                                    }
-                                  : {}
-                              }
-                            >
-                              <span className="font-medium text-lg">{l.label}</span>
-                            </Link>
-                            
-                            {/* Dropdown Toggle Button */}
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setActiveDropdown(isDropdownOpen ? null : l.label);
-                                setChevronHovered(isDropdownOpen ? null : l.label);
-                              }}
-                              className="flex items-center justify-center rounded-lg px-4 py-5 text-black/70 hover:text-brand-gold hover:bg-white/10 transition-all duration-200 min-h-[60px]"
-                              aria-expanded={isDropdownOpen}
-                              aria-haspopup="true"
-                              aria-controls={`menu-${l.label}`}
-                            >
-                              <motion.div
-                                animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                                transition={{ duration: 0.2, ease: "easeOut" }}
-                                className="w-6 h-6 flex items-center justify-center"
-                              >
-                                <ChevronDown className="h-5 w-5" />
-                              </motion.div>
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        // No submenu: just navigate
-                        <Link
-                          href={l.href}
-                          onClick={() => setOpen(false)} // Close mobile menu on navigation
-                          className={`flex-1 rounded-xl px-6 py-5 text-black transition-all duration-300 ease-out min-h-[56px] flex items-center ${
-                            isActive
-                              ? "bg-white/20 text-brand-gold"
-                              : "hover:text-brand-gold hover:bg-white/10"
-                          }`}
-                          style={
-                            isActive
-                              ? {
-                                  borderWidth: "1px",
-                                  borderStyle: "solid",
-                                  borderColor: "rgba(255,255,255,0.3)",
-                                }
-                              : {}
-                          }
-                        >
-                          <span className="font-medium text-lg">{l.label}</span>
-                        </Link>
-                      )}
-                    </div>
-
-                    {/* MOBILE DROPDOWN MENU WITH CARD */}
-                    <AnimatePresence>
-                      {isDropdownOpen && l.dropdown && (
-                        <motion.div
-                          id={`menu-${l.label}`}
-                          initial={{ opacity: 0, height: 0, y: -10 }}
-                          animate={{ opacity: 1, height: "auto", y: 0 }}
-                          exit={{ opacity: 0, height: 0, y: -10 }}
-                          transition={{
-                            duration: 0.4,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 30,
-                          }}
-                          className="overflow-hidden"
-                        >
-                          <div className="ml-2 space-y-3">
-                            {/* DROPDOWN MENU ITEMS */}
-                            <div
-                              className="space-y-1 rounded-2xl shadow-2xl p-4 overflow-hidden"
-                              role="menu"
-                              aria-label={`${l.label} submenu`}
-                              style={{
-                                backgroundColor: "rgba(255,255,255,0.25)",
+                      <button
+                        onClick={() => {
+                          setActiveDropdown(isDropdownOpen ? null : l.label);
+                          setChevronHovered(isDropdownOpen ? null : l.label);
+                        }}
+                        className={`group w-full flex items-center justify-between rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
+                          isActive
+                            ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
+                            : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
+                        }`}
+                        style={
+                          isActive
+                            ? {
                                 borderWidth: "1px",
                                 borderStyle: "solid",
-                                borderColor: "rgba(255,255,255,0.4)",
-                                backdropFilter: "blur(20px)",
-                                WebkitBackdropFilter: "blur(20px)",
-                                boxShadow:
-                                  "0 20px 40px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.05)",
-                              }}
-                            >
-                              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                              {l.dropdown.map((item, subIndex) => (
-                                <motion.div
-                                  key={item.label}
-                                  initial={{ opacity: 0, x: -15, y: 5 }}
-                                  animate={{ opacity: 1, x: 0, y: 0 }}
-                                  transition={{
-                                    delay: subIndex * 0.08,
-                                    duration: 0.3,
-                                    ease: [0.25, 0.46, 0.45, 0.94],
-                                  }}
-                                >
-                                  <Link
-                                    href={item.href}
-                                    onClick={() => {
-                                      setOpen(false); // Close mobile menu on navigation
-                                      setActiveDropdown(null); // Close dropdown
+                                borderColor: "rgba(255,255,255,0.3)",
+                              }
+                            : {}
+                        }
+                        aria-expanded={isDropdownOpen}
+                        aria-haspopup="true"
+                      >
+                        <span className="font-medium text-base">{l.label}</span>
+                        {l.dropdown && (
+                          <motion.div
+                            animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                            className="w-5 h-5 flex items-center justify-center"
+                          >
+                            <ChevronDown className="w-5 h-5" aria-hidden="true" />
+                          </motion.div>
+                        )}
+                      </button>
+
+                      {/* MOBILE DROPDOWN MENU WITH CARD */}
+                      <AnimatePresence>
+                        {isDropdownOpen && l.dropdown && (
+                          <motion.div
+                            id={`menu-${l.label}`}
+                            initial={{ opacity: 0, height: 0, y: -10 }}
+                            animate={{ opacity: 1, height: "auto", y: 0 }}
+                            exit={{ opacity: 0, height: 0, y: -10 }}
+                            transition={{
+                              duration: 0.4,
+                              ease: [0.25, 0.46, 0.45, 0.94],
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 30,
+                            }}
+                            className="overflow-hidden"
+                          >
+                            <div className="ml-2 space-y-3">
+                              {/* DROPDOWN MENU ITEMS */}
+                              <div
+                                className="space-y-1 rounded-2xl shadow-2xl p-4 overflow-hidden"
+                                role="menu"
+                                aria-label={`${l.label} submenu`}
+                                style={{
+                                  backgroundColor: "rgba(255,255,255,0.25)",
+                                  borderWidth: "1px",
+                                  borderStyle: "solid",
+                                  borderColor: "rgba(255,255,255,0.4)",
+                                  backdropFilter: "blur(20px)",
+                                  WebkitBackdropFilter: "blur(20px)",
+                                  boxShadow:
+                                    "0 20px 40px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.05)",
+                                }}
+                              >
+                                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                                {l.dropdown.map((item, subIndex) => (
+                                  <motion.div
+                                    key={item.label}
+                                    initial={{ opacity: 0, x: -15, y: 5 }}
+                                    animate={{ opacity: 1, x: 0, y: 0 }}
+                                    transition={{
+                                      delay: subIndex * 0.08,
+                                      duration: 0.3,
+                                      ease: [0.25, 0.46, 0.45, 0.94],
                                     }}
-                                    className={`group relative block rounded-xl px-6 py-5 text-base font-medium transition-all duration-300 ease-out min-h-[56px] flex items-center ${
-                                      hoveredDropdownItem === `${l.label}-${item.label}`
-                                        ? "text-brand-gold bg-white/20 shadow-sm"
-                                        : "text-gray-900 hover:text-brand-gold hover:bg-white/15"
-                                    }`}
-                                    onMouseEnter={() => {
-                                      if (hoverTimeout) {
-                                        clearTimeout(hoverTimeout);
-                                        setHoverTimeout(null);
-                                      }
-                                      setHoveredDropdownItem(`${l.label}-${item.label}`);
-                                    }}
-                                    onMouseLeave={() => {
-                                      const timeout = setTimeout(() => {
-                                        setHoveredDropdownItem(null);
-                                      }, 50);
-                                      setHoverTimeout(timeout);
-                                    }}
-                                    role="menuitem"
                                   >
-                                    <motion.div
-                                      className="absolute left-0 top-0 bottom-0 w-1 bg-brand-gold rounded-r-full"
-                                      initial={{ scaleY: 0 }}
-                                      animate={{
-                                        scaleY:
-                                          hoveredDropdownItem === `${l.label}-${item.label}` ? 1 : 0,
+                                    <Link
+                                      href={item.href}
+                                      onClick={() => {
+                                        setOpen(false); // Close mobile menu on navigation
+                                        setActiveDropdown(null); // Close dropdown
                                       }}
-                                      transition={{ duration: 0.2 }}
-                                    />
-                                    <span className="relative z-10 capitalize tracking-wide flex-1">
-                                      {item.label}
-                                    </span>
-                                    <motion.div
-                                      className="text-brand-gold opacity-0 ml-2"
-                                      animate={{
-                                        opacity:
-                                          hoveredDropdownItem === `${l.label}-${item.label}` ? 1 : 0,
-                                        x:
-                                          hoveredDropdownItem === `${l.label}-${item.label}` ? 0 : -5,
+                                      className={`group relative block rounded-xl px-5 py-4 text-sm font-medium transition-all duration-300 ease-out min-h-[48px] flex items-center ${
+                                        hoveredDropdownItem ===
+                                        `${l.label}-${item.label}`
+                                          ? "text-brand-gold bg-white/20 shadow-sm"
+                                          : "text-gray-900 hover:text-brand-gold hover:bg-white/15"
+                                      }`}
+                                      onMouseEnter={() => {
+                                        if (hoverTimeout) {
+                                          clearTimeout(hoverTimeout);
+                                          setHoverTimeout(null);
+                                        }
+                                        setHoveredDropdownItem(
+                                          `${l.label}-${item.label}`
+                                        );
                                       }}
-                                      transition={{ duration: 0.2 }}
+                                      onMouseLeave={() => {
+                                        const timeout = setTimeout(() => {
+                                          setHoveredDropdownItem(null);
+                                        }, 50);
+                                        setHoverTimeout(timeout);
+                                      }}
+                                      role="menuitem"
                                     >
-                                      →
-                                    </motion.div>
-                                  </Link>
-                                </motion.div>
-                              ))}
-                            </div>
-
-                            {/* FRAMER CARD PREVIEW - Mobile */}
-                            {l.cards && (
-                              <div className="space-y-2">
-                                <h4 className="text-xs font-semibold text-black/60 px-1">
-                                  Featured Content
-                                </h4>
-                                <div
-                                  className="flex gap-3 overflow-x-auto pb-3"
-                                  style={{
-                                    scrollbarWidth: "thin",
-                                    scrollbarColor: "rgba(0,0,0,0.2) transparent",
-                                  }}
-                                >
-                                  {l.cards.slice(0, 3).map((card) => {
-                                    const isSelected = selectedCard === card.id;
-                                    const isHovered = hoveredCard === card.id;
-
-                                    return (
                                       <motion.div
-                                        key={card.id}
-                                        className="flex-shrink-0"
-                                        style={{
-                                          width: "110px",
-                                          height: "150px",
-                                          opacity: 1,
-                                          borderRadius: "10px",
-                                          padding: "8px 8px 12px 8px",
-                                          backgroundColor: "rgba(255,255,255,0.2)",
-                                          borderWidth: "1px",
-                                          borderStyle: "solid",
-                                          borderColor: "rgba(255,255,255,0.35)",
-                                          backdropFilter: "blur(20px)",
-                                          WebkitBackdropFilter: "blur(20px)",
-                                          boxShadow: "none !important",
-                                          filter: "none",
-                                          zIndex: isSelected ? 10 : isHovered ? 5 : 1,
-                                        }}
+                                        className="absolute left-0 top-0 bottom-0 w-1 bg-brand-gold rounded-r-full"
+                                        initial={{ scaleY: 0 }}
                                         animate={{
-                                          scale: isSelected ? 1.05 : isHovered ? 0.98 : 1,
-                                          y: isSelected ? -2 : 0,
+                                          scaleY:
+                                            hoveredDropdownItem ===
+                                            `${l.label}-${item.label}`
+                                              ? 1
+                                              : 0,
                                         }}
-                                        whileHover={{
-                                          scale: 0.98,
-                                          transition: { duration: 0.2, ease: "easeOut" },
+                                        transition={{ duration: 0.2 }}
+                                      />
+                                      <span className="relative z-10 capitalize tracking-wide flex-1">
+                                        {item.label}
+                                      </span>
+                                      <motion.div
+                                        className="text-brand-gold opacity-0 ml-2"
+                                        animate={{
+                                          opacity:
+                                            hoveredDropdownItem ===
+                                            `${l.label}-${item.label}`
+                                              ? 1
+                                              : 0,
+                                          x:
+                                            hoveredDropdownItem ===
+                                            `${l.label}-${item.label}`
+                                              ? 0
+                                              : -5,
                                         }}
-                                        whileTap={{ scale: 0.95 }}
-                                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                        onClick={() => setSelectedCard(isSelected ? null : card.id)}
+                                        transition={{ duration: 0.2 }}
                                       >
-                                        <DropdownFramerCard
-                                          id={card.id}
-                                          image={card.image}
-                                          title={card.title}
-                                          description={card.description}
-                                          category={card.category}
-                                          readTime={card.readTime}
-                                          date={card.date}
-                                          selected={selectedCard}
-                                          setSelected={setSelectedCard}
-                                          hovered={hoveredCard}
-                                          setHovered={setHoveredCard}
-                                        />
+                                        →
                                       </motion.div>
-                                    );
-                                  })}
-                                </div>
+                                    </Link>
+                                  </motion.div>
+                                ))}
                               </div>
-                            )}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+
+                              {/* FRAMER CARD PREVIEW - Mobile */}
+                              {l.cards && (
+                                <div className="space-y-2">
+                                  <h4 className="text-xs font-semibold text-black/60 px-1">
+                                    Featured Content
+                                  </h4>
+                                  <div
+                                    className="flex gap-3 overflow-x-auto pb-3"
+                                    style={{
+                                      scrollbarWidth: "thin",
+                                      scrollbarColor:
+                                        "rgba(0,0,0,0.2) transparent",
+                                    }}
+                                  >
+                                    {l.cards.slice(0, 3).map((card) => {
+                                      const isSelected =
+                                        selectedCard === card.id;
+                                      const isHovered =
+                                        hoveredCard === card.id;
+
+                                      return (
+                                        <motion.div
+                                          key={card.id}
+                                          className="flex-shrink-0"
+                                          style={{
+                                            width: "110px",
+                                            height: "150px",
+                                            opacity: 1,
+                                            borderRadius: "10px",
+                                            padding: "8px 8px 12px 8px",
+                                            backgroundColor:
+                                              "rgba(255,255,255,0.2)",
+                                            borderWidth: "1px",
+                                            borderStyle: "solid",
+                                            borderColor:
+                                              "rgba(255,255,255,0.35)",
+                                            backdropFilter: "blur(20px)",
+                                            WebkitBackdropFilter: "blur(20px)",
+                                            boxShadow: "none",
+                                            filter: "none",
+                                            zIndex: isSelected
+                                              ? 10
+                                              : isHovered
+                                              ? 5
+                                              : 1,
+                                          }}
+                                          animate={{
+                                            scale: isSelected
+                                              ? 1.05
+                                              : isHovered
+                                              ? 0.98
+                                              : 1,
+                                            y: isSelected ? -2 : 0,
+                                          }}
+                                          whileHover={{
+                                            scale: 0.98,
+                                            transition: {
+                                              duration: 0.2,
+                                              ease: "easeOut",
+                                            },
+                                          }}
+                                          whileTap={{ scale: 0.95 }}
+                                          transition={{
+                                            type: "spring",
+                                            stiffness: 300,
+                                            damping: 20,
+                                          }}
+                                          onClick={() =>
+                                            setSelectedCard(
+                                              isSelected ? null : card.id
+                                            )
+                                          }
+                                        >
+                                          <DropdownFramerCard
+                                            id={card.id}
+                                            image={card.image}
+                                            title={card.title}
+                                            description={card.description}
+                                            category={card.category}
+                                            readTime={card.readTime}
+                                            date={card.date}
+                                            selected={selectedCard}
+                                            setSelected={setSelectedCard}
+                                            hovered={hoveredCard}
+                                            setHovered={setHoveredCard}
+                                          />
+                                        </motion.div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </motion.div>
                 );
               })}
@@ -874,19 +901,23 @@ export default function Navbar() {
                 className="pt-4 border-t border-white/20"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: links.length * 0.1, duration: 0.3, ease: "easeOut" }}
+                transition={{
+                  delay: links.length * 0.1,
+                  duration: 0.3,
+                  ease: "easeOut",
+                }}
               >
                 <div className="space-y-3">
-                  <h3 className="text-base font-semibold text-black px-2">Search</h3>
+                  <h3 className="text-sm font-semibold text-black px-2">Search</h3>
                   <div className="relative">
                     <input
                       type="text"
                       placeholder="Search Blog Post"
-                      className="w-full rounded-full pl-12 pr-4 py-4 text-black placeholder-black/70 text-base border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
+                      className="w-full rounded-full pl-10 pr-3 py-3 text-black placeholder-black/70 text-sm border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
                       onFocus={() => setSearchOpen(true)}
                       onBlur={() => setSearchOpen(false)}
                     />
-                    <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-black/70" />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/70" />
                   </div>
                 </div>
               </motion.div>

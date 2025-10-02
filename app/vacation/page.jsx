@@ -16,7 +16,7 @@ import { postsApi, videosApi } from '../../lib/api'
 
 
 
-export default function DestinationPage() {
+export default function VacationPage() {
   const [selected, setSelected] = useState(null);
   const [hovered, setHovered] = useState(null);
   const [cards, setCards] = useState([]);
@@ -36,9 +36,9 @@ export default function DestinationPage() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
   const framerCards = [
-    { id: 1, image: "/framer1.png", title: "Explore Destinations", description: "Discover amazing places", category: "Tour", readTime: "8 min read", date: "Dec 15, 2024" },
-    { id: 2, image: "/framer2.png", title: "Adventure Guide", description: "Thrilling activities await", category: "Adventure", readTime: "6 min read", date: "Dec 12, 2024" },
-    { id: 3, image: "/framer3.png", title: "Cultural Experiences", description: "Immerse in local traditions", category: "Culture", readTime: "7 min read", date: "Dec 10, 2024" },
+    { id: 1, image: "/framer1.png", title: "Tropical Paradise", description: "Escape to pristine beaches and crystal-clear waters", category: "Beach", readTime: "8 min read", date: "Dec 15, 2024" },
+    { id: 2, image: "/framer2.png", title: "Mountain Retreat", description: "Recharge in serene mountain landscapes", category: "Mountains", readTime: "6 min read", date: "Dec 12, 2024" },
+    { id: 3, image: "/framer3.png", title: "City Break", description: "Explore vibrant cities and urban adventures", category: "Urban", readTime: "7 min read", date: "Dec 10, 2024" },
   ];
 
   // Mock data for popular posts as fallback
@@ -46,36 +46,36 @@ export default function DestinationPage() {
     {
       id: "mock-1",
       image: "/popular1.jpg",
-      title: "Hidden Gems of Southeast Asia: 10 Secret Destinations You Must Visit",
-      description: "Discover breathtaking locations off the beaten path that most travelers never see. From pristine beaches to ancient temples, explore the untouched beauty of Southeast Asia.",
-      category: "Adventure",
+      title: "Top 10 All-Inclusive Beach Resorts for the Perfect Vacation",
+      description: "Discover the world's most luxurious all-inclusive beach resorts where every detail is taken care of. From the Maldives to the Caribbean, find your perfect tropical paradise getaway.",
+      category: "Beach",
       readTime: "8 min read",
       date: "Dec 20, 2024"
     },
     {
       id: "mock-2", 
       image: "/popular2.jpg",
-      title: "The Ultimate Guide to Solo Travel: Safety Tips and Must-Visit Places",
-      description: "Everything you need to know about traveling alone safely and confidently. Learn essential tips, best destinations for solo travelers, and how to make meaningful connections on the road.",
-      category: "Travel",
+      title: "Family Vacation Ideas: 15 Destinations Perfect for Kids",
+      description: "Plan the ultimate family vacation with our curated list of kid-friendly destinations. From theme parks to national parks, create memories that will last a lifetime.",
+      category: "Family",
       readTime: "12 min read", 
       date: "Dec 18, 2024"
     },
     {
       id: "mock-3",
       image: "/popular3.jpg", 
-      title: "Culinary Adventures: Street Food Tours Around the World",
-      description: "Embark on a delicious journey through the world's most vibrant street food scenes. From Bangkok's night markets to Mexico City's taco stands, taste authentic flavors that define cultures.",
-      category: "Food",
+      title: "Romantic Getaways: Honeymoon Destinations Around the World",
+      description: "Celebrate your love with these enchanting honeymoon destinations. From overwater bungalows to mountain cabins, find the perfect romantic escape for your special trip.",
+      category: "Romance",
       readTime: "6 min read",
       date: "Dec 16, 2024"
     },
     {
       id: "mock-4",
       image: "/popular1.jpg",
-      title: "Sustainable Travel: How to Explore the World Responsibly",
-      description: "Learn how to minimize your environmental impact while traveling. Discover eco-friendly accommodations, carbon offset programs, and sustainable tourism practices that help preserve our planet.",
-      category: "Sustainability", 
+      title: "Budget Vacation Tips: How to Travel More for Less",
+      description: "Learn insider secrets to planning amazing vacations without breaking the bank. Discover budget-friendly destinations, money-saving tips, and how to maximize your vacation budget.",
+      category: "Budget", 
       readTime: "10 min read",
       date: "Dec 14, 2024"
     }
@@ -87,40 +87,40 @@ export default function DestinationPage() {
       id: "video-mock-1",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
       thumbnail: "/vi.png",
-      title: "Amazing Waterfalls of Iceland: A Cinematic Journey",
-      description: "Experience the raw power and beauty of Iceland's most spectacular waterfalls through stunning cinematography and immersive storytelling.",
+      title: "Maldives Paradise: Ultimate Beach Vacation Guide",
+      description: "Discover the stunning beauty of the Maldives with this comprehensive guide to planning your perfect beach vacation in paradise.",
       duration: "8:45",
-      content: "Join us on an epic adventure through Iceland's most breathtaking waterfalls, from the mighty Gullfoss to the hidden gems of the Highlands.",
+      content: "From overwater bungalows to pristine beaches, explore everything you need to know about vacationing in the Maldives.",
       metadata: "Views: 2.3M • Likes: 45K • 2 days ago"
     },
     {
       id: "video-mock-2",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4",
       thumbnail: "/vi.png",
-      title: "Tokyo Street Food Adventure: 24 Hours of Delicious Discoveries",
-      description: "Dive into Tokyo's vibrant street food scene as we explore hidden alleys and taste authentic Japanese flavors that will blow your mind.",
+      title: "Disney World Vacation Planning: Tips for the Perfect Family Trip",
+      description: "Plan the ultimate Disney World vacation with insider tips, must-see attractions, and money-saving strategies for families.",
       duration: "12:30",
-      content: "From sizzling takoyaki to fresh sushi, discover the best street food spots in Tokyo that locals don't want tourists to know about.",
+      content: "Learn how to maximize your Disney experience with expert advice on dining, accommodations, and park strategies.",
       metadata: "Views: 1.8M • Likes: 32K • 5 days ago"
     },
     {
       id: "video-mock-3",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4",
       thumbnail: "/vi.png",
-      title: "Safari in Kenya: Close Encounters with Africa's Big Five",
-      description: "Get up close and personal with Africa's most magnificent wildlife in this thrilling safari adventure through Kenya's national parks.",
+      title: "European Summer Vacation: 10 Must-Visit Cities",
+      description: "Explore the most beautiful European cities perfect for your summer vacation, from Paris to Barcelona and beyond.",
       duration: "15:20",
-      content: "Witness lions, elephants, rhinos, and more in their natural habitat as we explore the vast savannas of Kenya's most famous wildlife reserves.",
+      content: "Discover the best European destinations for summer travel, including hidden gems and popular tourist spots.",
       metadata: "Views: 3.1M • Likes: 67K • 1 week ago"
     },
     {
       id: "video-mock-4",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_10mb.mp4",
       thumbnail: "/vi.png",
-      title: "Santorini Sunset Magic: A Greek Island Paradise",
-      description: "Experience the legendary sunsets of Santorini as we explore this iconic Greek island's white-washed villages and crystal-clear waters.",
+      title: "Hawaii Vacation Guide: Islands, Beaches & Adventures",
+      description: "Plan your perfect Hawaii vacation with this complete guide to the islands, beaches, and unforgettable adventures.",
       duration: "6:15",
-      content: "From Oia's famous sunset views to hidden beaches and traditional villages, discover why Santorini is considered one of the world's most romantic destinations.",
+      content: "From Maui's Road to Hana to Oahu's Pearl Harbor, discover all the must-see attractions and activities in Hawaii.",
       metadata: "Views: 4.2M • Likes: 89K • 3 days ago"
     }
   ];
@@ -233,276 +233,6 @@ export default function DestinationPage() {
 
   return (
     <>
-      <style jsx>{`
-      
-        .container {
-          width: 100%;
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-       
-        .news-section,
-        .hero-section,
-        .content-section,
-        .popular-post-section,
-        .framer-section,
-        .video-section {
-          width: 100%;
-          max-width: 100%;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-      
-        .new-section {
-          width: 100% !important;
-          max-width: 100% !important;
-          margin: 0 auto !important; 
-          padding: 0 1rem !important;
-        }
-
-        .main-video {
-          width: 100% !important;
-          max-width: 100% !important;
-          margin: 10px auto !important;
-          transform: scale(1.45) !important;
-        }
-
-        /* ==============================
-           Responsive (Tablet: ≤1024px)
-        ================================ */
-        @media (max-width: 1024px) {
-          .container {
-            padding: 0 1rem;
-          }
-
-          .news-section {
-            flex-direction: column !important;
-            gap: 2rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-        }
-
-        /* ==============================
-           Responsive (Mobile: ≤768px)
-        ================================ */
-        @media (max-width: 768px) {
-          .container {
-            padding: 0 0.5rem;
-          }
-
-          .hero-section {
-            margin: 0 auto !important;
-            padding: 0 1rem !important;
-          }
-
-          .content-section {
-            padding: 1rem !important;
-          }
-
-          .news-section {
-            margin-top: 2rem !important;
-            gap: 1.5rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-
-          .latest-post-title {
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 1rem !important;
-            margin: 2rem auto 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* More specific selector to override Tailwind */
-          .flex.latest-post-title {
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* Target the h2 element specifically for mobile centering */
-          .latest-post-title h2 {
-            text-align: center !important;
-            margin: 0 auto !important;
-          }
-
-          .destination-grid {
-            margin: 1rem 0 2rem !important;
-          }
-
-          .popular-post-section {
-            padding: 2rem 1rem !important;
-            min-height: auto !important;
-            margin-top: 6rem !important;
-          }
-
-          .popular-post-title {
-            margin: 0 0 2rem 0 !important;
-            flex-direction: column !important;
-            align-items: flex-start !important;
-          }
-
-          .popular-post-cards {
-            gap: 2rem !important;
-          }
-
-          /* Hide 5th card in popular posts on mobile */
-          .popular-post-cards > div:nth-child(5) {
-            display: none !important;
-          }
-
-          .framer-section {
-            flex-direction: column !important;
-            min-height: auto !important;
-            padding: 2rem 1rem !important;
-            margin-top: 4rem !important;
-          }
-
-          /* Override inline style for mobile */
-          .framer-section[style*="marginTop"] {
-            margin-top: 4rem !important;
-          }
-
-          .framer-content {
-            order: 2 !important;
-            max-width: 100% !important;
-            margin-top: 2rem !important;
-          }
-
-          .framer-cards {
-            order: 1 !important;
-            width: 100% !important;
-          }
-
-          .video-section {
-            padding: 2rem 1rem !important;
-            margin-top: 6rem !important;
-          }
-
-          .video-grid {
-            grid-template-columns: 1fr !important;
-            gap: 1.5rem !important;
-          }
-
-          .video-sidebar {
-            grid-template-rows: repeat(3, auto) !important;
-            gap: 1rem !important;
-          }
-
-          .main-video {
-            margin: 1rem auto !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            transform: none !important;
-          }
-        }
-
-        /* ==============================
-           Responsive (Small Mobile: ≤480px)
-        ================================ */
-        @media (max-width: 480px) {
-          .container {
-            padding: 0 0.25rem;
-          }
-
-          .content-section {
-            padding: 0.5rem !important;
-          }
-
-          .news-section {
-            margin-top: 1rem !important;
-            gap: 1rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-
-          .latest-post-title h2 {
-            font-size: 1.5rem !important;
-          }
-
-          .latest-post-title {
-            align-items: center !important;
-            display: flex !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* More specific selector to override Tailwind */
-          .flex.latest-post-title {
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* Target the h2 element specifically for mobile centering */
-          .latest-post-title h2 {
-            text-align: center !important;
-            margin: 0 auto !important;
-          }
-
-          .popular-post-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 7.5rem !important;
-          }
-
-          .popular-post-title h2 {
-            font-size: 1.5rem !important;
-          }
-
-          /* Hide 5th card in popular posts on small mobile */
-          .popular-post-cards > div:nth-child(5) {
-            display: none !important;
-          }
-
-          .framer-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 5rem !important;
-          }
-
-          /* Override inline style for small mobile */
-          .framer-section[style*="marginTop"] {
-            margin-top: 5rem !important;
-          }
-
-          .video-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 6rem !important;
-          }
-
-          .main-video {
-            margin: 0.5rem auto !important;
-            width: 100% !important;
-            transform: none !important;
-          }
-        }
-      `}</style>
       <main className="min-h-screen overflow-x-hidden">
       <div 
         className="w-full h-full"
@@ -515,99 +245,96 @@ export default function DestinationPage() {
         }}
       >
         <Navbar />
-        <HeroSection title="Destinations" />
+        <HeroSection title="Vacation" />
       
-      {/* Content Section */}
-      <motion.div 
-        ref={contentRef}
-        className="p-4 sm:p-6 lg:p-10 relative z-10"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-      >
+      {/* Main Container */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       
+        {/* Content Section */}
         <motion.div 
-          className="text-center mb-8 sm:mb-12"
+          ref={contentRef}
+          className="py-8 sm:py-12 lg:py-16"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+        <motion.div 
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Destination Page
+            Vacation News Update
           </h2>
         </motion.div>
         
-        {/* NewSection and NewsCards - Responsive Layout */}
+        {/* Featured Content Section - Mobile First */}
         <motion.div 
           ref={newSectionRef}
-          className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6 mt-8 lg:mt-12 news-section"
+          className="py-8 sm:py-12 lg:py-16"
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          {/* NewSection Component - Left side */}
-          <motion.div
-            className="w-full lg:w-auto lg:flex-shrink-0 new-section new-section-desktop"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              maxWidth: '400px',
-              margin: '0 auto',
-              gap: '1200px'
-            }}
-          >
-            <NewSection />
-          </motion.div>
+          {/* Mobile: Stack vertically */}
+          <div className="block lg:hidden space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <NewSection />
+            </motion.div>
+            {[1, 2, 3].map((index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + (index * 0.1) }}
+              >
+                <NewsCard />
+              </motion.div>
+            ))}
+          </div>
 
-          {/* NewsCards - Merged Section */}
-          <motion.div 
-            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto items-start news-cards news-cards-desktop"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '90%',
-              maxWidth: '450px',
-              margin: '0 auto',
-              gap: '35px'
-            }}
-          >
-            <NewsCard />
-            <NewsCard />
-            <NewsCard />
-          </motion.div>
+          {/* Desktop: Grid layout */}
+          <div className="hidden lg:grid lg:grid-cols-2 gap-8 items-start">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <NewSection />
+            </motion.div>
+
+            <motion.div 
+              className="flex flex-col gap-6"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <NewsCard />
+              <NewsCard />
+              <NewsCard />
+            </motion.div>
+          </div>
         </motion.div>
 
-        {/* Latest Post Title - Below NewsCards */}
+        {/* Latest Post Title - Mobile First */}
         <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-0 latest-post-title"
+          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{
-            marginTop: '2rem',
-            display: 'flex !important',
-            justifyContent: 'center !important',
-            alignItems: 'center !important',
-            textAlign: 'center !important'
-          }}
         >
           {/* Title */}
           <motion.h2 
-            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left ml-0 sm:ml-6 lg:ml-12"
+            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -618,7 +345,7 @@ export default function DestinationPage() {
 
           {/* Golden Line */}
           <motion.div 
-            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
+            className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg"
             initial={{ width: 0 }}
             whileInView={{ width: '100%' }}
             viewport={{ once: true, amount: 0.3 }}
@@ -626,11 +353,10 @@ export default function DestinationPage() {
           >
           </motion.div>
         </motion.div>
-
-        {/* LatestPostCard Grid with Data Fetching and Pagination */}
+        
+        {/* Latest Post Cards Grid - Mobile First */}
         <motion.div
-          className="destination-grid"
-          style={{ marginTop: "220px", marginBottom: "60px" }}
+          className="py-8 sm:py-12 lg:py-16"
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -640,16 +366,56 @@ export default function DestinationPage() {
             ease: [0.25, 0.46, 0.45, 0.94],
           }}
         >
-          {/* Pass fetched data as props */}
-          <DestinationGrid
-            card1={cards[0]}
-            card2={cards[1]}
-            card3={cards[2]}
-            card4={cards[3]}
-            card5={cards[4]}
-            card6={cards[5]}
-            card7={cards[6]}
-          />
+          {/* Mobile: Grid layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:hidden">
+            {cards.slice(0, 7).map((card, i) => (
+              <motion.div 
+                key={i} 
+                className="relative rounded-xl overflow-hidden shadow-lg h-80 w-full group cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ 
+                  scale: 1.03,
+                  y: -5,
+                  transition: { 
+                    type: "spring", 
+                    stiffness: 300, 
+                    damping: 20
+                  }
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <img 
+                  src={card.image || "/popular1.jpg"} 
+                  alt={card.title || `Latest post ${i+1}`} 
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="text-white font-semibold text-sm leading-tight mb-2 line-clamp-2">
+                    {card.title || `Latest Post ${i+1}`}
+                  </h3>
+                  <div className="text-white/80 text-xs">
+                    {card.readTime || '5 min read'}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Desktop: DestinationGrid component */}
+          <div className="hidden lg:block">
+            <DestinationGrid
+              card1={cards[0]}
+              card2={cards[1]}
+              card3={cards[2]}
+              card4={cards[3]}
+              card5={cards[4]}
+              card6={cards[5]}
+              card7={cards[6]}
+            />
+          </div>
 
           {/* Pagination */}
           <motion.div
@@ -743,78 +509,187 @@ export default function DestinationPage() {
         
       </motion.div>
 
-      {/* Popular Post Section with Gradient Background */}
+      {/* Popular Post Section with Gradient Background - Mobile First */}
       <motion.div 
         ref={popularPostRef}
-        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24 popular-post-section"
+        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24 mt-16 lg:mt-24"
         style={{
           background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
-          minHeight: '150vh',
-          marginTop: '6rem'
+          minHeight: '150vh'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0 popular-post-title"
-          style={{ marginTop: '-80px', marginBottom: '80px' }}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {/* Title  popular post*/}
-          <motion.h2 
-            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-left ml-0 sm:ml-6 lg:ml-12"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            Popular Post
-          </motion.h2>
-
-          {/* Golden Line */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
-            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
-            initial={{ width: 0 }}
-            whileInView={{ width: '100%' }}
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 lg:mb-12 -mt-20 mb-20"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-          </motion.div>
-        </motion.div>
-
-        {/* Popular Post Cards */}
-        <motion.div 
-          className="flex flex-col items-center px-4 sm:px-6 lg:px-0 popular-post-cards"
-          style={{ gap: '180px' }}
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {popularPosts.map((post, index) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 50, rotateX: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            {/* Title */}
+            <motion.h2 
+              className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.6 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <PopularPostCard 
-                image={post.image}
-                title={post.title}
-                description={post.description}
-                category={post.category}
-                readTime={post.readTime}
-                date={post.date}
-              />
+              Popular Post
+            </motion.h2>
+
+            {/* Golden Line */}
+            <motion.div 
+              className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg"
+              initial={{ width: 0 }}
+              whileInView={{ width: '100%' }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
             </motion.div>
-          ))}
-        </motion.div>
+          </motion.div>
+
+          {/* Popular Post Cards - Mobile First */}
+          <motion.div 
+            className="py-8 sm:py-12 lg:py-16"
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            {/* Mobile: Vertical layout */}
+            <div className="block lg:hidden">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6">
+                {popularPosts.slice(0, 4).map((post, index) => (
+                  <motion.div
+                    key={post.id}
+                    className="bg-white rounded-xl overflow-hidden hover:bg-gray-50 transition-colors cursor-pointer group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      y: -3,
+                      transition: { 
+                        type: "spring", 
+                        stiffness: 300, 
+                        damping: 20
+                      }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex flex-col sm:flex-row">
+                      {/* Image */}
+                      <div className="w-full sm:w-48 h-48 sm:h-32 rounded-t-xl sm:rounded-l-xl sm:rounded-t-none overflow-hidden flex-shrink-0">
+                        <img 
+                          src={post.image || "/popular1.jpg"} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                          {/* Category Tag */}
+                          <div className="mb-3">
+                            <span className="inline-block px-3 py-1 text-xs font-medium rounded-full" style={{ backgroundColor: '#E5E9FF', color: '#4A64E6' }}>
+                              {post.category}
+                            </span>
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="text-gray-900 font-semibold text-sm sm:text-base leading-tight mb-2 line-clamp-2">
+                            {post.title}
+                          </h3>
+                          
+                          {/* Description */}
+                          <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                            {post.description}
+                          </p>
+                        </div>
+                        
+                        {/* Metadata */}
+                        <div className="text-gray-600 text-xs space-y-1">
+                          <div>{post.readTime}</div>
+                          <div>{post.date}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: Vertical layout */}
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
+                {popularPosts.slice(0, 4).map((post, index) => (
+                  <motion.div
+                    key={post.id}
+                    className="bg-white rounded-xl overflow-hidden hover:bg-gray-50 transition-colors cursor-pointer group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      y: -3,
+                      transition: { 
+                        type: "spring", 
+                        stiffness: 300, 
+                        damping: 20
+                      }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex flex-row">
+                      {/* Image */}
+                      <div className="w-48 h-32 rounded-l-xl overflow-hidden flex-shrink-0">
+                        <img 
+                          src={post.image || "/popular1.jpg"} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                          {/* Category Tag */}
+                          <div className="mb-3">
+                            <span className="inline-block px-3 py-1 text-xs font-medium rounded-full" style={{ backgroundColor: '#E5E9FF', color: '#4A64E6' }}>
+                              {post.category}
+                            </span>
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="text-gray-900 font-semibold text-base leading-tight mb-2 line-clamp-2">
+                            {post.title}
+                          </h3>
+                          
+                          {/* Description */}
+                          <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                            {post.description}
+                          </p>
+                        </div>
+                        
+                        {/* Metadata */}
+                        <div className="text-gray-600 text-xs space-y-1">
+                          <div>{post.readTime}</div>
+                          <div>{post.date}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
         
         {/* View More Button */}
         <motion.div 
@@ -877,7 +752,7 @@ export default function DestinationPage() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            Waves & Whispers: Sri Lanka's Hidden Coves
+            Ultimate Vacation Escapes: Where Dreams Come True
           </motion.h1>
           <motion.p 
             className="font-inter font-normal text-xs sm:text-sm leading-5 tracking-wide text-gray-600 mt-2"
@@ -886,8 +761,7 @@ export default function DestinationPage() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.3, delay: 0.4 }}
           >
-            A barefoot journey through quiet blue shores   A barefoot journey through quiet blue shores
-            A barefoot journey through quiet blue shores
+            Discover your perfect getaway with our curated collection of vacation destinations. From tropical beaches to mountain retreats, find the ideal escape that matches your dream vacation style.
           </motion.p>
         </motion.div>
 
@@ -1055,6 +929,8 @@ export default function DestinationPage() {
 
       </motion.div>
 
+        </div> {/* Close main-container */}
+        
         <Newsletter />
         <Footer />
       </div>

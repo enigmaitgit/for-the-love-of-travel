@@ -62,6 +62,7 @@ export default function Newsletter() {
         />
       </svg>
 
+
       <div className="container relative z-10 pt-20 sm:pt-28 pb-16 sm:pb-20 text-center px-4">
         <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold">
           Get the best stories and travel deals straight<br className="hidden sm:block" />to your inbox, Sign-up here
@@ -74,19 +75,24 @@ export default function Newsletter() {
           onSubmit={handleSubmit} 
           className="mt-10 sm:mt-16 mx-auto flex flex-col sm:flex-row w-full max-w-2xl overflow-hidden rounded-lg bg-white"
         >
+
           <input
             type="email"
             placeholder="Enter Your Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+
             className="flex-1 px-6 sm:px-8 py-4 text-black outline-none text-base sm:text-lg"
+
             required
             disabled={isSubmitting}
           />
           <button 
             type="submit" 
             disabled={isSubmitting}
+
             className="px-6 sm:px-8 py-4 bg-indigo-600 text-white text-base sm:text-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors"
+
           >
             {isSubmitting ? 'Subscribing...' : 'Subscribe'}
           </button>

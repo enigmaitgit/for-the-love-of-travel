@@ -1,18 +1,19 @@
 import React from "react";
 import LatestPostCard from "./LatestPostCard";
 
-const DestinationGrid = () => {
+const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) => {
   const handleCardClick = (cardId) => {
     console.log(`Card ${cardId} clicked - navigating to content page`);
   };
   return (
     <div className="destination-grid-container" style={{
-      maxWidth: '90%',
+      maxWidth: '114.3%',
       margin: '0 auto',
-      marginTop: '22px',
-      marginLeft: '12%',
+      marginTop: '27px',
+      marginLeft: '15.2%',
       position: 'relative',
-      minHeight: '100vh'
+      minHeight: '127vh',
+      transform: 'scale(1.26)'
     }}>
 
 
@@ -26,7 +27,17 @@ const DestinationGrid = () => {
           gap: '10px',
           marginRight: '20px'
         }}>
-          <LatestPostCard width="520px" height="200px" image="/lt1.png" onClick={() => handleCardClick(1)} />
+          <LatestPostCard 
+            width="520px" 
+            height="200px" 
+            image={card1?.image || "/lt1.png"} 
+            title={card1?.title}
+            description={card1?.description}
+            readTime={card1?.readTime}
+            category={card1?.category}
+            publishedDate={card1?.publishedDate}
+            onClick={() => handleCardClick(card1?.id || 1)} 
+          />
         </div>
         <div className="card-2" style={{
           position: 'absolute',
@@ -35,7 +46,17 @@ const DestinationGrid = () => {
           zIndex: 1,
           marginLeft: '20px'
         }}>
-          <LatestPostCard width="520px" height="200px" image="/lt2.png" onClick={() => handleCardClick(2)} />
+          <LatestPostCard 
+            width="520px" 
+            height="200px" 
+            image={card2?.image || "/lt2.png" } 
+            title={card2?.title}
+            description={card2?.description}
+            readTime={card2?.readTime}
+            category={card2?.category}
+            publishedDate={card2?.publishedDate}
+            onClick={() => handleCardClick(card2?.id || 2)} 
+          />
         </div>
       </div>
 
@@ -48,9 +69,39 @@ const DestinationGrid = () => {
         marginTop: '-290px',
         marginBottom: '20px'
       }}>
-        <LatestPostCard width="450px" height="250px" image="/lt3.png" onClick={() => handleCardClick(3)} />
-        <LatestPostCard width="350px" height="250px" image="/lt4.png" onClick={() => handleCardClick(4)} />
-        <LatestPostCard width="250px" height="200px" image="/lt5.png" onClick={() => handleCardClick(5)} />
+        <LatestPostCard 
+          width="450px" 
+          height="250px" 
+          image={card3?.image || "/lt3.png"} 
+          title={card3?.title}
+          description={card3?.description}
+          readTime={card3?.readTime}
+          category={card3?.category}
+          publishedDate={card3?.publishedDate}
+          onClick={() => handleCardClick(card3?.id || 3)} 
+        />
+        <LatestPostCard 
+          width="350px" 
+          height="250px" 
+          image={card4?.image || "/lt4.png"} 
+          title={card4?.title}
+          description={card4?.description}
+          readTime={card4?.readTime}
+          category={card4?.category}
+          publishedDate={card4?.publishedDate}
+          onClick={() => handleCardClick(card4?.id || 4)} 
+        />
+        <LatestPostCard 
+          width="250px" 
+          height="200px" 
+          image={card5?.image || "/lt5.png"} 
+          title={card5?.title}
+          description={card5?.description}
+          readTime={card5?.readTime}
+          category={card5?.category}
+          publishedDate={card5?.publishedDate}
+          onClick={() => handleCardClick(card5?.id || 5)} 
+        />
       </div>
 
 
@@ -61,7 +112,17 @@ const DestinationGrid = () => {
         marginTop: '15px'
       }}>
         <div className="card-6">
-          <LatestPostCard width="820px" height="280px" image="/lt6.png" onClick={() => handleCardClick(6)} />
+          <LatestPostCard 
+            width="820px" 
+            height="280px" 
+            image={card6?.image || "/lt6.png"} 
+            title={card6?.title}
+            description={card6?.description}
+            readTime={card6?.readTime}
+            category={card6?.category}
+            publishedDate={card6?.publishedDate}
+            onClick={() => handleCardClick(card6?.id || 6)} 
+          />
         </div>
         <div className="card-7" style={{
           position: 'absolute',
@@ -69,7 +130,17 @@ const DestinationGrid = () => {
           left: '835px',
           zIndex: 1
         }}>
-          <LatestPostCard width="250px" height="330px" image="/lt7.png" onClick={() => handleCardClick(7)} />
+          <LatestPostCard 
+            width="250px" 
+            height="330px" 
+            image={card7?.image || "/lt7.png"} 
+            title={card7?.title}
+            description={card7?.description}
+            readTime={card7?.readTime}
+            category={card7?.category}
+            publishedDate={card7?.publishedDate}
+            onClick={() => handleCardClick(card7?.id || 7)} 
+          />
         </div>
       </div>
 
@@ -114,18 +185,20 @@ const DestinationGrid = () => {
             margin-bottom: 0 !important;
           }
           
-          /* Show only first 2 cards in row-2, hide the third */
+          /* Show only first 2 cards in row-2 for mobile (total 4 posts) */
           .row-2 > :nth-child(1),
           .row-2 > :nth-child(2) {
             display: flex !important;
             justify-content: center !important;
+            width: 100% !important;
           }
           
+          /* Hide the third card in row-2 on mobile */
           .row-2 > :nth-child(3) {
             display: none !important;
           }
           
-          /* Hide entire row-3 on mobile */
+          /* Hide entire row-3 on mobile to keep only 4 posts total */
           .row-3 {
             display: none !important;
           }

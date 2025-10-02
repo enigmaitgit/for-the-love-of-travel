@@ -9,7 +9,10 @@ const PopularPostCard = ({
   date = "Dec 15, 2024"
 }) => {
   return (
-    <div className="w-full max-w-4xl lg:w-[879px] h-auto lg:h-[275px] border border-gray-200 rounded-xl p-3 lg:p-4 bg-white flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-6">
+    <div 
+      className="w-full max-w-4xl lg:w-[879px] h-auto lg:h-[275px] border border-gray-200 rounded-xl p-3 lg:p-4 bg-white flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-6"
+      style={{ transform: 'scale(1.45)' }}
+    >
       {/* Image Section */}
       <div className="w-full lg:w-[372px] h-48 lg:h-[251px] rounded-lg overflow-hidden flex-shrink-0">
         <img 

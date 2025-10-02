@@ -18,13 +18,19 @@ import type {
   SearchResponse
 } from '../types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+
+// Debug logging for API calls
+const DEBUG_API = process.env.NODE_ENV === 'development';
 
 // API Endpoints
 export const API_ENDPOINTS = {
-  contact: '/api/contact/contact',
-  newsletter: '/api/contact/newsletter',
+  contact: '/api/contact',
+  newsletter: '/api/newsletter',
   posts: '/api/posts',
+  videos: '/api/videos',
+
   categories: '/api/categories',
   tags: '/api/tags',
   authors: '/api/authors',
@@ -34,9 +40,17 @@ export const API_ENDPOINTS = {
 };
 
 // API Response handler
-export const handleApiResponse = async <T = any>(response: Response): Promise<T> => {
+
+export const handleApiResponse = async <T = any>(response: Response, url?: string): Promise<T> => {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    console.error(`❌ API Error for ${url}:`, {
+      status: response.status,
+      statusText: response.statusText,
+      url: url,
+      errorData: errorData
+    });
+
     throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
   }
   return response.json();
@@ -46,6 +60,12 @@ export const handleApiResponse = async <T = any>(response: Response): Promise<T>
 export const apiRequest = async <T = any>(endpoint: string, options: RequestInit = {}): Promise<T> => {
   const url = `${API_BASE_URL}${endpoint}`;
   
+
+  if (DEBUG_API) {
+    console.log(`🌐 API Request: ${options.method || 'GET'} ${url}`);
+  }
+  
+
   const defaultOptions: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
@@ -62,14 +82,19 @@ export const apiRequest = async <T = any>(endpoint: string, options: RequestInit
   };
 
   try {
-    console.log('Making API request to:', url);
+
     const response = await fetch(url, config);
-    console.log('API response status:', response.status);
-    return await handleApiResponse<T>(response);
+    
+    if (DEBUG_API) {
+      console.log(`📡 API Response: ${response.status} ${response.statusText} for ${url}`);
+    }
+    
+    return await handleApiResponse<T>(response, url);
   } catch (error) {
-    console.error('API request failed:', error);
-    console.error('Request URL:', url);
-    console.error('Request config:', config);
+    if (DEBUG_API) {
+      console.error(`❌ API request failed for ${url}:`, error);
+    }
+
     throw error;
   }
 };
@@ -126,6 +151,11 @@ export const postsApi = {
   getRecentPosts: async (limit: number = 10): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/recent?limit=${limit}`);
   },
+
+  getLatestPostCards: async (limit: number = 7): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}?limit=${limit}&sortBy=createdAt&sortOrder=desc`);
+  },
+
   getRelatedPosts: async (postId: string, limit: number = 5): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/${postId}/related?limit=${limit}`);
   },
@@ -155,6 +185,76 @@ export const postsApi = {
     });
   },
 };
+
+
+// Videos API functions
+export const videosApi = {
+  getPopularVideos: async (limit: number = 4): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/popular?limit=${limit}`);
+  },
+  getFeaturedVideos: async (limit: number = 3): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/featured?limit=${limit}`);
+  },
+  getRecentVideos: async (limit: number = 6): Promise<PostsResponse> => {
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/recent?limit=${limit}`);
+  },
+  getVideos: async (params: SearchFilters = {}): Promise<PostsResponse> => {
+    const queryString = new URLSearchParams(
+      Object.entries(params)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    const endpoint = queryString ? `${API_ENDPOINTS.videos}?${queryString}` : API_ENDPOINTS.videos;
+    return apiRequest<PostsResponse>(endpoint);
+  },
+  getVideoById: async (videoId: string): Promise<PostResponse> => {
+    return apiRequest<PostResponse>(`${API_ENDPOINTS.videos}/${videoId}`);
+  },
+  searchVideos: async (query: string, params: SearchFilters = {}): Promise<PostsResponse> => {
+    const searchParams = { q: query, ...params };
+    const queryString = new URLSearchParams(
+      Object.entries(searchParams)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.videos}/search?${queryString}`);
+  },
+  likeVideo: async (videoId: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/like`, {
+      method: 'POST',
+    });
+  },
+  unlikeVideo: async (videoId: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/unlike`, {
+      method: 'POST',
+    });
+  },
+  shareVideo: async (videoId: string, platform: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/share`, {
+      method: 'POST',
+      body: JSON.stringify({ platform }),
+    });
+  },
+  getVideoStats: async (videoId: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/stats`);
+  },
+  getVideoComments: async (videoId: string, params: { page?: number; limit?: number } = {}): Promise<ApiResponse> => {
+    const queryString = new URLSearchParams(
+      Object.entries(params)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    const endpoint = queryString ? `${API_ENDPOINTS.videos}/${videoId}/comments?${queryString}` : `${API_ENDPOINTS.videos}/${videoId}/comments`;
+    return apiRequest<ApiResponse>(endpoint);
+  },
+  addVideoComment: async (videoId: string, commentData: { content: string; parentId?: string }): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.videos}/${videoId}/comments`, {
+      method: 'POST',
+      body: JSON.stringify(commentData),
+    });
+  },
+};
+
 
 // Categories API functions
 export const categoriesApi = {
@@ -304,6 +404,9 @@ const api = {
   contactApi,
   newsletterApi,
   postsApi,
+
+  videosApi,
+
   categoriesApi,
   authorsApi,
   tagsApi,
