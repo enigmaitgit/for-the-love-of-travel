@@ -145,3 +145,5 @@ To further enhance the integration, you could:
 ### Debug Mode
 
 To debug API calls, check the browser's Network tab in Developer Tools to see the actual requests being made and their responses.
+
+

@@ -62,10 +62,14 @@ export const apiRequest = async <T = any>(endpoint: string, options: RequestInit
   };
 
   try {
+    console.log('Making API request to:', url);
     const response = await fetch(url, config);
+    console.log('API response status:', response.status);
     return await handleApiResponse<T>(response);
   } catch (error) {
     console.error('API request failed:', error);
+    console.error('Request URL:', url);
+    console.error('Request config:', config);
     throw error;
   }
 };

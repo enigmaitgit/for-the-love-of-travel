@@ -48,7 +48,15 @@ export default function Newsletter() {
   };
 
   return (
-    <section id="newsletter" className="relative overflow-hidden bg-black text-white">
+    <section 
+      id="newsletter" 
+      className="relative overflow-hidden bg-black text-white"
+      style={{
+        width: '100%',
+        height: 'auto',
+        minHeight: '400px'
+      }}
+    >
       {/* Top curve */}
       <svg
         viewBox="0 0 1440 120"
@@ -62,28 +70,68 @@ export default function Newsletter() {
         />
       </svg>
 
-      <div className="container relative z-10 pt-16 sm:pt-24 pb-12 sm:pb-16 text-center px-4">
-        <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
-          Get the best stories and travel deals straight<br className="hidden sm:block" />to your inbox, Sign-up here
+      <div 
+        className="relative z-10 text-center"
+        style={{
+          padding: '60px 0',
+          width: '100%'
+        }}
+      >
+        <h3 
+          className="font-semibold"
+          style={{
+            fontSize: '48px',
+            lineHeight: '1.2',
+            marginBottom: '20px'
+          }}
+        >
+          Get the best stories and travel deals straight<br />to your inbox, Sign-up here
         </h3>
-        <p className="mt-2 text-white/70 text-sm sm:text-base">
+        <p 
+          className="text-white/70"
+          style={{
+            fontSize: '24px',
+            marginBottom: '40px'
+          }}
+        >
           We send only good stuff no spam, just pure wanderlust.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 sm:mt-12 mx-auto flex flex-col sm:flex-row w-full max-w-xl overflow-hidden rounded-lg bg-white">
+        <form 
+          onSubmit={handleSubmit} 
+          className="mx-auto flex flex-col sm:flex-row overflow-hidden rounded-lg bg-white"
+          style={{
+            width: '1000px',
+            height: '120px'
+          }}
+        >
           <input
             type="email"
             placeholder="Enter Your Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 px-4 sm:px-5 py-3 text-black outline-none text-sm sm:text-base"
+            className="text-black outline-none"
+            style={{
+              width: '728px',
+              height: '81px',
+              opacity: 1,
+              padding: '0 20px',
+              fontSize: '20px',
+              border: 'none'
+            }}
             required
             disabled={isSubmitting}
           />
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="px-4 sm:px-5 py-3 bg-indigo-600 text-white text-sm sm:text-base font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors"
+            className="bg-indigo-600 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors"
+            style={{
+              width: '272px',
+              height: '81px',
+              fontSize: '20px',
+              border: 'none'
+            }}
           >
             {isSubmitting ? 'Subscribing...' : 'Subscribe'}
           </button>

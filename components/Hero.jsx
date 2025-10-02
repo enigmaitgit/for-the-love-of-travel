@@ -3,10 +3,19 @@ import { Search, Play, Zap } from "lucide-react";
 
 export default function Hero() {
   return (
-    // Full-bleed hero with minimal side gaps, no top gap, image moved up to hide top border radius
+    // Hero section with specific measurements and styling
     <section className="relative w-full overflow-hidden">
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="relative h-screen rounded-[28px] overflow-hidden -mt-8">
+      <div className="container mx-auto" style={{ maxWidth: '2048px' }}>
+        <div 
+          className="relative overflow-hidden mx-auto"
+          style={{
+            width: '1948px',
+            height: '995px',
+            borderBottomRightRadius: '86px',
+            borderBottomLeftRadius: '86px',
+            opacity: 1
+          }}
+        >
           <Image
             src="/images/balloon4to.png"
             alt="Hot air balloons over landscape"
