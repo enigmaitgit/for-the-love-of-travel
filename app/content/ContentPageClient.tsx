@@ -107,7 +107,7 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
           setPosts(postsResponse.data || []);
           setTotalPages(postsResponse.meta?.pagination?.pages || 1);
         } else {
-          // Some backends may not include "success" – support both shapes
+          // Support both shapes (with/without success)
           const data = (postsResponse as any)?.data ?? [];
           const pages =
             (postsResponse as any)?.meta?.pagination?.pages ?? 1;
@@ -120,7 +120,7 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
         setTotalPages(1);
       }
 
-      // Categories (now enabled)
+      // Categories
       try {
         const categoriesResponse = await categoriesApi.getCategories();
         if ((categoriesResponse as any)?.success) {
@@ -133,20 +133,20 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
         setCategories([]);
       }
 
-      // Featured posts
+      // Featured posts -> hydrate hero
       try {
         const featuredResponse = await postsApi.getFeaturedPosts(3);
         const fp = (featuredResponse as any)?.data || [];
         setFeaturedPosts(Array.isArray(fp) ? fp : []);
 
-        // Update hero from first featured if available
         const first = fp?.[0];
         if (first) {
           setArticleContent((prev) => ({
             title: first.title || prev.title,
             author: first.author?.name || prev.author,
             publishDate: formatDate(first.publishedAt) || prev.publishDate,
-            readTime: first.readingTimeText || `${first.readingTime || 5} min read`,
+            readTime:
+              first.readingTimeText || `${first.readingTime || 5} min read`,
             heroImage: first.featuredImage?.url || prev.heroImage,
             content: prev.content,
             category: first.categories?.[0]?.name || prev.category,
@@ -166,7 +166,6 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchData]);
 
   /* ---------- Filters / Search ---------- */
@@ -323,13 +322,14 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
       <section className="py-6 bg-white">
         <div className="container max-w-6xl mx-auto px-4">
           <nav className="flex items-center space-x-3 text-base">
-            <a
+            <Link
               href="/"
               className="text-gray-500 hover:text-gray-700 transition-colors"
             >
               Home
-            </a>
+            </Link>
             <span className="text-gray-400">&gt;</span>
+            {/* Hash link is fine to remain an <a> */}
             <a
               href="#destinations"
               className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -348,9 +348,6 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
 
       {/* Article Content with Pinned Image Overlay */}
       <ArticleWithPinnedImage />
-
-      {/* Main Article Section - UPSCALED (truncated for brevity—kept from your UI-fixes) */}
-      {/* ... (unchanged UI-fixes content blocks) ... */}
 
       {/* ===== Search & Category Filter (from main, now wired to API) ===== */}
       <section className="py-8 bg-white border-b">
