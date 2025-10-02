@@ -233,560 +233,6 @@ export default function VacationPage() {
 
   return (
     <>
-      <style jsx>{`
-      
-        .container {
-          width: 100%;
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        .main-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1rem;
-          width: 100%;
-        }
-
-       
-        .news-section,
-        .hero-section,
-        .content-section,
-        .popular-post-section,
-        .framer-section,
-        .video-section {
-          width: 100%;
-          max-width: 100%;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        .content-section {
-          padding: 2rem 0;
-        }
-
-        .card-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 1.5rem;
-          margin: 2rem 0;
-        }
-
-        .posts-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 2rem;
-          margin: 2rem 0;
-        }
-
-        .featured-content-section {
-          margin: 3rem 0;
-        }
-
-        .featured-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 2rem;
-          align-items: start;
-        }
-
-        .featured-main {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .featured-cards {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-
-        .latest-posts-section {
-          margin: 3rem 0;
-        }
-
-        .popular-posts-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-          gap: 2rem;
-          margin: 2rem 0;
-        }
-
-      
-        .new-section {
-          width: 100% !important;
-          max-width: 100% !important;
-          margin: 2rem auto !important; 
-          margin-top: 3rem !important;
-          margin-bottom: 2rem !important;
-          padding: 0 1rem !important;
-        }
-
-        /* ==============================
-           Desktop View (≥1025px)
-        ================================ */
-        @media (min-width: 1025px) {
-          .new-section {
-            margin: 3rem auto !important;
-            margin-top: 4rem !important;
-            margin-bottom: 3rem !important;
-            margin-left:12rem !important;
-            margin-right: 2rem !important;
-          }
-        }
-
-        /* ==============================
-           Large Desktop View (≥1440px)
-        ================================ */
-        @media (min-width: 1440px) {
-          .main-container .featured-main .new-section,
-          .main-container .news-main .new-section {
-            margin: 2rem auto !important;
-            margin-top: 3rem !important;
-            margin-bottom: 2rem !important;
-            margin-left: 1120px !important;
-            margin-right: 100px !important;
-            padding: 1rem !important;
-            border-radius: 12px !important;
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-            width: auto !important;
-            max-width: none !important;
-          }
-        }
-
-        .main-video {
-          width: 100% !important;
-          max-width: 100% !important;
-          margin: 10px auto !important;
-          transform: scale(1.45) !important;
-        }
-
-        /* ==============================
-           Responsive Grid Section
-        ================================ */
-        .responsive-grid-section {
-          padding: 2rem 0;
-          margin: 2rem 0;
-        }
-
-        .grid-container {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 1.5rem;
-        }
-
-        .grid-item {
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-          padding: 2rem 1.5rem;
-          border-radius: 16px;
-          text-align: center;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          backdrop-filter: blur(10px);
-          transition: all 0.3s ease;
-          min-height: 150px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .grid-item:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
-        }
-
-        .grid-item h3 {
-          font-size: 1.25rem;
-          font-weight: 600;
-          color: #1f2937;
-          margin-bottom: 0.75rem;
-          line-height: 1.3;
-        }
-
-        .grid-item p {
-          font-size: 0.9rem;
-          color: #6b7280;
-          line-height: 1.5;
-          margin: 0;
-        }
-
-        /* ==============================
-           Responsive (Tablet: ≤1024px)
-        ================================ */
-        @media (max-width: 1024px) {
-          .container {
-            padding: 0 1rem;
-          }
-
-          .main-container {
-            padding: 0 1rem;
-          }
-
-          .responsive-grid-section {
-            padding: 1.5rem 0;
-          }
-
-          .grid-container {
-            gap: 1.25rem;
-          }
-
-          .featured-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-          }
-
-          .popular-posts-grid {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-          }
-
-          .grid-item {
-            padding: 1.75rem 1.25rem;
-            min-height: 140px;
-          }
-
-          .new-section {
-            margin: 1.5rem auto !important;
-            margin-top: 2rem !important;
-            margin-bottom: 1.5rem !important;
-          }
-
-          .grid-item h3 {
-            font-size: 1.125rem;
-          }
-
-          .grid-item p {
-            font-size: 0.85rem;
-          }
-
-          .news-section {
-            flex-direction: column !important;
-            gap: 2rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-        }
-
-        /* ==============================
-           Responsive (Mobile: ≤768px)
-        ================================ */
-        @media (max-width: 768px) {
-          .container {
-            padding: 0 0.5rem;
-          }
-
-          .main-container {
-            padding: 0 0.5rem;
-          }
-
-          .responsive-grid-section {
-            padding: 1rem 0;
-            margin: 1.5rem 0;
-          }
-
-          .grid-container {
-            gap: 1rem;
-            grid-template-columns: 1fr;
-          }
-
-          .featured-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          .popular-posts-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          .posts-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          .grid-item {
-            padding: 1.5rem 1rem;
-            min-height: 120px;
-            border-radius: 12px;
-          }
-
-          .new-section {
-            margin: 1rem auto !important;
-            margin-top: 1.5rem !important;
-            margin-bottom: 1rem !important;
-          }
-
-          .grid-item h3 {
-            font-size: 1.125rem;
-            margin-bottom: 0.5rem;
-          }
-
-          .grid-item p {
-            font-size: 0.8rem;
-          }
-
-          .hero-section {
-            margin: 0 auto !important;
-            padding: 0 1rem !important;
-          }
-
-          .content-section {
-            padding: 1rem !important;
-          }
-
-          .news-section {
-            margin-top: 2rem !important;
-            gap: 1.5rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-
-          .latest-post-title {
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 1rem !important;
-            margin: 2rem auto 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* More specific selector to override Tailwind */
-          .flex.latest-post-title {
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* Target the h2 element specifically for mobile centering */
-          .latest-post-title h2 {
-            text-align: center !important;
-            margin: 0 auto !important;
-          }
-
-          .destination-grid {
-            margin: 1rem 0 2rem !important;
-          }
-
-          .popular-post-section {
-            padding: 2rem 1rem !important;
-            min-height: auto !important;
-            margin-top: 6rem !important;
-          }
-
-          .popular-post-title {
-            margin: 0 0 2rem 0 !important;
-            flex-direction: column !important;
-            align-items: flex-start !important;
-          }
-
-          .popular-post-cards {
-            gap: 2rem !important;
-          }
-
-          /* Hide 5th card in popular posts on mobile */
-          .popular-post-cards > div:nth-child(5) {
-            display: none !important;
-          }
-
-          .framer-section {
-            flex-direction: column !important;
-            min-height: auto !important;
-            padding: 2rem 1rem !important;
-            margin-top: 4rem !important;
-          }
-
-          /* Override inline style for mobile */
-          .framer-section[style*="marginTop"] {
-            margin-top: 4rem !important;
-          }
-
-          .framer-content {
-            order: 2 !important;
-            max-width: 100% !important;
-            margin-top: 2rem !important;
-          }
-
-          .framer-cards {
-            order: 1 !important;
-            width: 100% !important;
-          }
-
-          .video-section {
-            padding: 2rem 1rem !important;
-            margin-top: 6rem !important;
-          }
-
-          .video-grid {
-            grid-template-columns: 1fr !important;
-            gap: 1.5rem !important;
-          }
-
-          .video-sidebar {
-            grid-template-rows: repeat(3, auto) !important;
-            gap: 1rem !important;
-          }
-
-          .main-video {
-            margin: 1rem auto !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            transform: none !important;
-          }
-        }
-
-        /* ==============================
-           Responsive (Small Mobile: ≤480px)
-        ================================ */
-        @media (max-width: 480px) {
-          .container {
-            padding: 0 0.25rem;
-          }
-
-          .main-container {
-            padding: 0 0.25rem;
-          }
-
-          .responsive-grid-section {
-            padding: 0.75rem 0;
-            margin: 1rem 0;
-          }
-
-          .grid-container {
-            gap: 0.75rem;
-          }
-
-          .featured-grid {
-            gap: 0.75rem;
-          }
-
-          .popular-posts-grid {
-            gap: 0.75rem;
-          }
-
-          .posts-grid {
-            gap: 0.75rem;
-          }
-
-          .grid-item {
-            padding: 1.25rem 0.75rem;
-            min-height: 100px;
-            border-radius: 10px;
-          }
-
-          .new-section {
-            margin: 0.75rem auto !important;
-            margin-top: 1rem !important;
-            margin-bottom: 0.75rem !important;
-          }
-
-          .grid-item h3 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-          }
-
-          .grid-item p {
-            font-size: 0.75rem;
-          }
-
-          .content-section {
-            padding: 0.5rem !important;
-          }
-
-          .news-section {
-            margin-top: 1rem !important;
-            gap: 1rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-
-          .latest-post-title h2 {
-            font-size: 1.5rem !important;
-          }
-
-          .latest-post-title {
-            align-items: center !important;
-            display: flex !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* More specific selector to override Tailwind */
-          .flex.latest-post-title {
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* Target the h2 element specifically for mobile centering */
-          .latest-post-title h2 {
-            text-align: center !important;
-            margin: 0 auto !important;
-          }
-
-          .popular-post-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 7.5rem !important;
-          }
-
-          .popular-post-title h2 {
-            font-size: 1.5rem !important;
-          }
-
-          /* Hide 5th card in popular posts on small mobile */
-          .popular-post-cards > div:nth-child(5) {
-            display: none !important;
-          }
-
-          .framer-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 5rem !important;
-          }
-
-          /* Override inline style for small mobile */
-          .framer-section[style*="marginTop"] {
-            margin-top: 5rem !important;
-          }
-
-          .video-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 6rem !important;
-          }
-
-          .main-video {
-            margin: 0.5rem auto !important;
-            width: 100% !important;
-            transform: none !important;
-          }
-        }
-      `}</style>
       <main className="min-h-screen overflow-x-hidden">
       <div 
         className="w-full h-full"
@@ -802,55 +248,18 @@ export default function VacationPage() {
         <HeroSection title="Vacation" />
       
       {/* Main Container */}
-      <div className="main-container">
-        {/* Responsive Grid Section */}
-        <section className="responsive-grid-section">
-          <div className="grid-container">
-            <div className="grid-item">
-              <h3>Beach Destinations</h3>
-              <p>Discover pristine beaches and crystal-clear waters around the world</p>
-            </div>
-            <div className="grid-item">
-              <h3>Mountain Retreats</h3>
-              <p>Escape to peaceful mountain destinations for ultimate relaxation</p>
-            </div>
-            <div className="grid-item">
-              <h3>City Adventures</h3>
-              <p>Explore vibrant cities with rich culture and exciting activities</p>
-            </div>
-            <div className="grid-item">
-              <h3>Family Fun</h3>
-              <p>Perfect destinations for memorable family vacation experiences</p>
-            </div>
-            <div className="grid-item">
-              <h3>Romantic Getaways</h3>
-              <p>Intimate destinations for couples seeking romantic escapes</p>
-            </div>
-            <div className="grid-item">
-              <h3>Adventure Tours</h3>
-              <p>Thrilling experiences for adrenaline-seeking travelers</p>
-            </div>
-            <div className="grid-item">
-              <h3>Cultural Immersion</h3>
-              <p>Deep dive into local traditions and authentic experiences</p>
-            </div>
-            <div className="grid-item">
-              <h3>Luxury Resorts</h3>
-              <p>Premium accommodations with world-class amenities and service</p>
-            </div>
-          </div>
-        </section>
-        
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       
         {/* Content Section */}
         <motion.div 
           ref={contentRef}
-          className="content-section"
+          className="py-8 sm:py-12 lg:py-16"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
         <motion.div 
-          className="text-center mb-8 sm:mb-12"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -860,46 +269,53 @@ export default function VacationPage() {
           </h2>
         </motion.div>
         
-        {/* Featured Content Section */}
+        {/* Featured Content Section - Mobile First */}
         <motion.div 
           ref={newSectionRef}
-          className="featured-content-section"
+          className="py-8 sm:py-12 lg:py-16"
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <div className="featured-grid">
+          {/* Mobile: Stack vertically */}
+          <div className="block lg:hidden space-y-6">
             <motion.div
-              className="featured-main"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <NewSection />
+            </motion.div>
+            {[1, 2, 3].map((index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + (index * 0.1) }}
+              >
+                <NewsCard />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Desktop: Grid layout */}
+          <div className="hidden lg:grid lg:grid-cols-2 gap-8 items-start">
+            <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <NewSection 
-                style={{
-                  margin: '2rem auto',
-                  marginTop: '3rem',
-                  marginBottom: '2rem',
-                  marginLeft: '112px',
-                  marginRight: '2rem',
-                  padding: '1rem',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
-                }}
-              />
+              <NewSection />
             </motion.div>
 
             <motion.div 
-              className="featured-cards"
+              className="flex flex-col gap-6"
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.6, delay: 0.5 }}
             >
               <NewsCard />
               <NewsCard />
@@ -908,24 +324,17 @@ export default function VacationPage() {
           </div>
         </motion.div>
 
-        {/* Latest Post Title - Below NewsCards */}
+        {/* Latest Post Title - Mobile First */}
         <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-0 latest-post-title"
+          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{
-            marginTop: '2rem',
-            display: 'flex !important',
-            justifyContent: 'center !important',
-            alignItems: 'center !important',
-            textAlign: 'center !important'
-          }}
         >
           {/* Title */}
           <motion.h2 
-            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left ml-0 sm:ml-6 lg:ml-12"
+            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -936,7 +345,7 @@ export default function VacationPage() {
 
           {/* Golden Line */}
           <motion.div 
-            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
+            className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg"
             initial={{ width: 0 }}
             whileInView={{ width: '100%' }}
             viewport={{ once: true, amount: 0.3 }}
@@ -944,10 +353,10 @@ export default function VacationPage() {
           >
           </motion.div>
         </motion.div>
-
-        {/* Latest Post Cards Grid */}
+        
+        {/* Latest Post Cards Grid - Mobile First */}
         <motion.div
-          className="latest-posts-section"
+          className="py-8 sm:py-12 lg:py-16"
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -957,8 +366,46 @@ export default function VacationPage() {
             ease: [0.25, 0.46, 0.45, 0.94],
           }}
         >
-          <div className="posts-grid">
-            {/* Pass fetched data as props */}
+          {/* Mobile: Grid layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:hidden">
+            {cards.slice(0, 7).map((card, i) => (
+              <motion.div 
+                key={i} 
+                className="relative rounded-xl overflow-hidden shadow-lg h-80 w-full group cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ 
+                  scale: 1.03,
+                  y: -5,
+                  transition: { 
+                    type: "spring", 
+                    stiffness: 300, 
+                    damping: 20
+                  }
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <img 
+                  src={card.image || "/popular1.jpg"} 
+                  alt={card.title || `Latest post ${i+1}`} 
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="text-white font-semibold text-sm leading-tight mb-2 line-clamp-2">
+                    {card.title || `Latest Post ${i+1}`}
+                  </h3>
+                  <div className="text-white/80 text-xs">
+                    {card.readTime || '5 min read'}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Desktop: DestinationGrid component */}
+          <div className="hidden lg:block">
             <DestinationGrid
               card1={cards[0]}
               card2={cards[1]}
@@ -1062,77 +509,187 @@ export default function VacationPage() {
         
       </motion.div>
 
-      {/* Popular Post Section with Gradient Background */}
+      {/* Popular Post Section with Gradient Background - Mobile First */}
       <motion.div 
         ref={popularPostRef}
-        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24 popular-post-section"
+        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24 mt-16 lg:mt-24"
         style={{
           background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
-          minHeight: '150vh',
-          marginTop: '6rem'
+          minHeight: '150vh'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0 popular-post-title"
-          style={{ marginTop: '-80px', marginBottom: '80px' }}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {/* Title  popular post*/}
-          <motion.h2 
-            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-left ml-0 sm:ml-6 lg:ml-12"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            Popular Post
-          </motion.h2>
-
-          {/* Golden Line */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
-            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
-            initial={{ width: 0 }}
-            whileInView={{ width: '100%' }}
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 lg:mb-12 -mt-20 mb-20"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-          </motion.div>
-        </motion.div>
-
-        {/* Popular Post Cards */}
-        <motion.div 
-          className="popular-posts-grid"
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {popularPosts.map((post, index) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 50, rotateX: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            {/* Title */}
+            <motion.h2 
+              className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.6 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <PopularPostCard 
-                image={post.image}
-                title={post.title}
-                description={post.description}
-                category={post.category}
-                readTime={post.readTime}
-                date={post.date}
-              />
+              Popular Post
+            </motion.h2>
+
+            {/* Golden Line */}
+            <motion.div 
+              className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg"
+              initial={{ width: 0 }}
+              whileInView={{ width: '100%' }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
             </motion.div>
-          ))}
-        </motion.div>
+          </motion.div>
+
+          {/* Popular Post Cards - Mobile First */}
+          <motion.div 
+            className="py-8 sm:py-12 lg:py-16"
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            {/* Mobile: Vertical layout */}
+            <div className="block lg:hidden">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6">
+                {popularPosts.slice(0, 4).map((post, index) => (
+                  <motion.div
+                    key={post.id}
+                    className="bg-white rounded-xl overflow-hidden hover:bg-gray-50 transition-colors cursor-pointer group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      y: -3,
+                      transition: { 
+                        type: "spring", 
+                        stiffness: 300, 
+                        damping: 20
+                      }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex flex-col sm:flex-row">
+                      {/* Image */}
+                      <div className="w-full sm:w-48 h-48 sm:h-32 rounded-t-xl sm:rounded-l-xl sm:rounded-t-none overflow-hidden flex-shrink-0">
+                        <img 
+                          src={post.image || "/popular1.jpg"} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                          {/* Category Tag */}
+                          <div className="mb-3">
+                            <span className="inline-block px-3 py-1 text-xs font-medium rounded-full" style={{ backgroundColor: '#E5E9FF', color: '#4A64E6' }}>
+                              {post.category}
+                            </span>
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="text-gray-900 font-semibold text-sm sm:text-base leading-tight mb-2 line-clamp-2">
+                            {post.title}
+                          </h3>
+                          
+                          {/* Description */}
+                          <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                            {post.description}
+                          </p>
+                        </div>
+                        
+                        {/* Metadata */}
+                        <div className="text-gray-600 text-xs space-y-1">
+                          <div>{post.readTime}</div>
+                          <div>{post.date}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: Vertical layout */}
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
+                {popularPosts.slice(0, 4).map((post, index) => (
+                  <motion.div
+                    key={post.id}
+                    className="bg-white rounded-xl overflow-hidden hover:bg-gray-50 transition-colors cursor-pointer group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      y: -3,
+                      transition: { 
+                        type: "spring", 
+                        stiffness: 300, 
+                        damping: 20
+                      }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex flex-row">
+                      {/* Image */}
+                      <div className="w-48 h-32 rounded-l-xl overflow-hidden flex-shrink-0">
+                        <img 
+                          src={post.image || "/popular1.jpg"} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                          {/* Category Tag */}
+                          <div className="mb-3">
+                            <span className="inline-block px-3 py-1 text-xs font-medium rounded-full" style={{ backgroundColor: '#E5E9FF', color: '#4A64E6' }}>
+                              {post.category}
+                            </span>
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="text-gray-900 font-semibold text-base leading-tight mb-2 line-clamp-2">
+                            {post.title}
+                          </h3>
+                          
+                          {/* Description */}
+                          <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                            {post.description}
+                          </p>
+                        </div>
+                        
+                        {/* Metadata */}
+                        <div className="text-gray-600 text-xs space-y-1">
+                          <div>{post.readTime}</div>
+                          <div>{post.date}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
         
         {/* View More Button */}
         <motion.div 
