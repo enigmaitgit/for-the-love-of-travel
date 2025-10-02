@@ -99,7 +99,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
       
       {/* Hero Section */}
       <motion.section 
-        className="relative h-[70vh] md:h-[80vh] lg:h-[90vh] overflow-hidden"
+        className="relative h-[calc(100vh+150px)] sm:h-screen overflow-hidden"
         style={{ y, opacity }}
       >
         <motion.div
@@ -116,10 +116,11 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white max-w-4xl px-4">
+        <div className="absolute inset-0 flex items-start justify-center">
+          <div className="text-center text-white max-w-4xl px-4 sm:px-6">
             <motion.h1 
-              className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
+              style={{ marginTop: '150px' }}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -128,23 +129,23 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
             </motion.h1>
             
             <motion.div 
-              className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-lg"
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 md:gap-8 text-sm sm:text-base md:text-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5" />
+              <div className="flex items-center gap-1 sm:gap-2">
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>{post.author.name}</span>
               </div>
-              <span className="hidden md:block">•</span>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
+              <span className="hidden sm:block">•</span>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>{formatDate(post.publishedAt)}</span>
               </div>
-              <span className="hidden md:block">•</span>
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5" />
+              <span className="hidden sm:block">•</span>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>{post.readingTimeText || `${post.readingTime} min read`}</span>
               </div>
             </motion.div>
@@ -152,64 +153,64 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         </div>
 
         {/* Share Icons */}
-        <div className="absolute bottom-8 right-8 flex gap-3">
+        <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 flex gap-2 sm:gap-3">
           <motion.button
-            className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+            className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('facebook')}
             disabled={isSharing}
           >
-            <Facebook className="w-5 h-5 text-white" />
+            <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </motion.button>
           <motion.button
-            className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+            className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('twitter')}
             disabled={isSharing}
           >
-            <Twitter className="w-5 h-5 text-white" />
+            <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </motion.button>
           <motion.button
-            className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+            className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('linkedin')}
             disabled={isSharing}
           >
-            <Linkedin className="w-5 h-5 text-white" />
+            <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </motion.button>
           <motion.button
-            className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+            className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('copy')}
             disabled={isSharing}
           >
-            <Copy className="w-5 h-5 text-white" />
+            <Copy className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </motion.button>
         </div>
       </motion.section>
 
       {/* Breadcrumb Navigation */}
-      <section className="py-4 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
-          <nav className="flex items-center space-x-2 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-gray-700 transition-colors">
+      <section className="py-3 sm:py-4 bg-white">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+          <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm overflow-x-auto">
+            <Link href="/" className="text-gray-500 hover:text-gray-700 transition-colors whitespace-nowrap">
               Home
             </Link>
             {post.breadcrumb.map((item, index) => (
-              <div key={index} className="flex items-center space-x-2">
+              <div key={index} className="flex items-center space-x-1 sm:space-x-2">
                 <span className="text-gray-400">&gt;</span>
                 {index === post.breadcrumb.length - 1 ? (
-                  <span className="text-gray-900 font-medium">
+                  <span className="text-gray-900 font-medium whitespace-nowrap">
                     {item.title}
                   </span>
                 ) : (
                   <Link 
                     href={item.url} 
-                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    className="text-gray-500 hover:text-gray-700 transition-colors whitespace-nowrap"
                   >
                     {item.title}
                   </Link>
@@ -221,96 +222,96 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
       </section>
 
       {/* Article Content */}
-      <section className="py-16 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <section className="py-8 sm:py-12 md:py-16 bg-white">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
             {/* Main Content */}
             <div className="lg:col-span-3">
               <motion.article
-                className="prose mx-auto max-w-4xl"
+                className="prose prose-sm sm:prose-base lg:prose-lg mx-auto max-w-4xl"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
                 {/* Post Content */}
                 <div 
-                  className="prose-lg max-w-none"
+                  className="prose-sm sm:prose-base lg:prose-lg max-w-none"
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
               </motion.article>
 
               {/* Post Actions */}
-              <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-200">
-                <div className="flex items-center gap-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 gap-4 sm:gap-0">
+                <div className="flex items-center gap-4 sm:gap-6">
                   <button
                     onClick={handleLike}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${
+                    className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full transition-colors text-sm sm:text-base ${
                       isLiked 
                         ? 'bg-red-100 text-red-600' 
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                    <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${isLiked ? 'fill-current' : ''}`} />
                     <span>{likeCount}</span>
                   </button>
                   
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <MessageCircle className="w-5 h-5" />
+                  <div className="flex items-center gap-2 text-gray-600 text-sm sm:text-base">
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>{post.commentCount}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-500">Share:</span>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="text-xs sm:text-sm text-gray-500">Share:</span>
                   <button
                     onClick={() => handleShare('facebook')}
-                    className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+                    className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
                     disabled={isSharing}
                   >
-                    <Facebook className="w-4 h-4" />
+                    <Facebook className="w-3 h-3 sm:w-4 sm:h-4" />
                   </button>
                   <button
                     onClick={() => handleShare('twitter')}
-                    className="w-8 h-8 bg-sky-500 text-white rounded-full flex items-center justify-center hover:bg-sky-600 transition-colors"
+                    className="w-7 h-7 sm:w-8 sm:h-8 bg-sky-500 text-white rounded-full flex items-center justify-center hover:bg-sky-600 transition-colors"
                     disabled={isSharing}
                   >
-                    <Twitter className="w-4 h-4" />
+                    <Twitter className="w-3 h-3 sm:w-4 sm:h-4" />
                   </button>
                   <button
                     onClick={() => handleShare('linkedin')}
-                    className="w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center hover:bg-blue-800 transition-colors"
+                    className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-700 text-white rounded-full flex items-center justify-center hover:bg-blue-800 transition-colors"
                     disabled={isSharing}
                   >
-                    <Linkedin className="w-4 h-4" />
+                    <Linkedin className="w-3 h-3 sm:w-4 sm:h-4" />
                   </button>
                 </div>
               </div>
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-24 space-y-8">
+            <div className="lg:col-span-1 order-first lg:order-last">
+              <div className="sticky top-20 lg:top-24 space-y-6 lg:space-y-8">
                 {/* Author Info */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <div className="flex items-center gap-4 mb-4">
+                <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                     {post.author.avatar && (
                       <Image
                         src={post.author.avatar.url}
                         alt={post.author.name}
-                        width={60}
-                        height={60}
-                        className="rounded-full object-cover"
+                        width={50}
+                        height={50}
+                        className="rounded-full object-cover w-12 h-12 sm:w-15 sm:h-15"
                       />
                     )}
                     <div>
-                      <h3 className="font-semibold text-gray-900">{post.author.name}</h3>
-                      <p className="text-sm text-gray-600">Author</p>
+                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base">{post.author.name}</h3>
+                      <p className="text-xs sm:text-sm text-gray-600">Author</p>
                     </div>
                   </div>
                   {post.author.bio && (
-                    <p className="text-sm text-gray-600 mb-4">{post.author.bio}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">{post.author.bio}</p>
                   )}
-                  <div className="flex gap-3">
+                  <div className="flex gap-2 sm:gap-3">
                     {post.author.socialLinks?.twitter && (
                       <a
                         href={`https://twitter.com/${post.author.socialLinks.twitter}`}
@@ -318,7 +319,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-blue-500 transition-colors"
                       >
-                        <Twitter className="w-5 h-5" />
+                        <Twitter className="w-4 h-4 sm:w-5 sm:h-5" />
                       </a>
                     )}
                     {post.author.socialLinks?.linkedin && (
@@ -328,7 +329,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-blue-600 transition-colors"
                       >
-                        <Linkedin className="w-5 h-5" />
+                        <Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />
                       </a>
                     )}
                   </div>
@@ -336,14 +337,14 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
 
                 {/* Categories */}
                 {post.categories && post.categories.length > 0 && (
-                  <div className="bg-gray-50 rounded-xl p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
+                    <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Categories</h3>
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {post.categories.map((category) => (
                         <Link
                           key={category._id}
                           href={`/category/${category.slug}`}
-                          className="px-3 py-1 bg-white text-sm rounded-full hover:bg-gray-100 transition-colors"
+                          className="px-2 sm:px-3 py-1 bg-white text-xs sm:text-sm rounded-full hover:bg-gray-100 transition-colors"
                           style={{ color: category.color }}
                         >
                           {category.name}
@@ -355,13 +356,13 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
 
                 {/* Tags */}
                 {post.tags && post.tags.length > 0 && (
-                  <div className="bg-gray-50 rounded-xl p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4">Tags</h3>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
+                    <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Tags</h3>
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {post.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-3 py-1 bg-white text-sm rounded-full text-gray-600"
+                          className="px-2 sm:px-3 py-1 bg-white text-xs sm:text-sm rounded-full text-gray-600"
                         >
                           #{tag}
                         </span>

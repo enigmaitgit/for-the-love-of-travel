@@ -268,23 +268,23 @@ export default function Navbar() {
         borderBottomColor: { duration: 0.3 },
       }}
     >
-      <div className="container relative flex h-24 items-center">
+      <div className="container relative flex h-28 items-center">
         {/* Logo */}
         <Link href="/" className="relative z-50 flex items-center mt-6 -ml-10 ml-2 md:ml-0">
           <Image
             src="/icon.png"
             alt="For the Love of Travel Logo"
-            width={180}
-            height={60}
-            className="h-16 w-auto"
+            width={220}
+            height={80}
+            className="h-20 w-auto"
             priority
           />
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:block absolute left-[240px] right-32 mt-6">
+        <div className="hidden md:block absolute left-[280px] right-32 mt-6">
           <motion.nav
-            className="relative w-full flex items-center justify-between rounded-[18px] px-8 py-4"
+            className="relative w-full flex items-center justify-between rounded-[18px] px-10 py-5"
             animate={{
               backgroundColor: "rgba(255,255,255,0.4)",
               borderWidth: "1px",
@@ -303,7 +303,7 @@ export default function Navbar() {
             }}
           >
             {/* Desktop links */}
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-10">
               {links.map((l) => {
                 const isActive =
                   (l.label === "Home" && pathname === "/") ||
@@ -337,7 +337,7 @@ export default function Navbar() {
                     <Link
                       href={l.href}
                       className={[
-                        "text-sm font-medium transition-all duration-300 ease-out",
+                        "text-base font-medium transition-all duration-300 ease-out",
                         isActive ? "text-brand-gold font-semibold" : "text-black hover:text-brand-gold",
                       ].join(" ")}
                     >
@@ -510,7 +510,7 @@ export default function Navbar() {
 
             {/* Desktop search */}
             <div
-              className="flex items-center gap-3 w-56 justify-end"
+              className="flex items-center gap-4 w-56 justify-end"
               onMouseEnter={() => setSearchOpen(true)}
               onMouseLeave={() => setSearchOpen(false)}
             >
@@ -527,24 +527,24 @@ export default function Navbar() {
                     <input
                       type="text"
                       placeholder="Search Blog Post"
-                      className="w-full rounded-full pl-10 pr-3 py-3 text-black placeholder-black/70 text-sm border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
+                      className="w-full rounded-full pl-12 pr-4 py-4 text-black placeholder-black/70 text-base border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
                       onFocus={() => setSearchOpen(true)}
                       onBlur={() => setSearchOpen(false)}
                     />
-                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/70" />
+                    <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-black/70" />
                   </motion.div>
                 )}
               </AnimatePresence>
 
               <motion.button
-                className="grid h-8 w-8 place-items-center text-black hover:text-brand-gold transition-all duration-300 ease-out"
+                className="grid h-10 w-10 place-items-center text-black hover:text-brand-gold transition-all duration-300 ease-out"
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-6 w-6" />
               </motion.button>
             </div>
           </motion.nav>
@@ -552,7 +552,7 @@ export default function Navbar() {
 
         {/* Mobile menu toggle */}
         <motion.button
-          className="mobile-menu-container ml-auto md:hidden text-black transition-all duration-300 ease-out mr-2 p-2 rounded-lg hover:bg-white/10"
+          className="mobile-menu-container ml-auto md:hidden text-black transition-all duration-300 ease-out mr-2 p-3 rounded-lg hover:bg-white/10"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen(!open)}
@@ -563,9 +563,9 @@ export default function Navbar() {
           <motion.div
             animate={{ rotate: open ? 180 : 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="w-6 h-6 flex items-center justify-center"
+            className="w-8 h-8 flex items-center justify-center"
           >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </motion.div>
         </motion.button>
       </div>
@@ -602,7 +602,7 @@ export default function Navbar() {
             }}
           >
             {/* Mobile links */}
-            <nav className="px-4 py-4 space-y-1" role="navigation" aria-label="Mobile navigation">
+            <nav className="px-6 py-6 space-y-2" role="navigation" aria-label="Mobile navigation">
               {links.map((l, index) => {
                 const isActive =
                   (l.label === "Home" && pathname === "/") ||
@@ -626,7 +626,7 @@ export default function Navbar() {
                             <Link
                               href={l.href}
                               onClick={() => setOpen(false)} // Close mobile menu on navigation
-                              className={`group flex-1 flex items-center gap-3 rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
+                              className={`group flex-1 flex items-center gap-4 rounded-xl px-6 py-5 text-black transition-all duration-300 ease-out min-h-[60px] ${
                                 isActive
                                   ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
                                   : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
@@ -641,7 +641,7 @@ export default function Navbar() {
                                   : {}
                               }
                             >
-                              <span className="font-medium text-base">{l.label}</span>
+                              <span className="font-medium text-lg">{l.label}</span>
                             </Link>
                             
                             {/* Dropdown Toggle Button */}
@@ -652,7 +652,7 @@ export default function Navbar() {
                                 setActiveDropdown(isDropdownOpen ? null : l.label);
                                 setChevronHovered(isDropdownOpen ? null : l.label);
                               }}
-                              className="flex items-center justify-center rounded-lg px-3 py-4 text-black/70 hover:text-brand-gold hover:bg-white/10 transition-all duration-200 min-h-[52px]"
+                              className="flex items-center justify-center rounded-lg px-4 py-5 text-black/70 hover:text-brand-gold hover:bg-white/10 transition-all duration-200 min-h-[60px]"
                               aria-expanded={isDropdownOpen}
                               aria-haspopup="true"
                               aria-controls={`menu-${l.label}`}
@@ -660,9 +660,9 @@ export default function Navbar() {
                               <motion.div
                                 animate={{ rotate: isDropdownOpen ? 180 : 0 }}
                                 transition={{ duration: 0.2, ease: "easeOut" }}
-                                className="w-5 h-5 flex items-center justify-center"
+                                className="w-6 h-6 flex items-center justify-center"
                               >
-                                <ChevronDown className="h-4 w-4" />
+                                <ChevronDown className="h-5 w-5" />
                               </motion.div>
                             </button>
                           </div>
@@ -672,7 +672,7 @@ export default function Navbar() {
                         <Link
                           href={l.href}
                           onClick={() => setOpen(false)} // Close mobile menu on navigation
-                          className={`flex-1 rounded-xl px-4 py-4 text-black transition-all duration-300 ease-out min-h-[48px] flex items-center ${
+                          className={`flex-1 rounded-xl px-6 py-5 text-black transition-all duration-300 ease-out min-h-[56px] flex items-center ${
                             isActive
                               ? "bg-white/20 text-brand-gold"
                               : "hover:text-brand-gold hover:bg-white/10"
@@ -687,7 +687,7 @@ export default function Navbar() {
                               : {}
                           }
                         >
-                          <span className="font-medium text-base">{l.label}</span>
+                          <span className="font-medium text-lg">{l.label}</span>
                         </Link>
                       )}
                     </div>
@@ -744,7 +744,7 @@ export default function Navbar() {
                                       setOpen(false); // Close mobile menu on navigation
                                       setActiveDropdown(null); // Close dropdown
                                     }}
-                                    className={`group relative block rounded-xl px-5 py-4 text-sm font-medium transition-all duration-300 ease-out min-h-[48px] flex items-center ${
+                                    className={`group relative block rounded-xl px-6 py-5 text-base font-medium transition-all duration-300 ease-out min-h-[56px] flex items-center ${
                                       hoveredDropdownItem === `${l.label}-${item.label}`
                                         ? "text-brand-gold bg-white/20 shadow-sm"
                                         : "text-gray-900 hover:text-brand-gold hover:bg-white/15"
@@ -877,16 +877,16 @@ export default function Navbar() {
                 transition={{ delay: links.length * 0.1, duration: 0.3, ease: "easeOut" }}
               >
                 <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-black px-2">Search</h3>
+                  <h3 className="text-base font-semibold text-black px-2">Search</h3>
                   <div className="relative">
                     <input
                       type="text"
                       placeholder="Search Blog Post"
-                      className="w-full rounded-full pl-10 pr-3 py-3 text-black placeholder-black/70 text-sm border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
+                      className="w-full rounded-full pl-12 pr-4 py-4 text-black placeholder-black/70 text-base border border-white/35 bg-white/20 backdrop-blur-md outline-none focus:ring-2 ring-brand-gold focus:border-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
                       onFocus={() => setSearchOpen(true)}
                       onBlur={() => setSearchOpen(false)}
                     />
-                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/70" />
+                    <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-black/70" />
                   </div>
                 </div>
               </motion.div>
