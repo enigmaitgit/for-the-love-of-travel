@@ -13,11 +13,11 @@ import FramerCard from '../../components/FramerCard.jsx'
 import VideoCard from '../../components/VideoCard.jsx'
 import Newsletter from '../../components/Newsletter.jsx'
 import Footer from '../../components/Footer.jsx'
-import { postsApi, videosApi } from '../../lib/api'
+import { postsApi, videosApi } from '../../lib/api.ts'
 
 
 
-export default function VacationPage() {
+export default function TourPage() {
   const [selected, setSelected] = useState(null);
   const [hovered, setHovered] = useState(null);
   const [cards, setCards] = useState([]);
@@ -37,16 +37,16 @@ export default function VacationPage() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
   const framerCards = [
-    { id: 1, image: "/vacation/vac2.jpg", title: "Tropical Paradise", description: "Escape to pristine beaches and crystal-clear waters", category: "Beach", readTime: "8 min read", date: "Dec 15, 2024" },
-    { id: 2, image: "/vacation/vac5.jpg", title: "Mountain Retreat", description: "Recharge in serene mountain landscapes", category: "Mountains", readTime: "6 min read", date: "Dec 12, 2024" },
-    { id: 3, image: "/vacation/vac7.jpg", title: "City Break", description: "Explore vibrant cities and urban adventures", category: "Urban", readTime: "7 min read", date: "Dec 10, 2024" },
+    { id: 1, image: "/tour/tou3.jpg", title: "Tropical Paradise", description: "Escape to pristine beaches and crystal-clear waters", category: "Beach", readTime: "8 min read", date: "Dec 15, 2024" },
+    { id: 2, image: "/tour/tou5.jpg", title: "Mountain Retreat", description: "Recharge in serene mountain landscapes", category: "Mountains", readTime: "6 min read", date: "Dec 12, 2024" },
+    { id: 3, image: "/tour/tou7.jpg", title: "City Break", description: "Explore vibrant cities and urban adventures", category: "Urban", readTime: "7 min read", date: "Dec 10, 2024" },
   ];
 
   // Mock data for popular posts as fallback
   const mockPopularPosts = [
     {
       id: "mock-1",
-      image: "/vacation/vac4.jpeg",
+      image: "/tour/tou3.jpg",
       title: "Top 10 All-Inclusive Beach Resorts for the Perfect Vacation",
       description: "Discover the world's most luxurious all-inclusive beach resorts where every detail is taken care of. From the Maldives to the Caribbean, find your perfect tropical paradise getaway.",
       category: "Beach",
@@ -55,7 +55,7 @@ export default function VacationPage() {
     },
     {
       id: "mock-2", 
-      image: "/vacation/vac5.jpg",
+      image: "/tour/tou4.jpg",
       title: "Family Vacation Ideas: 15 Destinations Perfect for Kids",
       description: "Plan the ultimate family vacation with our curated list of kid-friendly destinations. From theme parks to national parks, create memories that will last a lifetime.",
       category: "Family",
@@ -64,7 +64,7 @@ export default function VacationPage() {
     },
     {
       id: "mock-3",
-      image: "/vacation/vac6.jpg", 
+      image: "/tour/tou5.jpg", 
       title: "Romantic Getaways: Honeymoon Destinations Around the World",
       description: "Celebrate your love with these enchanting honeymoon destinations. From overwater bungalows to mountain cabins, find the perfect romantic escape for your special trip.",
       category: "Romance",
@@ -73,7 +73,7 @@ export default function VacationPage() {
     },
     {
       id: "mock-4",
-      image: "/vacation/vac7.jpg",
+      image: "/tour/tou6.jpg",
       title: "Budget Vacation Tips: How to Travel More for Less",
       description: "Learn insider secrets to planning amazing vacations without breaking the bank. Discover budget-friendly destinations, money-saving tips, and how to maximize your vacation budget.",
       category: "Budget", 
@@ -87,7 +87,7 @@ export default function VacationPage() {
     {
       id: "video-mock-1",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
-      thumbnail: "/vacation/vac1.jpg",
+      thumbnail: "/tour/tou5.jpg",
       title: "Tropical Paradise Escapes: Best Beach Vacation Destinations",
       description: "Discover the world's most stunning tropical destinations perfect for your dream beach vacation. From crystal-clear waters to pristine white sands.",
       duration: "9:30",
@@ -97,7 +97,7 @@ export default function VacationPage() {
     {
       id: "video-mock-2",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4",
-      thumbnail: "/vacation/vac3.jpg",
+      thumbnail: "/tour/tou6.jpg",
       title: "Family Vacation Planning: Kid-Friendly Destinations Worldwide",
       description: "Plan the perfect family vacation with our comprehensive guide to the most family-friendly destinations around the globe.",
       duration: "11:45",
@@ -107,7 +107,7 @@ export default function VacationPage() {
     {
       id: "video-mock-3",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4",
-      thumbnail: "/vacation/vac6.jpg",
+      thumbnail: "/tour/tou7.jpg",
       title: "Romantic Getaways: Honeymoon Destinations for Every Budget",
       description: "Find your perfect romantic escape with our curated list of honeymoon destinations that cater to every budget and preference.",
       duration: "13:20",
@@ -117,7 +117,7 @@ export default function VacationPage() {
     {
       id: "video-mock-4",
       videoSrc: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_10mb.mp4",
-      thumbnail: "/vacation/vac4.jpeg",
+      thumbnail: "/tour/tou8.jpg",
       title: "Budget Vacation Hacks: Travel More for Less",
       description: "Learn expert money-saving strategies to maximize your vacation budget and travel to more destinations without breaking the bank.",
       duration: "7:15",
@@ -246,7 +246,7 @@ export default function VacationPage() {
         }}
       >
         <Navbar />
-        <HeroSection title="Vacation" backgroundImage="/vacation/vac1.jpg" />
+        <HeroSection title="Tours" backgroundImage="/tour/tou1.webp" />
       
       {/* Main Container */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -266,7 +266,7 @@ export default function VacationPage() {
           transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Vacation News Update
+            Tour News Update
           </h2>
         </motion.div>
         
@@ -286,7 +286,7 @@ export default function VacationPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <NewSection image="/vacation/vac3.jpg" />
+              <NewSection image="/tour/tou3.jpg" />
             </motion.div>
             {[1, 2, 3].map((index) => (
               <motion.div
@@ -295,7 +295,7 @@ export default function VacationPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 + (index * 0.1) }}
               >
-                <NewsCard image="/vacation/vac2.jpg" />
+                <NewsCard image="/tour/tou2.jpg" />
               </motion.div>
             ))}
           </div>
@@ -308,7 +308,7 @@ export default function VacationPage() {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <NewSection image="/vacation/vac3.jpg" />
+              <NewSection image="/tour/tou3.jpg" />
             </motion.div>
 
             <motion.div 
@@ -758,7 +758,7 @@ export default function VacationPage() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            Ultimate Vacation Escapes: Where Dreams Come True
+            Ultimate Tour Experiences: Where Adventures Begin
           </motion.h1>
           <motion.p 
             className="font-inter font-normal text-xs sm:text-sm leading-5 tracking-wide text-gray-600 mt-2"
@@ -767,7 +767,7 @@ export default function VacationPage() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.3, delay: 0.4 }}
           >
-            Discover your perfect getaway with our curated collection of vacation destinations. From tropical beaches to mountain retreats, find the ideal escape that matches your dream vacation style.
+            Discover your perfect adventure with our curated collection of tour experiences. From guided city walks to wilderness expeditions, find the ideal tour that matches your adventure style.
           </motion.p>
         </motion.div>
 

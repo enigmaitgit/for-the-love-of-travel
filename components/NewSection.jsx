@@ -1,4 +1,4 @@
-export default function NewSection() {
+export default function NewSection({ image = "/news1.png" }) {
   return (
     <div className="w-full max-w-lg lg:w-[495px] p-6 lg:p-8 bg-white border border-gray-200 rounded-3xl flex flex-col gap-6 lg:gap-8">
       {/* Header Section with Title and Description */}
@@ -15,7 +15,7 @@ export default function NewSection() {
       <div 
         className="w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden relative flex flex-col justify-between p-4 lg:p-6 mx-auto"
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) -2.14%, rgba(0,0,0,0.55) 64.58%), url('/news1.png')`,
+          backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) -2.14%, rgba(0,0,0,0.55) 64.58%), url('${image}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}

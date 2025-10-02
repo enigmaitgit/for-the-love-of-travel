@@ -1,4 +1,4 @@
-export default function NewsCard() {
+export default function NewsCard({ image = "/news2.jpg" }) {
   return (
     <div 
       className="w-full max-w-2xl lg:w-[667px] h-auto lg:h-[181px] border border-gray-200 rounded-xl p-3 lg:p-4 bg-white flex flex-col sm:flex-row items-stretch sm:items-center gap-4 lg:gap-6"
@@ -7,7 +7,7 @@ export default function NewsCard() {
       {/* Image Section */}
       <div className="w-full sm:w-37 lg:w-[138px] h-32 sm:h-28 lg:h-[139px] rounded-lg overflow-hidden flex-shrink-0">
         <img
-          src="/news2.jpg"
+          src={image}
           alt="News Image"
           className="w-full h-full object-cover"
         />
