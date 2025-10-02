@@ -341,12 +341,21 @@ export default function VacationPage() {
            Large Desktop View (≥1440px)
         ================================ */
         @media (min-width: 1440px) {
-          .new-section {
-            margin: 4rem auto !important;
-            margin-top: 5rem !important;
-            margin-bottom: 4rem !important;
-            margin-left: 3rem !important;
-            margin-right: 3rem !important;
+          .main-container .featured-main .new-section,
+          .main-container .news-main .new-section {
+            margin: 2rem auto !important;
+            margin-top: 3rem !important;
+            margin-bottom: 2rem !important;
+            margin-left: 1120px !important;
+            margin-right: 100px !important;
+            padding: 1rem !important;
+            border-radius: 12px !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+            width: auto !important;
+            max-width: none !important;
           }
         }
 
@@ -873,7 +882,7 @@ export default function VacationPage() {
                   margin: '2rem auto',
                   marginTop: '3rem',
                   marginBottom: '2rem',
-                  marginLeft: '112rem',
+                  marginLeft: '112px',
                   marginRight: '2rem',
                   padding: '1rem',
                   borderRadius: '12px',
