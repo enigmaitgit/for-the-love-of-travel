@@ -1,4 +1,4 @@
-export default function HeroSection({ title = "Destination" }) {
+export default function HeroSection({ title = "Destination", backgroundImage = "/header.jpg" }) {
   return (
     <>
       <style jsx>{`
@@ -12,7 +12,7 @@ export default function HeroSection({ title = "Destination" }) {
           border-bottom-right-radius: 86px;
           border-bottom-left-radius: 86px;
           overflow: hidden;
-          background-image: linear-gradient(180deg, rgba(0,0,0,0) -2.14%, rgba(0,0,0,0.55) 64.58%), url('/header.jpg');
+          background-image: linear-gradient(180deg, rgba(0,0,0,0) -2.14%, rgba(0,0,0,0.55) 64.58%), url('${backgroundImage}');
           background-size: cover;
           background-position: center;
         }

@@ -155,7 +155,7 @@ const links = [
     ],
   },
   {
-    href: "#tours",
+    href: "/Tour",
     label: "Tours",
     cards: [
       {
@@ -309,7 +309,8 @@ export default function Navbar() {
                 const isActive =
                   (l.label === "Home" && pathname === "/") ||
                   (l.label === "Destinations" && pathname === "/destination") ||
-                  (l.label === "Vacations" && pathname === "/vacation");
+                  (l.label === "Vacations" && pathname === "/vacation") ||
+                  (l.label === "Tours" && pathname === "/Tour");
                 const isDropdownOpen = activeDropdown === l.label;
 
                 return (
@@ -632,7 +633,8 @@ export default function Navbar() {
                 const isActive =
                   (l.label === "Home" && pathname === "/") ||
                   (l.label === "Destinations" && pathname === "/destination") ||
-                  (l.label === "Vacations" && pathname === "/vacation");
+                  (l.label === "Vacations" && pathname === "/vacation") ||
+                  (l.label === "Tours" && pathname === "/Tour");
                 const isDropdownOpen = activeDropdown === l.label;
 
                 return (
@@ -646,41 +648,83 @@ export default function Navbar() {
                       ease: "easeOut",
                     }}
                   >
-                    {/* MOBILE NAVIGATION BUTTON */}
+                    {/* MOBILE NAVIGATION BUTTONS */}
                     <div className="space-y-1">
-                      <button
-                        onClick={() => {
-                          setActiveDropdown(isDropdownOpen ? null : l.label);
-                          setChevronHovered(isDropdownOpen ? null : l.label);
-                        }}
-                        className={`group w-full flex items-center justify-between rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
-                          isActive
-                            ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
-                            : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
-                        }`}
-                        style={
-                          isActive
-                            ? {
-                                borderWidth: "1px",
-                                borderStyle: "solid",
-                                borderColor: "rgba(255,255,255,0.3)",
-                              }
-                            : {}
-                        }
-                        aria-expanded={isDropdownOpen}
-                        aria-haspopup="true"
-                      >
-                        <span className="font-medium text-base">{l.label}</span>
-                        {l.dropdown && (
-                          <motion.div
-                            animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                            transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="w-5 h-5 flex items-center justify-center"
+                      {/* Home Button - Direct Link */}
+                      {l.label === "Home" ? (
+                        <Link
+                          href="/"
+                          onClick={() => {
+                            setOpen(false); // Close mobile menu on navigation
+                            setActiveDropdown(null); // Close dropdown
+                          }}
+                          className={`group w-full flex items-center justify-center rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
+                            isActive
+                              ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
+                              : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
+                          }`}
+                          style={
+                            isActive
+                              ? {
+                                  borderWidth: "1px",
+                                  borderStyle: "solid",
+                                  borderColor: "rgba(255,255,255,0.3)",
+                                }
+                              : {}
+                          }
+                        >
+                          <span className="font-medium text-base">{l.label}</span>
+                        </Link>
+                      ) : (
+                        /* Other Navigation Items with Dropdown */
+                        <div className="flex gap-2">
+                          {/* Main Navigation Button */}
+                          <Link
+                            href={l.href}
+                            onClick={() => {
+                              setOpen(false); // Close mobile menu on navigation
+                              setActiveDropdown(null); // Close dropdown
+                            }}
+                            className={`group flex-1 flex items-center justify-center rounded-xl px-5 py-4 text-black transition-all duration-300 ease-out min-h-[52px] ${
+                              isActive
+                                ? "bg-white/25 text-brand-gold shadow-sm border border-white/30"
+                                : "hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
+                            }`}
+                            style={
+                              isActive
+                                ? {
+                                    borderWidth: "1px",
+                                    borderStyle: "solid",
+                                    borderColor: "rgba(255,255,255,0.3)",
+                                  }
+                                : {}
+                            }
                           >
-                            <ChevronDown className="w-5 h-5" aria-hidden="true" />
-                          </motion.div>
-                        )}
-                      </button>
+                            <span className="font-medium text-base">{l.label}</span>
+                          </Link>
+                          
+                          {/* Dropdown Arrow Button */}
+                          {l.dropdown && (
+                            <button
+                              onClick={() => {
+                                setActiveDropdown(isDropdownOpen ? null : l.label);
+                                setChevronHovered(isDropdownOpen ? null : l.label);
+                              }}
+                              className="group flex items-center justify-center rounded-xl px-3 py-4 text-black transition-all duration-300 ease-out min-h-[52px] hover:text-brand-gold hover:bg-white/15 hover:shadow-sm"
+                              aria-expanded={isDropdownOpen}
+                              aria-haspopup="true"
+                            >
+                              <motion.div
+                                animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                className="w-5 h-5 flex items-center justify-center"
+                              >
+                                <ChevronDown className="w-5 h-5" aria-hidden="true" />
+                              </motion.div>
+                            </button>
+                          )}
+                        </div>
+                      )}
 
                       {/* MOBILE DROPDOWN MENU WITH CARD */}
                       <AnimatePresence>
