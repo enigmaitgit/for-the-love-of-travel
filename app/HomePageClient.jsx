@@ -31,7 +31,7 @@ export default function HomePageClient() {
       <Hero />
 
       {/* Featured Stories Grid - UPSCALED */}
-      <section id="stories" className="section pt-16 md:pt-20 lg:pt-24">
+      <section id="stories" className="py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto">
           {/* Mobile: Responsive grid layout */}
           <div className="block lg:hidden">
@@ -62,9 +62,9 @@ export default function HomePageClient() {
                 style={{
                   width: "1400px",
                   margin: "0 auto",
-                  marginTop: "40px",
+                  marginTop: "20px",
                   position: "relative",
-                  minHeight: "110vh",
+                  minHeight: "80vh",
                 }}
               >
                 {/* Row 1 - Absolute positioned cards */}
@@ -173,15 +173,15 @@ export default function HomePageClient() {
       </section>
 
       {/* Latest Post thumbnails - UPSCALED */}
-      <section className="section bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white -mt-8 sm:-mt-12 lg:-mt-16">
         <div className="container mx-auto">
           {/* Header */}
-          <div className="mb-12">
-            <div className="flex items-center gap-6">
-              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
+          <div className="mb-8 sm:mb-12">
+            <div className="flex items-center gap-4 sm:gap-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
                 Latest Post
               </h2>
-              <div className="w-96 h-2 bg-yellow-400 rounded-full"></div>
+              <div className="w-48 sm:w-64 lg:w-96 h-2 bg-yellow-400 rounded-full"></div>
             </div>
           </div>
 

@@ -12,7 +12,7 @@ import FramerCard from '../../components/FramerCard.jsx'
 import VideoCard from '../../components/VideoCard.jsx'
 import Newsletter from '../../components/Newsletter.jsx'
 import Footer from '../../components/Footer.jsx'
-import { postsApi, videosApi } from '../../lib/api'
+import { postsApi } from '../../lib/api'
 
 
 
@@ -140,9 +140,10 @@ export default function DestinationPage() {
         // Map backend Post data to card format expected by DestinationGrid
         const mappedCards = posts.map((post) => ({
           id: post._id,
-          image: post.featuredImage?.url,
+          slug: post.slug, // Add slug for dynamic routing
+          image: post.featuredImage, // featuredImage is already a base64 string
           title: post.title,
-          description: post.excerpt,
+          description: post.excerpt || post.body?.replace(/<[^>]*>/g, '').substring(0, 150) + '...', // Use excerpt or strip HTML from body
           readTime: post.readingTimeText || (post.readingTime ? `${post.readingTime} min read` : '5 min read'),
           category: post.categories?.[0]?.name || 'Travel',
           publishedDate: post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
@@ -173,9 +174,9 @@ export default function DestinationPage() {
         // Map backend Post data to popular post format
         const mappedPopularPosts = posts.map((post) => ({
           id: post._id,
-          image: post.featuredImage?.url || "/popular1.jpg",
+          image: post.featuredImage || "/popular1.jpg", // featuredImage is already a base64 string
           title: post.title,
-          description: post.excerpt,
+          description: post.excerpt || post.body?.replace(/<[^>]*>/g, '').substring(0, 150) + '...', // Use excerpt or strip HTML from body
           category: post.categories?.[0]?.name || 'Travel',
           readTime: post.readingTimeText || (post.readingTime ? `${post.readingTime} min read` : '5 min read'),
           date: post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
@@ -197,22 +198,22 @@ export default function DestinationPage() {
     fetchPopularPosts();
   }, []);
 
-  // Fetch popular videos
+  // Fetch popular videos (using posts as videos for now)
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await videosApi.getPopularVideos(4); // Get 4 popular videos
+        const response = await postsApi.getPopularPosts(4, '30d'); // Get 4 popular posts as videos
         const posts = response.data || [];
         
         // Map backend Post data to video format
         const mappedVideos = posts.map((post) => ({
           id: post._id,
-          videoSrc: post.videoUrl || "",
-          thumbnail: post.featuredImage?.url || "/vi.png",
+          videoSrc: "", // No video URL for now
+          thumbnail: post.featuredImage || "/vi.png", // featuredImage is already a base64 string
           title: post.title,
-          description: post.excerpt,
-          duration: post.videoDuration || "5:30",
-          content: post.excerpt,
+          description: post.excerpt || post.body?.replace(/<[^>]*>/g, '').substring(0, 150) + '...', // Use excerpt or strip HTML from body
+          duration: "5:30", // Default duration
+          content: post.excerpt || post.body?.replace(/<[^>]*>/g, '').substring(0, 150) + '...', // Use excerpt or strip HTML from body
           metadata: `Views: ${post.viewCount || 0} • Likes: ${post.likeCount || 0} • ${post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
             month: 'short', 
             day: 'numeric' 

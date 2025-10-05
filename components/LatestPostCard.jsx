@@ -2,9 +2,11 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-export default function LatestPostCard({ width = '382px', height = '146px', image, title, description, readTime, category, publishedDate, onClick }) {
+export default function LatestPostCard({ width = '382px', height = '146px', image, title, description, readTime, category, publishedDate, slug, onClick }) {
+  const href = slug ? `/content/${slug}` : '/content';
+  
   return (
-    <Link href="/content" onClick={onClick}>
+    <Link href={href} onClick={onClick}>
       <motion.div
         className="latest-post-card"
         style={{
@@ -69,8 +71,8 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         alignItems: 'flex-start',
         marginBottom: 'auto'
       }}>
-        {/* Tour Button - Top Left */}
-        <button className="tour-button" style={{
+        {/* Category Button - Top Left */}
+        <button className="category-button" style={{
           width: '62px', // 125px * 0.5 = 62px (50% smaller)
           height: '20px', // 40px * 0.5 = 20px (50% smaller)
           border: '1px solid #FFFFFF',
@@ -86,7 +88,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          Tour
+          {category || 'Tour'}
         </button>
       </div>
 
@@ -153,7 +155,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
             margin: 0 auto !important;
           }
           
-          :global(.tour-button) {
+          :global(.category-button) {
             width: 50px !important;
             height: 25px !important;
             font-size: 13.75px !important;
@@ -189,7 +191,7 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
             margin: 0 10px !important;
           }
           
-          :global(.tour-button) {
+          :global(.category-button) {
             width: 45px !important;
             height: 22px !important;
             font-size: 12.375px !important;

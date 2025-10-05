@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { postsApi } from '../../../lib/api';
-import type { Post } from '../../../types';
+import { fetchPostBySlug } from '../../../lib/cms';
 import ContentPageClient from './ContentPageClient';
 
 interface PageProps {
@@ -14,59 +13,25 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
     const { slug } = await params;
+    const post = await fetchPostBySlug(slug, { nextOptions: { revalidate: 60 } });
     
-    // Only try to fetch metadata if we're in a build context and backend is accessible
-    if (process.env.NODE_ENV === 'production') {
-      const response = await postsApi.getPost(slug);
-      
-      if (!response.success || !response.data) {
-        return {
-          title: 'Post Not Found',
-          description: 'The requested post could not be found.',
-        };
-      }
-
-      const post = response.data;
-    
+    if (!post) {
       return {
-        title: post.seo?.metaTitle || post.title,
-        description: post.seo?.metaDescription || post.excerpt,
-        keywords: post.seo?.keywords?.join(', '),
-
-        authors: [{ name: post.author?.name || 'Unknown Author' }],
-
-        openGraph: {
-          title: post.seo?.metaTitle || post.title,
-          description: post.seo?.metaDescription || post.excerpt,
-          type: 'article',
-          publishedTime: post.publishedAt,
-
-          authors: [post.author?.name || 'Unknown Author'],
-
-          images: post.featuredImage?.url ? [{
-            url: post.featuredImage.url,
-            width: post.featuredImage.width || 1200,
-            height: post.featuredImage.height || 630,
-            alt: post.featuredImage.alt || post.title,
-          }] : [],
-        },
-        twitter: {
-          card: 'summary_large_image',
-          title: post.seo?.metaTitle || post.title,
-          description: post.seo?.metaDescription || post.excerpt,
-          images: post.featuredImage?.url ? [post.featuredImage.url] : [],
-        },
-        robots: {
-          index: !post.seo?.noIndex,
-          follow: !post.seo?.noFollow,
-        },
+        title: 'Post Not Found',
+        description: 'The requested post could not be found.',
       };
     }
-    
-    // In development, return default metadata
+
     return {
-      title: 'Travel Post',
-      description: 'Discover amazing travel destinations and stories.',
+      title: post.title,
+      description: post.body ? post.body.replace(/<[^>]*>/g, '').slice(0, 160) : undefined,
+      openGraph: {
+        title: post.title,
+        description: post.body ? post.body.replace(/<[^>]*>/g, '').slice(0, 200) : undefined,
+        images: post.featuredImage
+          ? [typeof post.featuredImage === 'string' ? post.featuredImage : post.featuredImage.url]
+          : undefined,
+      },
     };
   } catch (error) {
     console.error('Error generating metadata:', error);
@@ -80,20 +45,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // Generate static params for popular posts
 export async function generateStaticParams() {
   try {
-    // Only generate static params if we're in a build context and backend is accessible
-    if (process.env.NODE_ENV === 'production') {
-      const response = await postsApi.getPosts({ limit: 20 });
-      
-      if (!response.success || !response.data) {
-        return [];
-      }
-
-      return response.data.map((post: Post) => ({
-        slug: post.slug,
-      }));
-    }
-    
-    // In development, return empty array to avoid build-time API calls
+    // For now, return empty array to avoid build-time API calls
+    // This can be enhanced later to pre-generate popular posts
     return [];
   } catch (error) {
     console.error('Error generating static params:', error);
@@ -104,17 +57,20 @@ export async function generateStaticParams() {
 export default async function PostPage({ params }: PageProps) {
   try {
     const { slug } = await params;
-    const response = await postsApi.getPost(slug);
+    console.log('🔍 PostPage: Fetching post with slug:', slug);
     
-    if (!response.success || !response.data) {
+    const post = await fetchPostBySlug(slug, { nextOptions: { revalidate: 60 } });
+    
+    if (!post) {
+      console.error('❌ PostPage: No post found for slug:', slug);
       notFound();
     }
 
-    const post = response.data;
+    console.log('✅ PostPage: Successfully loaded post:', post.title);
 
     return <ContentPageClient post={post} />;
   } catch (error) {
-    console.error('Error fetching post:', error);
+    console.error('❌ PostPage: Error fetching post:', error);
     notFound();
   }
 }
