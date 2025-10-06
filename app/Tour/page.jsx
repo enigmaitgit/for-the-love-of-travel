@@ -590,7 +590,7 @@ export default function TourPage() {
       >
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
-            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 lg:mb-12 -mt-20 mb-20"
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 lg:mb-12 -mt-20 mb-20 lg:justify-start lg:items-start lg:flex-col lg:gap-8"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -598,7 +598,7 @@ export default function TourPage() {
           >
             {/* Title */}
             <motion.h2 
-              className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left"
+              className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left lg:text-left lg:-mb-4"
               style={{ marginTop: '-100px' }}
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -610,7 +610,7 @@ export default function TourPage() {
 
             {/* Golden Line */}
             <motion.div 
-              className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg"
+              className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg lg:w-64 lg:h-1.5"
               initial={{ width: 0 }}
               whileInView={{ width: '100%' }}
               viewport={{ once: true, amount: 0.3 }}
