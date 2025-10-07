@@ -1,11 +1,12 @@
-// Example usage of SectionRenderer in a post page
+// Example usage of ContentSectionsRenderer in a post page
 import React from 'react';
-import { SectionRenderer } from './SectionRenderer';
+import ContentSectionsRenderer from './ContentSectionsRenderer';
+import type { ContentSection } from '@/lib/cms';
 
 interface PostBodyProps {
   post: {
     body?: string;
-    contentSections?: Array<{ type: string; data: any }>;
+    contentSections?: ContentSection[];
   };
 }
 
@@ -16,7 +17,7 @@ export function PostBody({ post }: PostBodyProps) {
       <article dangerouslySetInnerHTML={{ __html: post.body ?? '' }} />
       
       {/* Render optional content sections */}
-      <SectionRenderer sections={post.contentSections} />
+      <ContentSectionsRenderer sections={post.contentSections || []} />
     </div>
   );
 }
