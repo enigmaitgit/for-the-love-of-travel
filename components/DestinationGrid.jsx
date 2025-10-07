@@ -36,6 +36,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card1?.readTime}
             category={card1?.category}
             publishedDate={card1?.publishedDate}
+            slug={card1?.slug}
             onClick={() => handleCardClick(card1?.id || 1)} 
           />
         </div>
@@ -55,6 +56,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card2?.readTime}
             category={card2?.category}
             publishedDate={card2?.publishedDate}
+            slug={card2?.slug}
             onClick={() => handleCardClick(card2?.id || 2)} 
           />
         </div>
@@ -78,6 +80,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           readTime={card3?.readTime}
           category={card3?.category}
           publishedDate={card3?.publishedDate}
+          slug={card3?.slug}
           onClick={() => handleCardClick(card3?.id || 3)} 
         />
         <LatestPostCard 
@@ -89,6 +92,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           readTime={card4?.readTime}
           category={card4?.category}
           publishedDate={card4?.publishedDate}
+          slug={card4?.slug}
           onClick={() => handleCardClick(card4?.id || 4)} 
         />
         <LatestPostCard 
@@ -100,6 +104,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           readTime={card5?.readTime}
           category={card5?.category}
           publishedDate={card5?.publishedDate}
+          slug={card5?.slug}
           onClick={() => handleCardClick(card5?.id || 5)} 
         />
       </div>
@@ -121,6 +126,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card6?.readTime}
             category={card6?.category}
             publishedDate={card6?.publishedDate}
+            slug={card6?.slug}
             onClick={() => handleCardClick(card6?.id || 6)} 
           />
         </div>
@@ -139,6 +145,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card7?.readTime}
             category={card7?.category}
             publishedDate={card7?.publishedDate}
+            slug={card7?.slug}
             onClick={() => handleCardClick(card7?.id || 7)} 
           />
         </div>

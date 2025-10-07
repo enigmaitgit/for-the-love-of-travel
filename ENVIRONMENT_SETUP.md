@@ -6,7 +6,8 @@ Create a `.env.local` file in the `for-the-love-of-travel-clone` directory with 
 
 ```bash
 # API Configuration
-NEXT_PUBLIC_API_BASE_URL=http://localhost:5000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_BACKEND_URL=http://localhost:3000
 
 # Environment
 NODE_ENV=development
