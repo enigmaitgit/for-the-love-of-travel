@@ -3,8 +3,15 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 export default function LatestPostCard({ width = '382px', height = '146px', image, title, description, readTime, category, publishedDate, onClick }) {
+  const handleClick = (e) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <Link href="/content" onClick={onClick}>
+    <Link href="/content" onClick={handleClick}>
       <motion.div
         className="latest-post-card"
         style={{

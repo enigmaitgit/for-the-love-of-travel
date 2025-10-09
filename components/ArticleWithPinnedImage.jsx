@@ -18,13 +18,45 @@ export default function ArticleWithPinnedImage({
   scrim = true,
   viewportVh = 100
 }) {
+  // Debug logging
+  console.log('🎨 ArticleWithPinnedImage received postData:', postData);
+  if (postData?.contentSections) {
+    console.log('🎨 ContentSections found:', postData.contentSections);
+    const articleSection = postData.contentSections.find(section => section.type === 'article');
+    if (articleSection) {
+      console.log('🎨 Article section:', articleSection);
+      console.log('🎨 Changing images:', articleSection.changingImages);
+      console.log('🎨 Pinned image:', articleSection.pinnedImage);
+    }
+  }
+
   // Use dynamic data if postData is provided, otherwise use defaults
-  const dynamicImageUrl = postData?.featuredImage?.url || imageUrl;
-  const dynamicImageAlt = postData?.featuredImage?.alt || postData?.title || imageAlt;
-  
-  // Create dynamic images array - use featured image and any additional images from post
-  const dynamicImages = postData?.featuredImage?.url ? 
-    [postData.featuredImage.url, ...images.slice(1)] : images;
+  let dynamicImageUrl = imageUrl;
+  let dynamicImageAlt = imageAlt;
+
+  // Check for contentSections structure first
+  if (postData?.contentSections && postData.contentSections.length > 0) {
+    const articleSection = postData.contentSections.find(section => section.type === 'article');
+    if (articleSection?.pinnedImage?.url) {
+      dynamicImageUrl = articleSection.pinnedImage.url;
+      dynamicImageAlt = articleSection.pinnedImage.altText || postData.title || imageAlt;
+    }
+  } else if (postData?.featuredImage?.url) {
+    // Fallback to old structure
+    dynamicImageUrl = postData.featuredImage.url;
+    dynamicImageAlt = postData.featuredImage.alt || postData.title || imageAlt;
+  }
+
+  // Create dynamic images array
+  let dynamicImages = images;
+  if (postData?.contentSections && postData.contentSections.length > 0) {
+    const articleSection = postData.contentSections.find(section => section.type === 'article');
+    if (articleSection?.changingImages && articleSection.changingImages.length > 0) {
+      dynamicImages = articleSection.changingImages.map(img => img.url);
+    }
+  } else if (postData?.featuredImage?.url) {
+    dynamicImages = [postData.featuredImage.url, ...images.slice(1)];
+  }
   
   // Create dynamic articles from post data
   const createDynamicArticles = () => {
@@ -32,51 +64,106 @@ export default function ArticleWithPinnedImage({
     
     const articles = [];
     
-    // Main article with excerpt
-    if (postData.excerpt) {
-      articles.push({
-        title: "Story Overview",
-        body: (
-          <motion.div
-            className="mb-4 sm:mb-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            <div 
-              className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
-              style={{ fontFamily: "Inter" }}
-              dangerouslySetInnerHTML={{ __html: postData.excerpt }}
-            />
-          </motion.div>
-        ),
-        meta: "Overview"
-      });
+    // Check if post has contentSections (new structure)
+    if (postData.contentSections && postData.contentSections.length > 0) {
+      // Find the article section
+      const articleSection = postData.contentSections.find(section => section.type === 'article');
+      
+      if (articleSection) {
+        // Main article content
+        if (articleSection.content) {
+          articles.push({
+            title: articleSection.title || "Story Overview",
+            body: (
+              <motion.div
+                className="mb-4 sm:mb-8"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+              >
+                <div 
+                  className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
+                  style={{ fontFamily: "Inter" }}
+                  dangerouslySetInnerHTML={{ __html: articleSection.content }}
+                />
+              </motion.div>
+            ),
+            meta: "Article Content"
+          });
+        }
+      }
     }
     
-    // Additional content if available
-    if (postData.content && postData.content !== postData.excerpt) {
-      articles.push({
-        title: "Full Story",
-        body: (
-          <motion.div
-            className="mb-4 sm:mb-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-          >
-            <div 
-              className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
-              style={{ fontFamily: "Inter" }}
-              dangerouslySetInnerHTML={{ __html: postData.content }}
-            />
-          </motion.div>
-        ),
-        meta: "Details"
-      });
+    // Fallback to old structure if contentSections not found
+    if (articles.length === 0) {
+      // Main article with excerpt
+      if (postData.excerpt) {
+        articles.push({
+          title: "Story Overview",
+          body: (
+            <motion.div
+              className="mb-4 sm:mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <div 
+                className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
+                style={{ fontFamily: "Inter" }}
+                dangerouslySetInnerHTML={{ __html: postData.excerpt }}
+              />
+            </motion.div>
+          ),
+          meta: "Overview"
+        });
+      }
+      
+      // Additional content if available
+      if (postData.content && postData.content !== postData.excerpt) {
+        articles.push({
+          title: "Full Story",
+          body: (
+            <motion.div
+              className="mb-4 sm:mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              <div 
+                className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
+                style={{ fontFamily: "Inter" }}
+                dangerouslySetInnerHTML={{ __html: postData.content }}
+              />
+            </motion.div>
+          ),
+          meta: "Details"
+        });
+      }
+      
+      // Use body as fallback
+      if (postData.body && articles.length === 0) {
+        articles.push({
+          title: postData.title || "Travel Story",
+          body: (
+            <motion.div
+              className="mb-4 sm:mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <div 
+                className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
+                style={{ fontFamily: "Inter" }}
+                dangerouslySetInnerHTML={{ __html: postData.body }}
+              />
+            </motion.div>
+          ),
+          meta: "Story"
+        });
+      }
     }
     
-    // If no content, show a default message
+    // If still no content, show default message
     if (articles.length === 0) {
       articles.push({
         title: postData.title || "Travel Story",
@@ -235,27 +322,44 @@ export default function ArticleWithPinnedImage({
   const articles = postData ? createDynamicArticles() : defaultArticles;
   
   // Create dynamic lead if postData is provided
-  const dynamicLead = postData ? (
-    <div className="text-center">
-      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight mb-4">
-        {postData.title}
-      </h2>
-      {postData.author && (
-        <p className="text-sm sm:text-base text-gray-600 mb-2">
-          By {postData.author.name || postData.author}
-        </p>
-      )}
-      {postData.publishedAt && (
-        <p className="text-xs sm:text-sm text-gray-500">
-          {new Date(postData.publishedAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </p>
-      )}
-    </div>
-  ) : (
+  const dynamicLead = postData ? (() => {
+    // Get the title from contentSections article section if available
+    let displayTitle = postData.title; // fallback to main title
+    
+    if (postData.contentSections && postData.contentSections.length > 0) {
+      const articleSection = postData.contentSections.find(section => section.type === 'article');
+      if (articleSection && articleSection.title) {
+        displayTitle = articleSection.title;
+        console.log('🎨 Using contentSections title:', displayTitle);
+      } else {
+        console.log('🎨 Using main post title:', displayTitle);
+      }
+    } else {
+      console.log('🎨 No contentSections found, using main post title:', displayTitle);
+    }
+    
+    return (
+      <div className="text-center">
+        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight mb-4">
+          {displayTitle}
+        </h2>
+        {postData.author && (
+          <p className="text-sm sm:text-base text-gray-600 mb-2">
+            By {postData.author.name || postData.author}
+          </p>
+        )}
+        {postData.publishedAt && (
+          <p className="text-xs sm:text-sm text-gray-500">
+            {new Date(postData.publishedAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </p>
+        )}
+      </div>
+    );
+  })() : (
     <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight">
       The city of Porto is full of sky-high lookouts and rooftop bars that afford expansive views, yet the most memorable and unique vistas are those at street level.
     </h2>

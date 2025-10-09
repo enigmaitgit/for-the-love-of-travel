@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Newsletter from "../../components/Newsletter";
+import ArticleWithPinnedImage from "../../components/ArticleWithPinnedImage";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -19,6 +20,7 @@ export default function ContentPageClient() {
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -103,6 +105,37 @@ export default function ContentPageClient() {
     fetchData();
   }, [fetchData]);
 
+  // Check for selected post data from destination page
+  useEffect(() => {
+    const selectedPostData = sessionStorage.getItem('selectedPostData');
+    if (selectedPostData) {
+      try {
+        const postData = JSON.parse(selectedPostData);
+        console.log('📄 Selected post data from destination page:', postData);
+        console.log('📄 ContentSections:', postData.contentSections);
+        setSelectedPost(postData);
+        // Clear the session storage after using it
+        sessionStorage.removeItem('selectedPostData');
+      } catch (error) {
+        console.error('Error parsing selected post data:', error);
+      }
+    }
+  }, []);
+
+  // Handle ESC key to close selected post
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && selectedPost) {
+        setSelectedPost(null);
+      }
+    };
+
+    if (selectedPost) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [selectedPost]);
+
   const handleCategoryFilter = (categorySlug: string) => {
     setSelectedCategory(categorySlug === selectedCategory ? '' : categorySlug);
     setCurrentPage(1);
@@ -111,6 +144,19 @@ export default function ContentPageClient() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentPage(1);
+  };
+
+  const handlePostClick = (post: Post) => {
+    setSelectedPost(post);
+    // Scroll to the content section
+    const contentSection = document.getElementById('main-content-section');
+    if (contentSection) {
+      contentSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleClosePost = () => {
+    setSelectedPost(null);
   };
 
   const formatDate = (dateString: string) => {
@@ -148,6 +194,58 @@ export default function ContentPageClient() {
             </motion.p>
           </div>
         </div>
+      </section>
+
+      {/* Main Content Section with ArticleWithPinnedImage */}
+      <section id="main-content-section" className="relative">
+        {selectedPost ? (
+          <>
+            {/* Close Button */}
+            <button
+              onClick={handleClosePost}
+              className="fixed top-4 right-4 z-50 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110"
+              aria-label="Close article view"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            
+            <ArticleWithPinnedImage 
+              postData={selectedPost}
+              images={[
+                "/images/48b45fddefe25c7d2666ffca16947645b38eada5.png",
+                "/images/74654a8f67369b797c8fb2e96a533fd515fb2939.jpg"
+              ]}
+              scrim={true}
+              viewportVh={100}
+              articles={undefined}
+              lead={undefined}
+            />
+          </>
+        ) : (
+          <div className="py-16 bg-gray-50">
+            <div className="container max-w-6xl mx-auto px-4 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Select a Story to Read
+              </h2>
+              <p className="text-lg text-gray-600">
+                Click on any post from the destination grid to view it here
+              </p>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Search and Filter Section */}

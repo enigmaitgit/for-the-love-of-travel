@@ -163,10 +163,12 @@ export default function TourPage() {
         }
         
         // Map backend Post data to card format expected by DestinationGrid
+        // Keep the original full post data and add mapped fields for display
         const mappedCards = posts.map((post) => ({
-          id: post._id,
+          // Keep the original full post data
+          ...post,
+          // Add the mapped fields for display
           image: post.featuredImage?.url,
-          title: post.title,
           description: post.excerpt,
           readTime: post.readingTimeText || (post.readingTime ? `${post.readingTime} min read` : '5 min read'),
           category: post.categories?.[0]?.name || 'Travel',

@@ -2,8 +2,16 @@ import React from "react";
 import LatestPostCard from "./LatestPostCard";
 
 const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) => {
-  const handleCardClick = (cardId) => {
-    console.log(`Card ${cardId} clicked - navigating to content page`);
+  const handleCardClick = (card) => {
+    console.log(`Card ${card?.id} clicked - navigating to content page with post data`);
+    
+    // Store the post data in sessionStorage to pass to content page
+    if (card) {
+      sessionStorage.setItem('selectedPostData', JSON.stringify(card));
+    }
+    
+    // Navigate to content page
+    window.location.href = '/content';
   };
   return (
     <div className="destination-grid-container" style={{
@@ -36,7 +44,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card1?.readTime}
             category={card1?.category}
             publishedDate={card1?.publishedDate}
-            onClick={() => handleCardClick(card1?.id || 1)} 
+            onClick={() => handleCardClick(card1)} 
           />
         </div>
         <div className="card-2" style={{
@@ -55,7 +63,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card2?.readTime}
             category={card2?.category}
             publishedDate={card2?.publishedDate}
-            onClick={() => handleCardClick(card2?.id || 2)} 
+            onClick={() => handleCardClick(card2)} 
           />
         </div>
       </div>
@@ -78,7 +86,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           readTime={card3?.readTime}
           category={card3?.category}
           publishedDate={card3?.publishedDate}
-          onClick={() => handleCardClick(card3?.id || 3)} 
+          onClick={() => handleCardClick(card3)} 
         />
         <LatestPostCard 
           width="350px" 
@@ -89,7 +97,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           readTime={card4?.readTime}
           category={card4?.category}
           publishedDate={card4?.publishedDate}
-          onClick={() => handleCardClick(card4?.id || 4)} 
+          onClick={() => handleCardClick(card4)} 
         />
         <LatestPostCard 
           width="250px" 
@@ -100,7 +108,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           readTime={card5?.readTime}
           category={card5?.category}
           publishedDate={card5?.publishedDate}
-          onClick={() => handleCardClick(card5?.id || 5)} 
+          onClick={() => handleCardClick(card5)} 
         />
       </div>
 
@@ -121,7 +129,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card6?.readTime}
             category={card6?.category}
             publishedDate={card6?.publishedDate}
-            onClick={() => handleCardClick(card6?.id || 6)} 
+            onClick={() => handleCardClick(card6)} 
           />
         </div>
         <div className="card-7" style={{
@@ -139,7 +147,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             readTime={card7?.readTime}
             category={card7?.category}
             publishedDate={card7?.publishedDate}
-            onClick={() => handleCardClick(card7?.id || 7)} 
+            onClick={() => handleCardClick(card7)} 
           />
         </div>
       </div>
