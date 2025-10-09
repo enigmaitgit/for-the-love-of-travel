@@ -4,6 +4,7 @@ import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import Newsletter from "../../../components/Newsletter";
 import Comments from "../../../components/Comments";
+import ArticleWithPinnedImage from "../../../components/ArticleWithPinnedImage";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -49,12 +50,12 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
     try {
       setIsSharing(true);
       
-      const url = window.location.href;
+    const url = window.location.href;
       const title = post.title;
       const description = post.excerpt;
 
       let shareUrl = '';
-      
+
       switch (platform) {
         case 'facebook':
           shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
@@ -99,9 +100,9 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
   return (
     <main className="overflow-x-hidden">
       <Navbar />
-      
+
       {/* Hero Section */}
-      <motion.section 
+      <motion.section
         className="relative h-[70vh] md:h-[80vh] lg:h-[90vh] overflow-hidden"
         style={{ y, opacity }}
       >
@@ -112,16 +113,16 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
           <Image
             src={post.featuredImage?.url || '/images/placeholder.jpg'}
             alt={post.featuredImage?.alt || post.title}
-            fill
-            className="object-cover"
+              fill
+              className="object-cover"
           />
         </motion.div>
         <div className="absolute inset-0 bg-black/30"></div>
-        
+
         {/* Content Overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white max-w-4xl px-4">
-            <motion.h1 
+            <motion.h1
               className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -129,8 +130,8 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
             >
               {post.title}
             </motion.h1>
-            
-            <motion.div 
+
+            <motion.div
               className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -156,52 +157,52 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
 
         {/* Share Icons */}
         <div className="absolute bottom-8 right-8 flex gap-3">
-          <motion.button
+            <motion.button
             className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('facebook')}
             disabled={isSharing}
-          >
-            <Facebook className="w-5 h-5 text-white" />
-          </motion.button>
-          <motion.button
+            >
+              <Facebook className="w-5 h-5 text-white" />
+            </motion.button>
+            <motion.button
             className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('twitter')}
             disabled={isSharing}
-          >
-            <Twitter className="w-5 h-5 text-white" />
-          </motion.button>
-          <motion.button
+            >
+              <Twitter className="w-5 h-5 text-white" />
+            </motion.button>
+            <motion.button
             className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('linkedin')}
             disabled={isSharing}
-          >
-            <Linkedin className="w-5 h-5 text-white" />
-          </motion.button>
-          <motion.button
+            >
+              <Linkedin className="w-5 h-5 text-white" />
+            </motion.button>
+            <motion.button
             className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             onClick={() => handleShare('copy')}
             disabled={isSharing}
-          >
-            <Copy className="w-5 h-5 text-white" />
-          </motion.button>
+            >
+              <Copy className="w-5 h-5 text-white" />
+            </motion.button>
         </div>
       </motion.section>
 
       {/* Breadcrumb Navigation */}
       <section className="py-4 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
+              <div className="container max-w-6xl mx-auto px-4">
           <nav className="flex items-center space-x-2 text-sm">
             <Link href="/" className="text-gray-500 hover:text-gray-700 transition-colors">
               Home
-            </Link>
+                      </Link>
             {post.breadcrumb?.map((item, index) => (
               <div key={index} className="flex items-center space-x-2">
                 <span className="text-gray-400">&gt;</span>
@@ -218,10 +219,17 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                   </Link>
                 )}
               </div>
-            ))}
+                  ))}
           </nav>
         </div>
       </section>
+
+      {/* Dynamic Article with Pinned Image */}
+      <ArticleWithPinnedImage 
+        postData={post} 
+        articles={[]}
+        lead={null}
+      />
 
       {/* Article Content */}
       <section className="py-16 bg-white">
@@ -256,7 +264,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                     <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
                     <span>{likeCount}</span>
                   </button>
-                  
+
                   <div className="flex items-center gap-2 text-gray-600">
                     <MessageCircle className="w-5 h-5" />
                     <span>{post.commentCount}</span>
@@ -309,7 +317,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                       <h3 className="font-semibold text-gray-900">{post.author?.name || 'Unknown Author'}</h3>
                       <p className="text-sm text-gray-600">Author</p>
                     </div>
-                  </div>
+                          </div>
                   {post.author?.bio && (
                     <p className="text-sm text-gray-600 mb-4">{post.author.bio}</p>
                   )}
@@ -380,7 +388,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
 
       {/* Comments Section */}
       {post.allowComments && (
-        <Comments />
+      <Comments />
       )}
 
       <Newsletter />

@@ -7,16 +7,17 @@ import HeroSection from '../../components/HeroSection.jsx'
 import NewSection from '../../components/NewSection.jsx'
 import NewsCard from '../../components/NewsCard.jsx'
 import DestinationGrid from '../../components/DestinationGrid.jsx'
+import LatestPostCard from '../../components/LatestPostCard.jsx'
 import PopularPostCard from '../../components/PopularPostCard.jsx'
 import FramerCard from '../../components/FramerCard.jsx'
 import VideoCard from '../../components/VideoCard.jsx'
 import Newsletter from '../../components/Newsletter.jsx'
 import Footer from '../../components/Footer.jsx'
-import { postsApi, videosApi } from '../../lib/api'
+import { postsApi, videosApi } from '../../lib/api.ts'
 
 
 
-export default function DestinationPage() {
+export default function TourPage() {
   const [selected, setSelected] = useState(null);
   const [hovered, setHovered] = useState(null);
   const [cards, setCards] = useState([]);
@@ -36,9 +37,33 @@ export default function DestinationPage() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
   const framerCards = [
-    { id: 1, image: "/framer1.png", title: "Explore Destinations", description: "Discover amazing places", category: "Tour", readTime: "8 min read", date: "Dec 15, 2024" },
-    { id: 2, image: "/framer2.png", title: "Adventure Guide", description: "Thrilling activities await", category: "Adventure", readTime: "6 min read", date: "Dec 12, 2024" },
-    { id: 3, image: "/framer3.png", title: "Cultural Experiences", description: "Immerse in local traditions", category: "Culture", readTime: "7 min read", date: "Dec 10, 2024" },
+    {
+      id: 1,
+      image: "/framer1.png",
+      title: "Explore Destinations",
+      description: "Discover amazing places",
+      category: "Tour",
+      readTime: "8 min read",
+      date: "Dec 15, 2024"
+    },
+    {
+      id: 2,
+      image: "/framer2.png",
+      title: "Adventure Guide",
+      description: "Thrilling activities await",
+      category: "Adventure",
+      readTime: "6 min read",
+      date: "Dec 12, 2024"
+    },
+    {
+      id: 3,
+      image: "/framer3.png",
+      title: "Cultural Experiences",
+      description: "Immerse in local traditions",
+      category: "Culture",
+      readTime: "7 min read",
+      date: "Dec 10, 2024"
+    }
   ];
 
   // Mock data for popular posts as fallback
@@ -53,17 +78,17 @@ export default function DestinationPage() {
       date: "Dec 20, 2024"
     },
     {
-      id: "mock-2", 
+      id: "mock-2",
       image: "/popular2.jpg",
       title: "The Ultimate Guide to Solo Travel: Safety Tips and Must-Visit Places",
       description: "Everything you need to know about traveling alone safely and confidently. Learn essential tips, best destinations for solo travelers, and how to make meaningful connections on the road.",
       category: "Travel",
-      readTime: "12 min read", 
+      readTime: "12 min read",
       date: "Dec 18, 2024"
     },
     {
       id: "mock-3",
-      image: "/popular3.jpg", 
+      image: "/popular3.jpg",
       title: "Culinary Adventures: Street Food Tours Around the World",
       description: "Embark on a delicious journey through the world's most vibrant street food scenes. From Bangkok's night markets to Mexico City's taco stands, taste authentic flavors that define cultures.",
       category: "Food",
@@ -75,7 +100,7 @@ export default function DestinationPage() {
       image: "/popular1.jpg",
       title: "Sustainable Travel: How to Explore the World Responsibly",
       description: "Learn how to minimize your environmental impact while traveling. Discover eco-friendly accommodations, carbon offset programs, and sustainable tourism practices that help preserve our planet.",
-      category: "Sustainability", 
+      category: "Sustainability",
       readTime: "10 min read",
       date: "Dec 14, 2024"
     }
@@ -171,9 +196,9 @@ export default function DestinationPage() {
         const posts = response.data || [];
         
         // Map backend Post data to popular post format
-        const mappedPopularPosts = posts.map((post) => ({
+        const mappedPopularPosts = posts.map((post, index) => ({
           id: post._id,
-          image: post.featuredImage?.url || "/popular1.jpg",
+          image: post.featuredImage?.url || `/vacation/vac${index + 4}${index === 0 ? '.jpeg' : '.jpg'}`,
           title: post.title,
           description: post.excerpt,
           category: post.categories?.[0]?.name || 'Travel',
@@ -205,10 +230,10 @@ export default function DestinationPage() {
         const posts = response.data || [];
         
         // Map backend Post data to video format
-        const mappedVideos = posts.map((post) => ({
+        const mappedVideos = posts.map((post, index) => ({
           id: post._id,
           videoSrc: post.videoUrl || "",
-          thumbnail: post.featuredImage?.url || "/vi.png",
+          thumbnail: post.featuredImage?.url || `/vacation/vac${index + 1}${index === 3 ? '.jpeg' : '.jpg'}`,
           title: post.title,
           description: post.excerpt,
           duration: post.videoDuration || "5:30",
@@ -233,276 +258,6 @@ export default function DestinationPage() {
 
   return (
     <>
-      <style jsx>{`
-      
-        .container {
-          width: 100%;
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-       
-        .news-section,
-        .hero-section,
-        .content-section,
-        .popular-post-section,
-        .framer-section,
-        .video-section {
-          width: 100%;
-          max-width: 100%;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-      
-        .new-section {
-          width: 100% !important;
-          max-width: 100% !important;
-          margin: 0 auto !important; 
-          padding: 0 1rem !important;
-        }
-
-        .main-video {
-          width: 100% !important;
-          max-width: 100% !important;
-          margin: 10px auto !important;
-          transform: scale(1.45) !important;
-        }
-
-        /* ==============================
-           Responsive (Tablet: ≤1024px)
-        ================================ */
-        @media (max-width: 1024px) {
-          .container {
-            padding: 0 1rem;
-          }
-
-          .news-section {
-            flex-direction: column !important;
-            gap: 2rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-        }
-
-        /* ==============================
-           Responsive (Mobile: ≤768px)
-        ================================ */
-        @media (max-width: 768px) {
-          .container {
-            padding: 0 0.5rem;
-          }
-
-          .hero-section {
-            margin: 0 auto !important;
-            padding: 0 1rem !important;
-          }
-
-          .content-section {
-            padding: 1rem !important;
-          }
-
-          .news-section {
-            margin-top: 2rem !important;
-            gap: 1.5rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-
-          .latest-post-title {
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 1rem !important;
-            margin: 2rem auto 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* More specific selector to override Tailwind */
-          .flex.latest-post-title {
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* Target the h2 element specifically for mobile centering */
-          .latest-post-title h2 {
-            text-align: center !important;
-            margin: 0 auto !important;
-          }
-
-          .destination-grid {
-            margin: 1rem 0 2rem !important;
-          }
-
-          .popular-post-section {
-            padding: 2rem 1rem !important;
-            min-height: auto !important;
-            margin-top: 6rem !important;
-          }
-
-          .popular-post-title {
-            margin: 0 0 2rem 0 !important;
-            flex-direction: column !important;
-            align-items: flex-start !important;
-          }
-
-          .popular-post-cards {
-            gap: 2rem !important;
-          }
-
-          /* Hide 5th card in popular posts on mobile */
-          .popular-post-cards > div:nth-child(5) {
-            display: none !important;
-          }
-
-          .framer-section {
-            flex-direction: column !important;
-            min-height: auto !important;
-            padding: 2rem 1rem !important;
-            margin-top: 4rem !important;
-          }
-
-          /* Override inline style for mobile */
-          .framer-section[style*="marginTop"] {
-            margin-top: 4rem !important;
-          }
-
-          .framer-content {
-            order: 2 !important;
-            max-width: 100% !important;
-            margin-top: 2rem !important;
-          }
-
-          .framer-cards {
-            order: 1 !important;
-            width: 100% !important;
-          }
-
-          .video-section {
-            padding: 2rem 1rem !important;
-            margin-top: 6rem !important;
-          }
-
-          .video-grid {
-            grid-template-columns: 1fr !important;
-            gap: 1.5rem !important;
-          }
-
-          .video-sidebar {
-            grid-template-rows: repeat(3, auto) !important;
-            gap: 1rem !important;
-          }
-
-          .main-video {
-            margin: 1rem auto !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            transform: none !important;
-          }
-        }
-
-        /* ==============================
-           Responsive (Small Mobile: ≤480px)
-        ================================ */
-        @media (max-width: 480px) {
-          .container {
-            padding: 0 0.25rem;
-          }
-
-          .content-section {
-            padding: 0.5rem !important;
-          }
-
-          .news-section {
-            margin-top: 1rem !important;
-            gap: 1rem !important;
-          }
-
-          .news-cards,
-          .new-section {
-            margin: 0 auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-          }
-
-          .latest-post-title h2 {
-            font-size: 1.5rem !important;
-          }
-
-          .latest-post-title {
-            align-items: center !important;
-            display: flex !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* More specific selector to override Tailwind */
-          .flex.latest-post-title {
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-          }
-
-          /* Target the h2 element specifically for mobile centering */
-          .latest-post-title h2 {
-            text-align: center !important;
-            margin: 0 auto !important;
-          }
-
-          .popular-post-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 7.5rem !important;
-          }
-
-          .popular-post-title h2 {
-            font-size: 1.5rem !important;
-          }
-
-          /* Hide 5th card in popular posts on small mobile */
-          .popular-post-cards > div:nth-child(5) {
-            display: none !important;
-          }
-
-          .framer-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 5rem !important;
-          }
-
-          /* Override inline style for small mobile */
-          .framer-section[style*="marginTop"] {
-            margin-top: 5rem !important;
-          }
-
-          .video-section {
-            padding: 1rem 0.5rem !important;
-            margin-top: 6rem !important;
-          }
-
-          .main-video {
-            margin: 0.5rem auto !important;
-            width: 100% !important;
-            transform: none !important;
-          }
-        }
-      `}</style>
       <main className="min-h-screen overflow-x-hidden">
       <div 
         className="w-full h-full"
@@ -515,99 +270,103 @@ export default function DestinationPage() {
         }}
       >
         <Navbar />
-        <HeroSection title="Destinations" />
+        <HeroSection title="Destination" backgroundImage="/header.jpg" />
       
-      {/* Content Section */}
-      <motion.div 
-        ref={contentRef}
-        className="p-4 sm:p-6 lg:p-10 relative z-10"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-      >
+      {/* Main Container */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       
+        {/* Content Section */}
         <motion.div 
-          className="text-center mb-8 sm:mb-12"
+          ref={contentRef}
+          className="py-8 sm:py-12 lg:py-16"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+        <motion.div 
+          className="text-center mb-8 sm:mb-12 lg:mb-1 mt-8 sm:mt-12 lg:mt-4"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Destination Page
+            Latest News Update
           </h2>
         </motion.div>
         
-        {/* NewSection and NewsCards - Responsive Layout */}
+        {/* Featured Content Section - Mobile First */}
         <motion.div 
           ref={newSectionRef}
-          className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6 mt-8 lg:mt-12 news-section"
+          className="py-8 sm:py-12 lg:py-16"
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          {/* NewSection Component - Left side */}
-          <motion.div
-            className="w-full lg:w-auto lg:flex-shrink-0 new-section new-section-desktop"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              maxWidth: '400px',
-              margin: '0 auto',
-              gap: '1200px'
-            }}
-          >
-            <NewSection />
-          </motion.div>
+          {/* Mobile: Stack vertically */}
+          <div className="block lg:hidden space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <NewSection image="/lt2.png" />
+            </motion.div>
+            {[
+              { index: 1, image: "/lt3.png" },
+              { index: 2, image: "/lt4.png" },
+              { index: 3, image: "/lt5.png" }
+            ].map((item) => (
+              <motion.div
+                key={item.index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + (item.index * 0.1) }}
+              >
+                <NewsCard image={item.image} />
+              </motion.div>
+            ))}
+          </div>
 
-          {/* NewsCards - Merged Section */}
-          <motion.div 
-            className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto items-start news-cards news-cards-desktop"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '90%',
-              maxWidth: '450px',
-              margin: '0 auto',
-              gap: '35px'
-            }}
-          >
-            <NewsCard />
-            <NewsCard />
-            <NewsCard />
-          </motion.div>
+          {/* Desktop: Grid layout */}
+          <div className="hidden lg:grid lg:grid-cols-2 gap-8 items-start">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <NewSection image="/lt2.png" />
+            </motion.div>
+
+            <motion.div 
+              className="flex flex-col gap-6"
+              style={{ transform: 'translateX(-15%)',marginRight: '-110px' ,marginLeft: '-40px'  }}
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <NewsCard image="/lt3.png" />
+              <NewsCard image="/lt4.png" />
+              <NewsCard image="/lt5.png" />
+            </motion.div>
+          </div>
+
         </motion.div>
 
-        {/* Latest Post Title - Below NewsCards */}
+        {/* Latest Post Title - Mobile First */}
         <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-0 latest-post-title"
+          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{
-            marginTop: '2rem',
-            display: 'flex !important',
-            justifyContent: 'center !important',
-            alignItems: 'center !important',
-            textAlign: 'center !important'
-          }}
         >
           {/* Title */}
           <motion.h2 
-            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left ml-0 sm:ml-6 lg:ml-12"
+            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left"
+            style={{ marginBottom: '5px' }}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -618,7 +377,8 @@ export default function DestinationPage() {
 
           {/* Golden Line */}
           <motion.div 
-            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
+            className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg"
+            style={{ marginBottom: '-50px' }}
             initial={{ width: 0 }}
             whileInView={{ width: '100%' }}
             viewport={{ once: true, amount: 0.3 }}
@@ -626,11 +386,10 @@ export default function DestinationPage() {
           >
           </motion.div>
         </motion.div>
-
-        {/* LatestPostCard Grid with Data Fetching and Pagination */}
+        
+        {/* Latest Post Cards Grid - Mobile First */}
         <motion.div
-          className="destination-grid"
-          style={{ marginTop: "220px", marginBottom: "60px" }}
+          className="py-8 sm:py-12 lg:py-16"
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -640,20 +399,118 @@ export default function DestinationPage() {
             ease: [0.25, 0.46, 0.45, 0.94],
           }}
         >
-          {/* Pass fetched data as props */}
-          <DestinationGrid
-            card1={cards[0]}
-            card2={cards[1]}
-            card3={cards[2]}
-            card4={cards[3]}
-            card5={cards[4]}
-            card6={cards[5]}
-            card7={cards[6]}
-          />
+          {/* Mobile: Grid layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:hidden">
+            {cards.slice(0, 7).map((card, i) => (
+              <motion.div 
+                key={i} 
+                className="relative rounded-xl overflow-hidden shadow-lg h-80 w-full group cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ 
+                  scale: 1.03,
+                  y: -5,
+                  transition: { 
+                    type: "spring", 
+                    stiffness: 300, 
+                    damping: 20
+                  }
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <img 
+                  src={card.image || "/popular1.jpg"} 
+                  alt={card.title || `Latest post ${i+1}`} 
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="text-white font-semibold text-sm leading-tight mb-2 line-clamp-2">
+                    {card.title || `Latest Post ${i+1}`}
+                  </h3>
+                  <div className="text-white/80 text-xs">
+                    {card.readTime || '5 min read'}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Mobile: Destination Cards - Vertical Layout */}
+          <div className="lg:hidden mt-8">
+            <motion.div
+              className="flex flex-col gap-6 px-4"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {/* Debug info */}
+              {console.log('Cards length:', cards.length)}
+              {console.log('Cards data:', cards)}
+              
+              {/* Fallback data if cards is empty */}
+              {(cards.length === 0 ? [
+                { id: 'fallback-1', image: '/lt1.png', title: 'Tropical Paradise', description: 'Discover amazing tropical destinations', readTime: '5 min read', category: 'Beach', publishedDate: 'Dec 15, 2024' },
+                { id: 'fallback-2', image: '/lt2.png', title: 'Mountain Adventure', description: 'Explore breathtaking mountain landscapes', readTime: '7 min read', category: 'Mountains', publishedDate: 'Dec 12, 2024' },
+                { id: 'fallback-3', image: '/lt3.png', title: 'City Exploration', description: 'Experience vibrant city life and culture', readTime: '6 min read', category: 'Urban', publishedDate: 'Dec 10, 2024' },
+                { id: 'fallback-4', image: '/lt4.png', title: 'Cultural Heritage', description: 'Immerse yourself in rich cultural experiences', readTime: '8 min read', category: 'Culture', publishedDate: 'Dec 8, 2024' }
+              ] : cards).slice(0, 4).map((card, i) => (
+                <motion.div
+                  key={`mobile-dest-${card.id || i}`}
+                  className="w-full max-w-sm mx-auto"
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 0.3 + (i * 0.1),
+                    ease: [0.25, 0.46, 0.45, 0.94]
+                  }}
+                  whileHover={{ 
+                    scale: 1.02,
+                    y: -5,
+                    transition: { 
+                      type: "spring", 
+                      stiffness: 300, 
+                      damping: 20
+                    }
+                  }}
+                >
+                  <LatestPostCard 
+                    width="100%" 
+                    height="200px" 
+                    image={card.image || "/lt1.png"} 
+                    title={card.title || `Destination ${i+1}`}
+                    description={card.description || `Amazing destination ${i+1} description`}
+                    readTime={card.readTime || '5 min read'}
+                    category={card.category || 'Travel'}
+                    publishedDate={card.publishedDate || 'Dec 15, 2024'}
+                    onClick={() => console.log(`Mobile destination card ${i+1} clicked`)} 
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Desktop: DestinationGrid component */}
+          <div className="hidden lg:block" style={{ transform: 'translate(-100px, 100px)' }}>
+            <DestinationGrid
+              card1={cards[0]}
+              card2={cards[1]}
+              card3={cards[2]}
+              card4={cards[3]}
+              card5={cards[4]}
+              card6={cards[5]}
+              card7={cards[6]}
+            />
+          </div>
 
           {/* Pagination */}
           <motion.div
-            className="flex justify-center items-center gap-2 sm:gap-4 -mt-16 sm:-mt-20 lg:-mt-20 mb-8 lg:mb-12 px-4"
+            className="flex justify-center items-center gap-2 sm:gap-4 -mt-16 sm:-mt-20 lg:mt-8 mb-8 lg:-mb-1 px-4"
+            style={{ marginTop: '10px', marginBottom: '10px' }}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -743,78 +600,124 @@ export default function DestinationPage() {
         
       </motion.div>
 
-      {/* Popular Post Section with Gradient Background */}
+      {/* Popular Post Section with Gradient Background - Mobile First */}
       <motion.div 
         ref={popularPostRef}
-        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24 popular-post-section"
+        className="py-16 lg:py-24 my-0 mb-16 lg:mb-24 mt-16 lg:mt-1 w-full"
         style={{
           background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
           minHeight: '150vh',
-          marginTop: '6rem'
+          width: '100vw',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <motion.div 
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-0 popular-post-title"
-          style={{ marginTop: '-80px', marginBottom: '80px' }}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {/* Title  popular post*/}
-          <motion.h2 
-            className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-left ml-0 sm:ml-6 lg:ml-12"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            Popular Post
-          </motion.h2>
-
-          {/* Golden Line */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
-            className="w-32 sm:w-40 lg:w-48 h-0 border-t-4 border-[#D2AD3F] rounded-lg"
-            initial={{ width: 0 }}
-            whileInView={{ width: '100%' }}
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8 lg:mb-12 -mt-20 mb-20 lg:justify-start lg:items-start lg:flex-col lg:gap-8"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-          </motion.div>
-        </motion.div>
-
-        {/* Popular Post Cards */}
-        <motion.div 
-          className="flex flex-col items-center px-4 sm:px-6 lg:px-0 popular-post-cards"
-          style={{ gap: '180px' }}
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {popularPosts.map((post, index) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 50, rotateX: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            {/* Title */}
+            <motion.h2 
+              className="text-xl sm:text-2xl lg:text-3xl font-bold text-black text-center sm:text-left lg:text-left lg:-mb-4"
+              style={{ marginTop: '-100px' }}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.6 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <PopularPostCard 
-                image={post.image}
-                title={post.title}
-                description={post.description}
-                category={post.category}
-                readTime={post.readTime}
-                date={post.date}
-              />
+              Popular Post
+            </motion.h2>
+
+            {/* Golden Line */}
+            <motion.div 
+              className="w-32 sm:w-40 lg:w-48 h-1 bg-[#D2AD3F] rounded-lg lg:w-64 lg:h-1.5"
+              initial={{ width: 0 }}
+              whileInView={{ width: '100%' }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
             </motion.div>
-          ))}
-        </motion.div>
+          </motion.div>
+
+          {/* Popular Post Cards - Mobile First */}
+          <motion.div 
+            className="py-8 sm:py-12 lg:py-16"
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            {/* Mobile: Vertical layout */}
+            <div className="block lg:hidden">
+              <motion.div 
+                className="flex flex-col items-center px-4 sm:px-6 lg:px-0 popular-post-cards"
+                style={{ gap: '40px' }}
+                initial={{ opacity: 0, y: 80 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                {popularPosts.slice(0, 4).map((post, index) => (
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 50, rotateX: -10 }}
+                    whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.6, delay: 0.6 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <PopularPostCard 
+                      image={post.image}
+                      title={post.title}
+                      description={post.description}
+                      category={post.category}
+                      readTime={post.readTime}
+                      date={post.date}
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Desktop: Vertical layout */}
+            <div className="hidden lg:block">
+              <motion.div 
+                className="flex flex-col items-center px-4 sm:px-6 lg:px-0 popular-post-cards"
+                style={{ gap: '180px' }}
+                initial={{ opacity: 0, y: 80 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                {popularPosts.slice(0, 4).map((post, index) => (
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 50, rotateX: -10 }}
+                    whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.6, delay: 0.6 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <PopularPostCard 
+                      image={post.image}
+                      title={post.title}
+                      description={post.description}
+                      category={post.category}
+                      readTime={post.readTime}
+                      date={post.date}
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
         
         {/* View More Button */}
         <motion.div 
@@ -856,7 +759,13 @@ export default function DestinationPage() {
       <motion.div 
         ref={framerCardRef}
         className="flex flex-col lg:flex-row gap-4 lg:gap-8 justify-start items-center min-h-screen lg:h-screen px-4 sm:px-6 lg:px-14 py-8 lg:py-0 framer-section"
-        style={{ marginTop: '-150px',marginBottom: '-105px' }}
+        style={{ 
+          marginTop: '-50px',
+          marginBottom: '-105px',
+          marginRight: '70px',
+          marginLeft: '-60px',
+          transform: 'translate(5px, 10px)'
+        }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
@@ -864,9 +773,9 @@ export default function DestinationPage() {
       >
         {/* Content Section - Left Side */}
         <motion.div 
-          className="flex flex-col gap-4 max-w-full lg:max-w-md order-2 lg:order-1 framer-content"
-          initial={{ opacity: 0, x: -100, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          className="hidden sm:flex flex-col gap-4 max-w-full lg:max-w-md order-2 lg:order-1 framer-content"
+          initial={{ opacity: 0, x: -100, y: 70, rotateY: -15 }}
+          whileInView={{ opacity: 1, x: -60, y: 70, rotateY: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
@@ -877,7 +786,7 @@ export default function DestinationPage() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            Waves & Whispers: Sri Lanka's Hidden Coves
+            Ultimate Tour Experiences: Where Adventures Begin
           </motion.h1>
           <motion.p 
             className="font-inter font-normal text-xs sm:text-sm leading-5 tracking-wide text-gray-600 mt-2"
@@ -886,8 +795,7 @@ export default function DestinationPage() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.3, delay: 0.4 }}
           >
-            A barefoot journey through quiet blue shores   A barefoot journey through quiet blue shores
-            A barefoot journey through quiet blue shores
+            Discover your perfect adventure with our curated collection of tour experiences. From guided city walks to wilderness expeditions, find the ideal tour that matches your adventure style.
           </motion.p>
         </motion.div>
 
@@ -895,7 +803,7 @@ export default function DestinationPage() {
         <motion.div 
           className="flex flex-col sm:flex-row lg:flex-row gap-4 lg:gap-6 order-1 lg:order-2 w-full lg:w-auto framer-cards"
           initial={{ opacity: 0, x: 100, rotateY: 15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          whileInView={{ opacity: 1, x: 60, rotateY: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
@@ -922,10 +830,13 @@ export default function DestinationPage() {
       {/* Popular Videos Section with Gradient Background */}
       <motion.div 
         ref={videoSectionRef}
-        className="py-8 lg:py-12 my-0 mb-0 video-section"
+        className="py-8 lg:py-12 my-0 mb-0 video-section w-full"
         style={{
           background: 'linear-gradient(102.91deg, rgba(247, 236, 213, 0.45) 1.8%, rgba(238, 201, 249, 0.45) 99.54%)',
-          marginTop: '6rem'
+          marginTop: '6rem',
+          width: '100vw',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)'
         }}
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -962,7 +873,7 @@ export default function DestinationPage() {
         </motion.div>
 
         {/* Video Card Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-8 video-container">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-8 lg:mt-12 mb-8 lg:mb-12 px-4 sm:px-6 lg:px-12 xl:px-16 gap-6 lg:gap-5 video-container" style={{ gap: '20px' }}>
           {/* Left Side - 3 Video Cards Vertical */}
           <div 
             className="flex flex-col gap-4 lg:gap-6 w-full lg:w-auto lg:max-w-md video-sidebar"
@@ -972,10 +883,11 @@ export default function DestinationPage() {
               alignItems: 'flex-start',
               justifyContent: 'flex-start',
               marginRight: '1250px',
-              marginLeft: '-130px',
+              marginLeft: '-150px',
               width: '600px',
               maxWidth: '5000px',
               marginRight: '50px',
+              marginBottom: '20px',
               padding: '20px',
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
               borderRadius: '15px',
@@ -1006,9 +918,10 @@ export default function DestinationPage() {
               alignItems: 'center',
               justifyContent: 'flex-end',
               width: '100%',
-              maxWidth: '800px',
-              marginLeft: '-200px',
-              marginRight: '90px',
+              maxWidth: '300px',
+              marginLeft: '-20px',
+              marginRight: '400px',
+              marginBottom: '20px',
               padding: '20px',
               position: 'relative'
             }}
@@ -1055,6 +968,8 @@ export default function DestinationPage() {
 
       </motion.div>
 
+        </div> {/* Close main-container */}
+        
         <Newsletter />
         <Footer />
       </div>

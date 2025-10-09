@@ -4,9 +4,103 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import PinnedImageOverlay from "./PinnedImageOverlay";
 
-export default function ArticleWithPinnedImage() {
+export default function ArticleWithPinnedImage({ 
+  postData = null,
+  imageUrl = "/images/fda08960788ac48d0e9729d96349d66cce42cefd.png",
+  imageAlt = "Travel destination image",
+  images = [
+    "/images/fda08960788ac48d0e9729d96349d66cce42cefd.png",
+    "/images/48b45fddefe25c7d2666ffca16947645b38eada5.png",
+    "/images/74654a8f67369b797c8fb2e96a533fd515fb2939.jpg"
+  ],
+  articles: customArticles,
+  lead: customLead,
+  scrim = true,
+  viewportVh = 100
+}) {
+  // Use dynamic data if postData is provided, otherwise use defaults
+  const dynamicImageUrl = postData?.featuredImage?.url || imageUrl;
+  const dynamicImageAlt = postData?.featuredImage?.alt || postData?.title || imageAlt;
+  
+  // Create dynamic images array - use featured image and any additional images from post
+  const dynamicImages = postData?.featuredImage?.url ? 
+    [postData.featuredImage.url, ...images.slice(1)] : images;
+  
+  // Create dynamic articles from post data
+  const createDynamicArticles = () => {
+    if (!postData) return null;
+    
+    const articles = [];
+    
+    // Main article with excerpt
+    if (postData.excerpt) {
+      articles.push({
+        title: "Story Overview",
+        body: (
+          <motion.div
+            className="mb-4 sm:mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <div 
+              className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
+              style={{ fontFamily: "Inter" }}
+              dangerouslySetInnerHTML={{ __html: postData.excerpt }}
+            />
+          </motion.div>
+        ),
+        meta: "Overview"
+      });
+    }
+    
+    // Additional content if available
+    if (postData.content && postData.content !== postData.excerpt) {
+      articles.push({
+        title: "Full Story",
+        body: (
+          <motion.div
+            className="mb-4 sm:mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <div 
+              className="prose max-w-none text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base"
+              style={{ fontFamily: "Inter" }}
+              dangerouslySetInnerHTML={{ __html: postData.content }}
+            />
+          </motion.div>
+        ),
+        meta: "Details"
+      });
+    }
+    
+    // If no content, show a default message
+    if (articles.length === 0) {
+      articles.push({
+        title: postData.title || "Travel Story",
+        body: (
+          <motion.div
+            className="mb-4 sm:mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <p className="text-gray-900 sm:text-gray-800 leading-relaxed text-sm sm:text-base" style={{ fontFamily: "Inter" }}>
+              Discover the amazing story behind this travel adventure. Click through to read the full article and explore more details about this incredible journey.
+            </p>
+          </motion.div>
+        ),
+        meta: "Story"
+      });
+    }
+    
+    return articles;
+  };
+  
   // Build your article "cards" as JSX bodies so all your existing markup/animations stay intact.
-  const articles = [
+  const defaultArticles = [
     {
       title: "Embarking on the Journey",
       body: (
@@ -137,24 +231,46 @@ export default function ArticleWithPinnedImage() {
     },
   ];
 
+  // Use dynamic articles if postData is provided, otherwise use default articles
+  const articles = postData ? createDynamicArticles() : defaultArticles;
+  
+  // Create dynamic lead if postData is provided
+  const dynamicLead = postData ? (
+    <div className="text-center">
+      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight mb-4">
+        {postData.title}
+      </h2>
+      {postData.author && (
+        <p className="text-sm sm:text-base text-gray-600 mb-2">
+          By {postData.author.name || postData.author}
+        </p>
+      )}
+      {postData.publishedAt && (
+        <p className="text-xs sm:text-sm text-gray-500">
+          {new Date(postData.publishedAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </p>
+      )}
+    </div>
+  ) : (
+    <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight">
+      The city of Porto is full of sky-high lookouts and rooftop bars that afford expansive views, yet the most memorable and unique vistas are those at street level.
+    </h2>
+  );
+
   return (
     <PinnedImageOverlay
-      imageUrl="/images/fda08960788ac48d0e9729d96349d66cce42cefd.png"
-      imageAlt="Travel destination image"
-      scrim
-      viewportVh={100}
+      imageUrl={dynamicImageUrl}
+      imageAlt={dynamicImageAlt}
+      scrim={scrim}
+      viewportVh={viewportVh}
       // The component is resilient: if `articles` is undefined/null it won't crash.
       articles={articles}
-      images={[
-        "/images/fda08960788ac48d0e9729d96349d66cce42cefd.png",
-        "/images/48b45fddefe25c7d2666ffca16947645b38eada5.png",
-        "/images/74654a8f67369b797c8fb2e96a533fd515fb2939.jpg"
-      ]}
-      lead={
-        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight">
-          The city of Porto is full of sky-high lookouts and rooftop bars that afford expansive views, yet the most memorable and unique vistas are those at street level.
-        </h2>
-      }
+      images={dynamicImages}
+      lead={customLead || dynamicLead}
     />
   );
 }

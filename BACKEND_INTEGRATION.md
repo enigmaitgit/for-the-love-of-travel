@@ -62,7 +62,7 @@ This document explains how the frontend has been connected to the backend API fo
 
 ## Environment Configuration
 
-The API base URL is configured in `lib/api.js` and defaults to `http://localhost:5000`. 
+The API base URL is configured in `lib/api.js` and defaults to `http://localhost:3000`. 
 
 To change the API URL, you can:
 1. Set the `NEXT_PUBLIC_API_BASE_URL` environment variable
