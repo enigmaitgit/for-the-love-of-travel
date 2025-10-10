@@ -17,7 +17,7 @@ import { postsApi, videosApi } from '../../lib/api.ts'
 
 
 
-export default function TourPage() {
+export default function DestinationPage() {
   const [selected, setSelected] = useState(null);
   const [hovered, setHovered] = useState(null);
   const [cards, setCards] = useState([]);
