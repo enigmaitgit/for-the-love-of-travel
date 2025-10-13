@@ -1,123 +1,294 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Send, User, Calendar, Heart, Reply } from "lucide-react";
+import { Send, User, Calendar, Heart, Reply, Loader2, ThumbsDown, Flag } from "lucide-react";
+import { useParams } from "next/navigation";
+import ReportCommentModal from "./ReportCommentModal";
 
 const Comments = () => {
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      email: "sarah.j@email.com",
-      comment: "This article really opened my eyes to the future of workplace technology. The insights about remote collaboration tools are particularly relevant in today's world.",
-      date: "2024-12-15",
-      likes: 12,
-      replies: [
-        {
-          id: 1,
-          name: "Mike Chen",
-          email: "mike.c@email.com",
-          comment: "I completely agree! We've been using these tools at our company and the productivity gains have been remarkable.",
-          date: "2024-12-15",
-          likes: 5
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: "Alex Rodriguez",
-      email: "alex.r@email.com",
-      comment: "The section about AI integration in the workplace was fascinating. It's amazing how quickly technology is evolving.",
-      date: "2024-12-14",
-      likes: 8,
-      replies: []
-    },
-    {
-      id: 3,
-      name: "Emma Thompson",
-      email: "emma.t@email.com",
-      comment: "Great read! I especially enjoyed the part about sustainable technology practices. More companies should consider this approach.",
-      date: "2024-12-13",
-      likes: 15,
-      replies: []
-    }
-  ]);
+  const params = useParams();
+  const postSlug = params?.slug;
+  
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const [newComment, setNewComment] = useState({
     name: "",
     email: "",
+    website: "",
     comment: ""
   });
 
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [reportModal, setReportModal] = useState({ isOpen: false, commentId: null, commentAuthor: "" });
 
-  const handleSubmitComment = (e) => {
-    e.preventDefault();
-    if (newComment.name && newComment.email && newComment.comment) {
-      const comment = {
-        id: Date.now(),
-        name: newComment.name,
-        email: newComment.email,
-        comment: newComment.comment,
-        date: new Date().toISOString().split('T')[0],
-        likes: 0,
-        replies: []
-      };
-      setComments([comment, ...comments]);
-      setNewComment({ name: "", email: "", comment: "" });
+  // Fetch comments from API
+  const fetchComments = async () => {
+    if (!postSlug) return;
+    
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/interactions/posts/${postSlug}/comments?includeReplies=true`);
+      const data = await response.json();
+      
+      if (data.success) {
+        // Transform flat comments into nested structure
+        const commentsData = data.data || [];
+        const commentsMap = new Map();
+        const rootComments = [];
+        
+        // First pass: create map of all comments
+        commentsData.forEach(comment => {
+          commentsMap.set(comment._id, { ...comment, replies: [] });
+        });
+        
+        // Second pass: build nested structure
+        commentsData.forEach(comment => {
+          if (comment.parentId) {
+            // This is a reply
+            const parent = commentsMap.get(comment.parentId);
+            if (parent) {
+              parent.replies.push(comment);
+            }
+          } else {
+            // This is a root comment
+            rootComments.push(commentsMap.get(comment._id));
+          }
+        });
+        
+        setComments(rootComments);
+      } else {
+        setError(data.message || 'Failed to load comments');
+      }
+    } catch (err) {
+      setError('Failed to load comments');
+      console.error('Error fetching comments:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSubmitReply = (parentId) => {
-    if (replyText.trim()) {
+  // Load comments on component mount
+  useEffect(() => {
+    fetchComments();
+  }, [postSlug]);
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!newComment.name || !newComment.email || !newComment.comment) {
+      setError('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setError(null);
+      
+      const response = await fetch(`/api/interactions/posts/${postSlug}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          author: {
+            name: newComment.name,
+            email: newComment.email,
+            website: newComment.website
+          },
+          content: newComment.comment
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setSuccessMessage(data.data.status === 'approved' 
+          ? 'Comment posted successfully!' 
+          : 'Comment submitted for moderation. Thank you!');
+        setNewComment({ name: "", email: "", website: "", comment: "" });
+        // Refresh comments to show the new one if approved
+        if (data.data.status === 'approved') {
+          fetchComments();
+        }
+      } else {
+        // Handle validation errors
+        if (data.errors && Array.isArray(data.errors)) {
+          const errorMessages = data.errors.map(err => `${err.field}: ${err.message}`).join(', ');
+          setError(errorMessages);
+        } else {
+          setError(data.message || 'Failed to submit comment');
+        }
+      }
+    } catch (err) {
+      setError('Failed to submit comment. Please try again.');
+      console.error('Error submitting comment:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSubmitReply = async (parentId) => {
+    if (!replyText.trim()) {
+      setError('Please enter a reply');
+      return;
+    }
+    
+    if (!newComment.name.trim() || !newComment.email.trim()) {
+      setError('Please fill in your name and email to reply');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setError(null);
+      
+      // Find the parent comment to get author info
       const parentComment = comments.find(c => c.id === parentId);
-      if (parentComment) {
-        const reply = {
-          id: Date.now(),
-          name: "Anonymous User", // In a real app, this would be the logged-in user
-          email: "user@email.com",
-          comment: replyText,
-          date: new Date().toISOString().split('T')[0],
-          likes: 0
-        };
-        
-        const updatedComments = comments.map(comment => 
-          comment.id === parentId 
-            ? { ...comment, replies: [...comment.replies, reply] }
-            : comment
-        );
-        setComments(updatedComments);
+      
+      const replyData = {
+        author: {
+          name: newComment.name || "Anonymous",
+          email: newComment.email || "anonymous@example.com",
+          website: newComment.website
+        },
+        content: replyText,
+        parentId: parentId
+      };
+      
+      const response = await fetch(`/api/interactions/posts/${postSlug}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(replyData)
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setSuccessMessage(data.data.status === 'approved' 
+          ? 'Reply posted successfully!' 
+          : 'Reply submitted for moderation. Thank you!');
         setReplyText("");
         setReplyingTo(null);
+        // Clear the form fields
+        setNewComment({ name: "", email: "", website: "", comment: "" });
+        // Refresh comments to show the new reply if approved
+        if (data.data.status === 'approved') {
+          fetchComments();
+        }
+      } else {
+        setError(data.message || 'Failed to submit reply');
       }
+    } catch (err) {
+      setError('Failed to submit reply. Please try again.');
+      console.error('Error submitting reply:', err);
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleLike = (commentId, isReply = false, parentId = null) => {
-    if (isReply && parentId) {
-      const updatedComments = comments.map(comment => 
-        comment.id === parentId 
-          ? {
-              ...comment,
-              replies: comment.replies.map(reply => 
-                reply.id === commentId 
-                  ? { ...reply, likes: reply.likes + 1 }
-                  : reply
-              )
-            }
-          : comment
-      );
-      setComments(updatedComments);
-    } else {
-      const updatedComments = comments.map(comment => 
-        comment.id === commentId 
-          ? { ...comment, likes: comment.likes + 1 }
-          : comment
-      );
-      setComments(updatedComments);
+  const handleLike = async (commentId, isReply = false, parentId = null) => {
+    try {
+      const response = await fetch(`/api/interactions/comments/${commentId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Update the comment in the state
+        if (isReply && parentId) {
+          const updatedComments = comments.map(comment => 
+            comment._id === parentId 
+              ? {
+                  ...comment,
+                  replies: comment.replies.map(reply => 
+                    reply._id === commentId 
+                      ? { ...reply, likes: data.data.likes }
+                      : reply
+                  )
+                }
+              : comment
+          );
+          setComments(updatedComments);
+        } else {
+          const updatedComments = comments.map(comment => 
+            comment._id === commentId 
+              ? { ...comment, likes: data.data.likes }
+              : comment
+          );
+          setComments(updatedComments);
+        }
+      }
+    } catch (err) {
+      console.error('Error liking comment:', err);
     }
+  };
+
+  const handleDislike = async (commentId, isReply = false, parentId = null) => {
+    try {
+      const response = await fetch(`/api/interactions/comments/${commentId}/dislike`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Update the comment in the state
+        if (isReply && parentId) {
+          const updatedComments = comments.map(comment => 
+            comment._id === parentId 
+              ? {
+                  ...comment,
+                  replies: comment.replies.map(reply => 
+                    reply._id === commentId 
+                      ? { ...reply, dislikes: data.data.dislikes }
+                      : reply
+                  )
+                }
+              : comment
+          );
+          setComments(updatedComments);
+        } else {
+          const updatedComments = comments.map(comment => 
+            comment._id === commentId 
+              ? { ...comment, dislikes: data.data.dislikes }
+              : comment
+          );
+          setComments(updatedComments);
+        }
+      }
+    } catch (err) {
+      console.error('Error disliking comment:', err);
+    }
+  };
+
+  const handleReport = (commentId, commentAuthor) => {
+    setReportModal({
+      isOpen: true,
+      commentId,
+      commentAuthor
+    });
+  };
+
+  const closeReportModal = () => {
+    setReportModal({
+      isOpen: false,
+      commentId: null,
+      commentAuthor: ""
+    });
   };
 
   return (
@@ -149,6 +320,16 @@ const Comments = () => {
             <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-6 sm:mb-8">
               Leave a Comment
             </h3>
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm">{error}</p>
+              </div>
+            )}
+            {successMessage && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-600 text-sm">{successMessage}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmitComment} className="space-y-6 sm:space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 <div>
@@ -180,6 +361,18 @@ const Comments = () => {
               </div>
               <div>
                 <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2 sm:mb-3">
+                  Website (optional)
+                </label>
+                <input
+                  type="text"
+                  value={newComment.website}
+                  onChange={(e) => setNewComment({ ...newComment, website: e.target.value })}
+                  className="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none transition-all duration-200"
+                  placeholder="https://yourwebsite.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2 sm:mb-3">
                   Comment *
                 </label>
                 <textarea
@@ -194,12 +387,17 @@ const Comments = () => {
               <div className="flex justify-end">
                 <motion.button
                   type="submit"
-                  className="bg-brand-gold text-white px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg rounded-lg font-medium hover:bg-opacity-90 transition-all duration-200 flex items-center gap-2 sm:gap-3"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  disabled={submitting}
+                  className="bg-brand-gold text-white px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg rounded-lg font-medium hover:bg-opacity-90 transition-all duration-200 flex items-center gap-2 sm:gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={{ scale: submitting ? 1 : 1.02 }}
+                  whileTap={{ scale: submitting ? 1 : 0.98 }}
                 >
-                  <Send className="w-5 h-5 sm:w-6 sm:h-6" />
-                  Post Comment
+                  {submitting ? (
+                    <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5 sm:w-6 sm:h-6" />
+                  )}
+                  {submitting ? 'Posting...' : 'Post Comment'}
                 </motion.button>
               </div>
             </form>
@@ -208,9 +406,29 @@ const Comments = () => {
 
         {/* Comments List - UPSCALED */}
         <div className="space-y-6 sm:space-y-8 md:space-y-10">
-          {comments.map((comment, index) => (
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-brand-gold" />
+              <span className="ml-3 text-gray-600">Loading comments...</span>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-600 mb-4">{error}</p>
+              <button 
+                onClick={fetchComments}
+                className="bg-brand-gold text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-200"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : comments.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          ) : (
+            comments.map((comment, index) => (
             <motion.div
-              key={comment.id}
+              key={comment._id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -223,112 +441,160 @@ const Comments = () => {
                     <User className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-900">{comment.name}</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-900">{comment.author.name}</h4>
                     <div className="flex items-center gap-1 sm:gap-2 text-sm sm:text-base text-gray-500">
                       <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span>{new Date(comment.date).toLocaleDateString()}</span>
+                      <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleLike(comment.id)}
-                  className="flex items-center gap-1 sm:gap-2 text-gray-500 hover:text-red-500 transition-colors duration-200"
-                >
-                  <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="text-sm sm:text-base md:text-lg">{comment.likes}</span>
-                </button>
               </div>
 
               {/* Comment Content - UPSCALED */}
               <p className="text-gray-700 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
-                {comment.comment}
+                {comment.content}
               </p>
 
               {/* Comment Actions - UPSCALED */}
               <div className="flex items-center gap-4 sm:gap-6">
                 <button
-                  onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+                  onClick={() => handleLike(comment._id)}
+                  className="flex items-center gap-1 sm:gap-2 text-gray-500 hover:text-red-500 transition-colors duration-200"
+                >
+                  <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base md:text-lg">{comment.likes || 0}</span>
+                </button>
+                <button
+                  onClick={() => handleDislike(comment._id)}
+                  className="flex items-center gap-1 sm:gap-2 text-gray-500 hover:text-blue-500 transition-colors duration-200"
+                >
+                  <ThumbsDown className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base md:text-lg">{comment.dislikes || 0}</span>
+                </button>
+                <button
+                  onClick={() => setReplyingTo(replyingTo === comment._id ? null : comment._id)}
                   className="flex items-center gap-1 sm:gap-2 text-gray-500 hover:text-brand-gold transition-colors duration-200"
                 >
                   <Reply className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="text-sm sm:text-base md:text-lg">Reply</span>
                 </button>
+                <button
+                  onClick={() => handleReport(comment._id, comment.author.name)}
+                  className="flex items-center gap-1 sm:gap-2 text-gray-500 hover:text-red-600 transition-colors duration-200"
+                >
+                  <Flag className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base md:text-lg">Report</span>
+                </button>
               </div>
 
               {/* Reply Form - UPSCALED */}
-              {replyingTo === comment.id && (
+              {replyingTo === comment._id && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-100"
                 >
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      <input
+                        type="text"
+                        value={newComment.name}
+                        onChange={(e) => setNewComment({ ...newComment, name: e.target.value })}
+                        placeholder="Your name *"
+                        className="px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
+                      />
+                      <input
+                        type="email"
+                        value={newComment.email}
+                        onChange={(e) => setNewComment({ ...newComment, email: e.target.value })}
+                        placeholder="Your email *"
+                        className="px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
+                      />
+                    </div>
                     <input
                       type="text"
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Write a reply..."
-                      className="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
+                      value={newComment.website}
+                      onChange={(e) => setNewComment({ ...newComment, website: e.target.value })}
+                      placeholder="Website (optional)"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
                     />
-                    <button
-                      onClick={() => handleSubmitReply(comment.id)}
-                      className="bg-brand-gold text-white px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg rounded-lg hover:bg-opacity-90 transition-all duration-200"
-                    >
-                      Reply
-                    </button>
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                      <input
+                        type="text"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Write a reply..."
+                        className="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
+                      />
+                      <button
+                        onClick={() => handleSubmitReply(comment.id)}
+                        className="bg-brand-gold text-white px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg rounded-lg hover:bg-opacity-90 transition-all duration-200"
+                      >
+                        Reply
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               )}
 
               {/* Replies - UPSCALED */}
-              {comment.replies.length > 0 && (
+              {comment.replies && comment.replies.length > 0 && (
                 <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
                   {comment.replies.map((reply) => (
-                    <div key={reply.id} className="bg-gray-50 rounded-lg p-4 sm:p-6 ml-4 sm:ml-6 md:ml-8">
+                    <div key={reply._id} className="bg-gray-50 rounded-lg p-4 sm:p-6 ml-4 sm:ml-6 md:ml-8">
                       <div className="flex items-start justify-between mb-2 sm:mb-3">
                         <div className="flex items-center gap-2 sm:gap-3">
                           <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-400 rounded-full flex items-center justify-center">
                             <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                           </div>
-                          <span className="font-medium text-sm sm:text-base text-gray-900">{reply.name}</span>
+                          <span className="font-medium text-sm sm:text-base text-gray-900">{reply.author.name}</span>
                           <span className="text-xs sm:text-sm text-gray-500">
-                            {new Date(reply.date).toLocaleDateString()}
+                            {new Date(reply.createdAt).toLocaleDateString()}
                           </span>
                         </div>
-                        <button
-                          onClick={() => handleLike(reply.id, true, comment.id)}
-                          className="flex items-center gap-1 sm:gap-2 text-gray-500 hover:text-red-500 transition-colors duration-200"
-                        >
-                          <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span className="text-xs sm:text-sm">{reply.likes}</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleLike(reply._id, true, comment._id)}
+                            className="flex items-center gap-1 text-gray-500 hover:text-red-500 transition-colors duration-200"
+                          >
+                            <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="text-xs sm:text-sm">{reply.likes || 0}</span>
+                          </button>
+                          <button
+                            onClick={() => handleDislike(reply._id, true, comment._id)}
+                            className="flex items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors duration-200"
+                          >
+                            <ThumbsDown className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="text-xs sm:text-sm">{reply.dislikes || 0}</span>
+                          </button>
+                          <button
+                            onClick={() => handleReport(reply._id, reply.author.name)}
+                            className="flex items-center gap-1 text-gray-500 hover:text-red-600 transition-colors duration-200"
+                          >
+                            <Flag className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </button>
+                        </div>
                       </div>
-                      <p className="text-sm sm:text-base text-gray-700">{reply.comment}</p>
+                      <p className="text-sm sm:text-base text-gray-700">{reply.content}</p>
                     </div>
                   ))}
                 </div>
               )}
             </motion.div>
-          ))}
+          ))
+          )}
         </div>
 
-        {/* No Comments State - UPSCALED */}
-        {comments.length === 0 && (
-          <motion.div
-            className="text-center py-12 sm:py-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-              <User className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
-            </div>
-            <h3 className="text-xl sm:text-2xl font-medium text-gray-900 mb-2 sm:mb-3">No comments yet</h3>
-            <p className="text-gray-500 text-base sm:text-lg">Be the first to share your thoughts!</p>
-          </motion.div>
-        )}
       </div>
+
+      {/* Report Comment Modal */}
+      <ReportCommentModal
+        isOpen={reportModal.isOpen}
+        onClose={closeReportModal}
+        commentId={reportModal.commentId}
+        commentAuthor={reportModal.commentAuthor}
+      />
     </section>
   );
 };

@@ -261,6 +261,9 @@ export const categoriesApi = {
   getCategories: async (): Promise<CategoriesResponse> => {
     return apiRequest<CategoriesResponse>(API_ENDPOINTS.categories);
   },
+  getCategoryTree: async (): Promise<{ success: boolean; data: Category[]; meta: any }> => {
+    return apiRequest<{ success: boolean; data: Category[]; meta: any }>(`${API_ENDPOINTS.categories}/tree`);
+  },
   getCategory: async (slug: string): Promise<Category> => {
     return apiRequest<Category>(`${API_ENDPOINTS.categories}/${slug}`);
   },
@@ -273,6 +276,17 @@ export const categoriesApi = {
     const endpoint = queryString 
       ? `${API_ENDPOINTS.categories}/${slug}/posts?${queryString}` 
       : `${API_ENDPOINTS.categories}/${slug}/posts`;
+    return apiRequest<PostsResponse>(endpoint);
+  },
+  getPostsByCategorySlug: async (slug: string, params: SearchFilters = {}): Promise<PostsResponse> => {
+    const queryString = new URLSearchParams(
+      Object.entries({ category: slug, ...params })
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    const endpoint = queryString 
+      ? `${API_ENDPOINTS.posts}?${queryString}` 
+      : `${API_ENDPOINTS.posts}?category=${slug}`;
     return apiRequest<PostsResponse>(endpoint);
   },
 };

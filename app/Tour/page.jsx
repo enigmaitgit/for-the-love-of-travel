@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import Navbar from '../../components/Navbar.jsx'
+import DynamicNavbar from '../../components/DynamicNavbar'
 import HeroSection from '../../components/HeroSection.jsx'
 import NewSection from '../../components/NewSection.jsx'
 import NewsCard from '../../components/NewsCard.jsx'
@@ -245,7 +245,7 @@ export default function TourPage() {
           transformOrigin: 'top left'
         }}
       >
-        <Navbar />
+        <DynamicNavbar />
         <HeroSection title="Tours" backgroundImage="/tour/tou1.webp" />
       
       {/* Main Container */}

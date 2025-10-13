@@ -3,12 +3,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 /* --- Shared UI Components --- */
-import Navbar from "../../../components/Navbar";
+import DynamicNavbar from "../../../components/DynamicNavbar";
 import Footer from "../../../components/Footer";
 import Newsletter from "../../../components/Newsletter";
 import ArticleWithPinnedImage from "../../../components/ArticleWithPinnedImage";
 import Comments from "../../../components/Comments";
 import ContentSectionsRenderer from "../../../components/ContentSectionsRenderer";
+import Breadcrumbs, { buildCategoryBreadcrumbs, generateBreadcrumbJsonLd } from "../../../components/Breadcrumbs";
 
 /* --- Next / Motion / Icons --- */
 import Image from "next/image";
@@ -232,12 +233,14 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
   };
 
   /* ---------- Get hero author from content sections or fallback ---------- */
-  const getHeroAuthor = () => {
+  const getHeroAuthor = (): string => {
     const heroSection = getHeroSection();
     if (heroSection && heroSection.type === 'hero' && heroSection.author) {
       return heroSection.author;
     }
-    return post.author;
+    return typeof post.author === 'object' && post.author?.name 
+      ? post.author.name 
+      : (post.author as string) || 'Unknown Author';
   };
 
   /* ---------- Get hero publish date from content sections or fallback ---------- */
@@ -260,9 +263,30 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
 
   /* ================== RENDER ================== */
 
+  // Build breadcrumbs from primary category
+  const breadcrumbItems = buildCategoryBreadcrumbs(post.primaryCategory, post.title);
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+
   return (
     <main className="overflow-x-hidden">
-      <Navbar />
+      <DynamicNavbar />
+
+      {/* Breadcrumbs */}
+      {breadcrumbItems.length > 0 && (
+        <section className="bg-gray-50 py-4">
+          <div className="container max-w-6xl mx-auto px-4">
+            <Breadcrumbs items={breadcrumbItems} />
+          </div>
+        </section>
+      )}
+
+      {/* JSON-LD Structured Data */}
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      )}
 
       {/* Hero Section - Enhanced with dynamic content */}
       <motion.section
@@ -408,11 +432,11 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         return null;
       })()}
 
-      {/* Dynamic Content Sections */}
-      <ContentSectionsRenderer sections={getContentSections()} />
-
       {/* Article Content with Pinned Image Overlay */}
       <ArticleWithPinnedImage />
+
+      {/* Dynamic Content Sections */}
+      <ContentSectionsRenderer sections={getContentSections()} />
 
       {/* Search & Category Filter Section */}
       <section className="py-8 bg-white border-b">
@@ -724,92 +748,6 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         </div>
       </section>
 
-      {/* Popular Posts Section */}
-      {(() => {
-        const popularPostsSection = getPopularPostsSection();
-        if (popularPostsSection && popularPostsSection.type === 'popular-posts') {
-          return (
-            <section className="container mx-auto px-4 py-12">
-              <div className="grid lg:grid-cols-5 gap-8">
-                {/* Featured Article - Left Side */}
-                <div className="lg:col-span-2">
-                  <div className="mb-6">
-                    <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                      {popularPostsSection.title || 'Popular Posts'}
-                    </h2>
-                    {popularPostsSection.description && (
-                      <p className="text-gray-600">{popularPostsSection.description}</p>
-                    )}
-                  </div>
-
-                  {popularPostsSection.featuredPost && (
-                    <div className="relative w-full h-[500px] overflow-hidden shadow-lg group cursor-pointer rounded-[24px]">
-                      <SafeImage
-                        src={popularPostsSection.featuredPost.imageUrl}
-                        alt={popularPostsSection.featuredPost.title || 'Featured Post Title'}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-[24px]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-[24px]">
-                        <div className="absolute top-6 left-6">
-                          <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium border border-white/30">
-                            {popularPostsSection.featuredPost.category || 'Tours'}
-                          </span>
-                        </div>
-                        <div className="absolute bottom-6 left-6 right-6">
-                          <h3 className="text-3xl font-bold text-white mb-3">
-                            {popularPostsSection.featuredPost.title || 'Featured Post Title'}
-                          </h3>
-                          <p className="text-white/90 mb-4 text-lg">
-                            {popularPostsSection.featuredPost.excerpt || 'Featured post excerpt...'}
-                          </p>
-                          <div className="flex items-center text-white/80 text-sm">
-                            <span>{popularPostsSection.featuredPost.readTime || '14 min read'}</span>
-                            <span className="mx-2">|</span>
-                            <span>{popularPostsSection.featuredPost.publishDate || 'May 28, 2025'}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Side Articles - Right Side */}
-                <div className="lg:col-span-3 space-y-6">
-                  {popularPostsSection.sidePosts && popularPostsSection.sidePosts.map((post, index) => (
-                    <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                      <div className="flex h-48 sm:h-56">
-                        <div className="relative w-40 h-full flex-shrink-0">
-                          <SafeImage
-                            src={post.imageUrl}
-                            alt={post.title || 'Side Post Title'}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="p-4 sm:p-6 flex-1 flex flex-col">
-                          <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 line-clamp-2">
-                            {post.title || 'Side Post Title'}
-                          </h4>
-                          <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2">
-                            {post.excerpt || 'Side post excerpt...'}
-                          </p>
-                          <div className="flex items-center justify-end text-xs sm:text-sm text-gray-500 mt-auto">
-                            <span>{post.readTime || '14 min read'}</span>
-                            <span className="mx-2">|</span>
-                            <span>{post.publishDate || 'May 28, 2025'}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          );
-        }
-        return null;
-      })()}
 
       {/* Comments Section */}
       <Comments />

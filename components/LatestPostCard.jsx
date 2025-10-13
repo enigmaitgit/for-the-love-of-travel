@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-export default function LatestPostCard({ width = '382px', height = '146px', image, title, description, readTime, category, publishedDate, slug, onClick }) {
+export default function LatestPostCard({ width = '382px', height = '146px', image, title, description, readTime, categories = [], category, publishedDate, slug, onClick }) {
   const href = slug ? `/content/${slug}` : '/content';
   
   return (
@@ -64,32 +64,78 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           }}
         />
       )}
-      {/* Top Section with Tour Button */}
+      {/* Top Section with Category Tags */}
       <div style={{
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        marginBottom: 'auto'
+        marginBottom: 'auto',
+        flexWrap: 'wrap',
+        gap: '6px'
       }}>
-        {/* Category Button - Top Left */}
-        <button className="category-button" style={{
-          width: '62px', // 125px * 0.5 = 62px (50% smaller)
-          height: '20px', // 40px * 0.5 = 20px (50% smaller)
-          border: '1px solid #FFFFFF',
-          borderRadius: '10px', // 20px * 0.5 = 10px (50% smaller)
-          padding: '5px', // 10px * 0.5 = 5px (50% smaller)
-          gap: '5px', // 10px * 0.5 = 5px (50% smaller)
-          background: 'transparent',
-          color: '#FFFFFF',
-          fontSize: '9.625px', // 8.75px * 1.1 = 9.625px (35% total increase)
-          fontWeight: '500',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          {category || 'Tour'}
-        </button>
+        {/* Category Tags - Top Left */}
+        {categories && categories.length > 0 ? (
+          categories.slice(0, 3).map((cat, index) => (
+            <span
+              key={cat._id || index}
+              className="category-tag"
+              style={{
+                padding: '4px 8px',
+                border: '1px solid rgba(255, 255, 255, 0.8)',
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(10px)',
+                color: '#FFFFFF',
+                fontSize: '8px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)',
+                transition: 'all 0.2s ease',
+                maxWidth: '80px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.25)';
+                e.target.style.borderColor = '#FFFFFF';
+                e.target.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.15)';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+                e.target.style.transform = 'scale(1)';
+              }}
+            >
+              {cat.name || cat}
+            </span>
+          ))
+        ) : (
+          <span
+            className="category-tag"
+            style={{
+              padding: '4px 8px',
+              border: '1px solid rgba(255, 255, 255, 0.8)',
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.15)',
+              backdropFilter: 'blur(10px)',
+              color: '#FFFFFF',
+              fontSize: '8px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            {category || 'Travel'}
+          </span>
+        )}
       </div>
 
       {/* Main Content */}
@@ -155,11 +201,10 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
             margin: 0 auto !important;
           }
           
-          :global(.category-button) {
-            width: 50px !important;
-            height: 25px !important;
-            font-size: 13.75px !important;
-            padding: 6px !important;
+          :global(.category-tag) {
+            font-size: 10px !important;
+            padding: 6px 10px !important;
+            max-width: 100px !important;
           }
           
           :global(.card-title) {
@@ -191,10 +236,10 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
             margin: 0 10px !important;
           }
           
-          :global(.category-button) {
-            width: 45px !important;
-            height: 22px !important;
-            font-size: 12.375px !important;
+          :global(.category-tag) {
+            font-size: 9px !important;
+            padding: 5px 8px !important;
+            max-width: 90px !important;
           }
           
           :global(.card-title) {

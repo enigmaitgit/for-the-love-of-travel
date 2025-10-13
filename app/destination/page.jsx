@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import Navbar from '../../components/Navbar.jsx'
+import DynamicNavbar from '../../components/DynamicNavbar'
 import HeroSection from '../../components/HeroSection.jsx'
 import NewSection from '../../components/NewSection.jsx'
 import NewsCard from '../../components/NewsCard.jsx'
@@ -145,12 +145,17 @@ export default function DestinationPage() {
           title: post.title,
           description: post.excerpt || post.body?.replace(/<[^>]*>/g, '').substring(0, 150) + '...', // Use excerpt or strip HTML from body
           readTime: post.readingTimeText || (post.readingTime ? `${post.readingTime} min read` : '5 min read'),
-          category: post.categories?.[0]?.name || 'Travel',
-          publishedDate: post.formattedPublishedDate || new Date(post.publishedAt).toLocaleDateString('en-US', { 
+          categories: post.categories || [], // Pass all categories instead of just the first one
+          category: post.categories?.[0]?.name || 'Travel', // Keep for backward compatibility
+          publishedDate: post.formattedPublishedDate || (post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('en-US', { 
             month: 'short', 
             day: 'numeric', 
             year: 'numeric' 
-          })
+          }) : new Date().toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+          }))
         }));
         
         setCards(mappedCards);
@@ -515,7 +520,7 @@ export default function DestinationPage() {
           transformOrigin: 'top left'
         }}
       >
-        <Navbar />
+        <DynamicNavbar />
         <HeroSection title="Destinations" />
       
       {/* Content Section */}

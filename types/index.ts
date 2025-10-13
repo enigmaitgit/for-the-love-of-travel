@@ -38,6 +38,7 @@ export interface Post {
   };
   tags: string[];
   categories: Category[];
+  primaryCategory?: Category;
   author: Author;
   status: 'draft' | 'published' | 'archived' | 'scheduled';
   publishedAt: string;
@@ -104,11 +105,16 @@ export interface Category {
     alt?: string;
   };
   parent?: string;
+  parentId?: string;
   level: number;
   path: string;
   isActive: boolean;
   isFeatured: boolean;
   sortOrder: number;
+  order: number;
+  navVisible: boolean;
+  type: 'nav' | 'taxonomy';
+  heroImageUrl?: string;
   seo: {
     metaTitle?: string;
     metaDescription?: string;
@@ -120,6 +126,7 @@ export interface Category {
   url?: string;
   fullPath?: string[];
   childrenCount?: number;
+  children?: Category[];
 }
 
 // Author Types

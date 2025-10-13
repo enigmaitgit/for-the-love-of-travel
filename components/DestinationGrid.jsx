@@ -34,6 +34,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             title={card1?.title}
             description={card1?.description}
             readTime={card1?.readTime}
+            categories={card1?.categories}
             category={card1?.category}
             publishedDate={card1?.publishedDate}
             slug={card1?.slug}
@@ -54,6 +55,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             title={card2?.title}
             description={card2?.description}
             readTime={card2?.readTime}
+            categories={card2?.categories}
             category={card2?.category}
             publishedDate={card2?.publishedDate}
             slug={card2?.slug}
@@ -78,6 +80,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           title={card3?.title}
           description={card3?.description}
           readTime={card3?.readTime}
+          categories={card3?.categories}
           category={card3?.category}
           publishedDate={card3?.publishedDate}
           slug={card3?.slug}
@@ -90,6 +93,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           title={card4?.title}
           description={card4?.description}
           readTime={card4?.readTime}
+          categories={card4?.categories}
           category={card4?.category}
           publishedDate={card4?.publishedDate}
           slug={card4?.slug}
@@ -102,6 +106,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           title={card5?.title}
           description={card5?.description}
           readTime={card5?.readTime}
+          categories={card5?.categories}
           category={card5?.category}
           publishedDate={card5?.publishedDate}
           slug={card5?.slug}
@@ -124,6 +129,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             title={card6?.title}
             description={card6?.description}
             readTime={card6?.readTime}
+            categories={card6?.categories}
             category={card6?.category}
             publishedDate={card6?.publishedDate}
             slug={card6?.slug}
@@ -143,6 +149,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             title={card7?.title}
             description={card7?.description}
             readTime={card7?.readTime}
+            categories={card7?.categories}
             category={card7?.category}
             publishedDate={card7?.publishedDate}
             slug={card7?.slug}

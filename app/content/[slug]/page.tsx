@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { fetchPostBySlug } from '../../../lib/cms';
+import { categoriesApi } from '../../../lib/api';
 import ContentPageClient from './ContentPageClient';
 
 interface PageProps {
@@ -22,15 +23,50 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       };
     }
 
+    // Get category information for breadcrumbs
+    let categoryBreadcrumb = '';
+    if (post.primaryCategory) {
+      try {
+        const category = await categoriesApi.getCategory(post.primaryCategory.slug);
+        categoryBreadcrumb = category.name;
+      } catch (error) {
+        console.error('Error fetching category for breadcrumb:', error);
+      }
+    }
+
+    const title = post.seo?.metaTitle || post.title;
+    const description = post.seo?.metaDescription || (post.body ? post.body.replace(/<[^>]*>/g, '').slice(0, 160) : undefined);
+    const keywords = post.seo?.keywords?.join(', ') || (post.tags ? post.tags.join(', ') : undefined);
+
     return {
-      title: post.title,
-      description: post.body ? post.body.replace(/<[^>]*>/g, '').slice(0, 160) : undefined,
+      title,
+      description,
+      keywords,
       openGraph: {
-        title: post.title,
-        description: post.body ? post.body.replace(/<[^>]*>/g, '').slice(0, 200) : undefined,
+        title,
+        description: post.seo?.metaDescription || (post.body ? post.body.replace(/<[^>]*>/g, '').slice(0, 200) : undefined),
         images: post.featuredImage
           ? [typeof post.featuredImage === 'string' ? post.featuredImage : post.featuredImage.url]
           : undefined,
+        type: 'article',
+        publishedTime: post.publishedAt,
+        authors: [typeof post.author === 'object' && post.author?.name ? post.author.name : (post.author as string) || 'Unknown Author'],
+        section: categoryBreadcrumb,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: post.featuredImage
+          ? [typeof post.featuredImage === 'string' ? post.featuredImage : post.featuredImage.url]
+          : undefined,
+      },
+      alternates: {
+        canonical: post.seo?.canonicalUrl || `/content/${slug}`,
+      },
+      robots: {
+        index: !post.seo?.noIndex,
+        follow: !post.seo?.noFollow,
       },
     };
   } catch (error) {

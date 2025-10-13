@@ -12,8 +12,8 @@ export default function ContentSectionsRenderer({ sections }: { sections: Conten
   return (
     <div className="w-full">
       {sections.map((s, idx) => {
-        // Skip hero, breadcrumb, and popular-posts sections as they're handled by the main component in ContentPageClient
-        if (s.type === 'hero' || s.type === 'breadcrumb' || s.type === 'popular-posts') {
+        // Skip hero and breadcrumb sections as they're handled by the main component in ContentPageClient
+        if (s.type === 'hero' || s.type === 'breadcrumb') {
           return null;
         }
         return <Section key={idx} section={s} />;
