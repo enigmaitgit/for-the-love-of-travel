@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "../components/Navbar";
+import DynamicNavbar from "../components/DynamicNavbar";
 import Hero from "../components/Hero";
 import SectionHeader from "../components/SectionHeader";
 import PostCard from "../components/PostCard";
@@ -27,7 +27,7 @@ export default function HomePageClient() {
 
   return (
     <main>
-      <Navbar />
+      <DynamicNavbar />
       <Hero />
 
       {/* Featured Stories Grid - UPSCALED */}

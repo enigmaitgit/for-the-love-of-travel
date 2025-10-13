@@ -17,7 +17,55 @@ export type PublicPost = {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;
-  author?: string;
+  author?: string | {
+    name: string;
+    email?: string;
+    [key: string]: any;
+  };
+  tags?: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+    canonicalUrl?: string;
+    noIndex?: boolean;
+    noFollow?: boolean;
+  };
+  primaryCategory?: {
+    _id: string;
+    name: string;
+    slug: string;
+    description?: string;
+    color: string;
+    icon?: string;
+    image?: {
+      url: string;
+      alt?: string;
+    };
+    parent?: string;
+    parentId?: string;
+    level: number;
+    path: string;
+    isActive: boolean;
+    isFeatured: boolean;
+    sortOrder: number;
+    order: number;
+    navVisible: boolean;
+    type: 'nav' | 'taxonomy';
+    heroImageUrl?: string;
+    seo: {
+      metaTitle?: string;
+      metaDescription?: string;
+      keywords?: string[];
+    };
+    postCount: number;
+    createdAt: string;
+    updatedAt: string;
+    url?: string;
+    fullPath?: string[];
+    childrenCount?: number;
+    children?: any[];
+  };
 };
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
@@ -76,8 +124,15 @@ export async function fetchPostBySlug(slug: string, { nextOptions }: { nextOptio
       updatedAt: post.updatedAt,
       publishedAt: post.publishedAt,
       author: post.author && typeof post.author === 'object'
-        ? [post.author.firstName, post.author.lastName].filter(Boolean).join(' ') || post.author.email
+        ? {
+            name: [post.author.firstName, post.author.lastName].filter(Boolean).join(' ') || post.author.email || 'Unknown Author',
+            email: post.author.email,
+            ...post.author
+          }
         : post.author || 'Unknown Author',
+      tags: post.tags || [],
+      seo: post.seo,
+      primaryCategory: post.primaryCategory,
     };
   } catch (error) {
     console.error('❌ fetchPostBySlug: Network or parsing error:', error);

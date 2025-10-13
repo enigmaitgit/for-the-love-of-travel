@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 
 /* --- Shared UI (Fix/UI-fixes) --- */
-import Navbar from "../../components/Navbar";
+import DynamicNavbar from "../../components/DynamicNavbar";
 import Footer from "../../components/Footer";
 import Newsletter from "../../components/Newsletter";
 import ArticleWithPinnedImage from "../../components/ArticleWithPinnedImage";
@@ -223,7 +223,7 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
 
   return (
     <main className="overflow-x-hidden">
-      <Navbar />
+      <DynamicNavbar />
 
       {/* Hero Section - UPSCALED */}
       <motion.section

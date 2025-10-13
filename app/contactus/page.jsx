@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import Navbar from '../../components/Navbar.jsx'
+import DynamicNavbar from '../../components/DynamicNavbar'
 import HeroSection from '../../components/HeroSection.jsx'
 import { ArrowRight } from 'lucide-react'
 import Footer from '../../components/Footer.jsx'
@@ -63,7 +63,7 @@ export default function ContactUs() {
  
     return (
         <div>
-            <Navbar />
+            <DynamicNavbar />
 
             
             {/* Main Container */}
