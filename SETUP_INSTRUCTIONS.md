@@ -39,7 +39,7 @@ Edit the `.env` file with your configuration:
 ```env
 # Server Configuration
 NODE_ENV=development
-PORT=3000
+PORT=3001
 
 # Database Configuration
 MONGODB_URI=mongodb://localhost:27017/love-of-travel
@@ -55,8 +55,8 @@ SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 
 # Frontend URLs
-FRONTEND_URL=http://localhost:3000
-ADMIN_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:3001
+ADMIN_URL=http://localhost:3001
 
 # Redis Configuration (optional)
 REDIS_URL=redis://localhost:6379
@@ -112,7 +112,7 @@ npm install
 Create a `.env.local` file in the frontend directory:
 ```env
 # API Configuration
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 
 # Environment
 NODE_ENV=development
@@ -123,7 +123,7 @@ NODE_ENV=development
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:3000`
+The frontend will be available at `http://localhost:3001`
 
 ## Project Structure
 
@@ -248,9 +248,9 @@ Visit `http://localhost:3000/health` to verify the backend is running.
 Visit `http://localhost:3000/api` to see available endpoints.
 
 ### 3. Frontend Pages
-- Home: `http://localhost:3000`
-- Content: `http://localhost:3000/content`
-- Individual Post: `http://localhost:3000/content/[slug]`
+- Home: `http://localhost:3001`
+- Content: `http://localhost:3001/content`
+- Individual Post: `http://localhost:3001/content/[slug]`
 
 ### 4. Sample Data
 After seeding, you can access:

@@ -6,7 +6,7 @@ Create a `.env.local` file in the `for-the-love-of-travel-clone` directory with 
 
 ```bash
 # API Configuration
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 
 # Environment
 NODE_ENV=development
@@ -19,7 +19,7 @@ Make sure your backend has a `.env` file in the `for-the-love-of-travel-backend`
 ```bash
 # Server Configuration
 NODE_ENV=development
-PORT=3000
+PORT=3001
 
 # Database Configuration
 MONGODB_URI=mongodb://localhost:27017/love-of-travel
@@ -39,8 +39,8 @@ SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 
 # Frontend URLs
-FRONTEND_URL=http://localhost:3000
-ADMIN_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:3001
+ADMIN_URL=http://localhost:3001
 
 # Analytics Configuration
 GOOGLE_ANALYTICS_ID=GA_MEASUREMENT_ID
@@ -78,8 +78,8 @@ NODE_DEBUG=*
 
 ## Important Notes
 
-1. **Frontend Port**: The frontend runs on port 3000 by default (Next.js)
-2. **CORS Configuration**: The backend is configured to accept requests from `http://localhost:3000`
+1. **Frontend Port**: The frontend runs on port 3001 by default (Next.js)
+2. **CORS Configuration**: The backend is configured to accept requests from `http://localhost:3001`
 3. **Email Service**: You need to configure SMTP settings for contact form and newsletter emails to work
 4. **Database**: Make sure MongoDB is running and accessible
 5. **Redis**: Optional but recommended for caching and rate limiting
@@ -91,5 +91,5 @@ NODE_DEBUG=*
 3. Start MongoDB and Redis (if using)
 4. Start the backend: `npm run dev` in the backend directory
 5. Start the frontend: `npm run dev` in the frontend directory
-6. Visit `http://localhost:3000` to see the frontend
+6. Visit `http://localhost:3001` to see the frontend
 7. Test the contact form and newsletter subscription

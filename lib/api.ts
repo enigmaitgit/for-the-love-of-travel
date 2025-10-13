@@ -18,7 +18,8 @@ import type {
   SearchResponse
 } from '../types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
 // Debug logging for API calls
 const DEBUG_API = process.env.NODE_ENV === 'development';
@@ -126,25 +127,169 @@ export const postsApi = {
         .map(([key, value]) => [key, String(value)])
     ).toString();
     const endpoint = queryString ? `${API_ENDPOINTS.posts}?${queryString}` : API_ENDPOINTS.posts;
-    return apiRequest<PostsResponse>(endpoint);
+    const url = `${BACKEND_URL}${endpoint}`;
+    
+    if (DEBUG_API) {
+      console.log(`🌐 Posts API Request: GET ${url}`);
+    }
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`❌ Posts API Error:`, {
+        status: response.status,
+        statusText: response.statusText,
+        url: url,
+        errorData: errorData
+      });
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
   },
   getPost: async (slug: string): Promise<PostResponse> => {
     return apiRequest<PostResponse>(`${API_ENDPOINTS.posts}/${slug}`);
   },
   getPopularPosts: async (limit: number = 10, timeframe: string = '30d'): Promise<PostsResponse> => {
-    return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/popular?limit=${limit}&timeframe=${timeframe}`);
+    const url = `${BACKEND_URL}${API_ENDPOINTS.posts}/popular?limit=${limit}&timeframe=${timeframe}`;
+    
+    if (DEBUG_API) {
+      console.log(`🌐 Popular Posts API Request: GET ${url}`);
+    }
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`❌ Popular Posts API Error:`, {
+        status: response.status,
+        statusText: response.statusText,
+        url: url,
+        errorData: errorData
+      });
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
   },
   getFeaturedPosts: async (limit: number = 5): Promise<PostsResponse> => {
-    return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/featured?limit=${limit}`);
+    const url = `${BACKEND_URL}${API_ENDPOINTS.posts}/featured?limit=${limit}`;
+    
+    if (DEBUG_API) {
+      console.log(`🌐 Featured Posts API Request: GET ${url}`);
+    }
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`❌ Featured Posts API Error:`, {
+        status: response.status,
+        statusText: response.statusText,
+        url: url,
+        errorData: errorData
+      });
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
   },
   getPinnedPosts: async (limit: number = 3): Promise<PostsResponse> => {
-    return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/pinned?limit=${limit}`);
+    const url = `${BACKEND_URL}${API_ENDPOINTS.posts}/pinned?limit=${limit}`;
+    
+    if (DEBUG_API) {
+      console.log(`🌐 Pinned Posts API Request: GET ${url}`);
+    }
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`❌ Pinned Posts API Error:`, {
+        status: response.status,
+        statusText: response.statusText,
+        url: url,
+        errorData: errorData
+      });
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
   },
   getRecentPosts: async (limit: number = 10): Promise<PostsResponse> => {
-    return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/recent?limit=${limit}`);
+    const url = `${BACKEND_URL}${API_ENDPOINTS.posts}/recent?limit=${limit}`;
+    
+    if (DEBUG_API) {
+      console.log(`🌐 Recent Posts API Request: GET ${url}`);
+    }
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`❌ Recent Posts API Error:`, {
+        status: response.status,
+        statusText: response.statusText,
+        url: url,
+        errorData: errorData
+      });
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
   },
   getLatestPostCards: async (limit: number = 7): Promise<PostsResponse> => {
-    return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}?limit=${limit}&sortBy=createdAt&sortOrder=desc`);
+    const url = `${BACKEND_URL}${API_ENDPOINTS.posts}?limit=${limit}&sortBy=createdAt&sortOrder=desc`;
+    
+    if (DEBUG_API) {
+      console.log(`🌐 Latest Post Cards API Request: GET ${url}`);
+    }
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`❌ Latest Post Cards API Error:`, {
+        status: response.status,
+        statusText: response.statusText,
+        url: url,
+        errorData: errorData
+      });
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
   },
   getRelatedPosts: async (postId: string, limit: number = 5): Promise<PostsResponse> => {
     return apiRequest<PostsResponse>(`${API_ENDPOINTS.posts}/${postId}/related?limit=${limit}`);
