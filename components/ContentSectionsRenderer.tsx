@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import SafeImage from './content/SafeImage';
 import type { ContentSection } from '@/lib/cms';
 
@@ -140,6 +141,112 @@ function Section({ section }: { section: ContentSection }) {
             ))}
           </div>
         </section>
+      );
+    }
+
+    case 'article': {
+      return (
+        <section className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            {section.title && (
+              <h2 className="text-3xl font-bold mb-6">{section.title}</h2>
+            )}
+            
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Main content */}
+              <div className="lg:col-span-2">
+                {section.content && (
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: section.content }}
+                  />
+                )}
+              </div>
+              
+              {/* Images sidebar */}
+              <div className="lg:col-span-1 space-y-6">
+                {/* Pinned Image */}
+                {section.pinnedImage?.url && (
+                  <div className="sticky top-8">
+                    <div className="relative w-full h-64 rounded-xl overflow-hidden">
+                      <SafeImage
+                        src={section.pinnedImage.url}
+                        alt={section.pinnedImage.altText || section.title || 'Article image'}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    {section.pinnedImage.caption && (
+                      <p className="text-sm text-gray-600 mt-2">{section.pinnedImage.caption}</p>
+                    )}
+                  </div>
+                )}
+                
+                {/* Changing Images */}
+                {section.changingImages && section.changingImages.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Gallery</h3>
+                    {section.changingImages.map((image, index) => (
+                      <div key={index} className="relative w-full h-32 rounded-lg overflow-hidden">
+                        <SafeImage
+                          src={image.url}
+                          alt={image.altText || `Gallery image ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                        {image.caption && (
+                          <p className="text-xs text-gray-600 mt-1">{image.caption}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    case 'breadcrumb': {
+      if (!section.enabled) return null;
+      
+      const textSizeClasses = {
+        sm: 'text-sm',
+        base: 'text-base',
+        lg: 'text-lg'
+      };
+
+      const colorClasses = {
+        gray: 'text-gray-600',
+        blue: 'text-blue-600',
+        black: 'text-black'
+      };
+
+      return (
+        <nav className={`py-4 px-4 max-w-4xl mx-auto ${textSizeClasses[section.style?.textSize || 'sm']} ${colorClasses[section.style?.color || 'gray']}`}>
+          <div className="flex items-center space-x-2">
+            {section.style?.showHomeIcon && (
+              <Link href="/" className="hover:text-gray-800">
+                🏠
+              </Link>
+            )}
+            {section.items?.map((item, index) => (
+              <div key={index} className="flex items-center">
+                {index > 0 && (
+                  <span className="mx-2">{section.style?.separator || '>'}</span>
+                )}
+                {item.href ? (
+                  <Link href={item.href} className="hover:underline">
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span>{item.label}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </nav>
       );
     }
 

@@ -371,6 +371,89 @@ const GallerySection = ({ section }) => {
   );
 };
 
+// Article Section Component
+const ArticleSection = ({ section }) => {
+  const {
+    title,
+    content,
+    changingImages = [],
+    pinnedImage,
+    layout = { imageSize: 'medium', showPinnedImage: true, showChangingImages: true },
+    animation = { enabled: true, type: 'fadeIn', duration: 0.5, delay: 0 }
+  } = section.data || {};
+
+  return (
+    <motion.section
+      className="py-8 px-4 max-w-4xl mx-auto"
+      initial={animation.enabled ? { opacity: 0, y: 20 } : {}}
+      whileInView={animation.enabled ? { opacity: 1, y: 0 } : {}}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ 
+        duration: animation.duration || 0.5, 
+        delay: animation.delay || 0 
+      }}
+    >
+      <div className="max-w-4xl mx-auto">
+        {title && (
+          <h2 className="text-3xl font-bold mb-6">{title}</h2>
+        )}
+        
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main content */}
+          <div className="lg:col-span-2">
+            {content && (
+              <div 
+                className="prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            )}
+          </div>
+          
+          {/* Images sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Pinned Image */}
+            {layout.showPinnedImage && pinnedImage?.url && (
+              <div className="sticky top-8">
+                <div className="relative w-full h-64 rounded-xl overflow-hidden">
+                  <Image
+                    src={pinnedImage.url}
+                    alt={pinnedImage.altText || title || 'Article image'}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                {pinnedImage.caption && (
+                  <p className="text-sm text-gray-600 mt-2">{pinnedImage.caption}</p>
+                )}
+              </div>
+            )}
+            
+            {/* Changing Images */}
+            {layout.showChangingImages && changingImages.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Gallery</h3>
+                {changingImages.map((image, index) => (
+                  <div key={index} className="relative w-full h-32 rounded-lg overflow-hidden">
+                    <Image
+                      src={image.url}
+                      alt={image.altText || `Gallery image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                    {image.caption && (
+                      <p className="text-xs text-gray-600 mt-1">{image.caption}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.section>
+  );
+};
+
 // Popular Posts Section Component
 const PopularPostsSection = ({ section, popularPosts = [] }) => {
   const {
@@ -525,6 +608,8 @@ const DynamicContentRenderer = ({ post, popularPosts = [] }) => {
             return <HeroSection key={index} section={section} post={post} />;
           case 'text':
             return <TextSection key={index} section={section} />;
+          case 'article':
+            return <ArticleSection key={index} section={section} />;
           case 'image':
             return <ImageSection key={index} section={section} />;
           case 'gallery':
