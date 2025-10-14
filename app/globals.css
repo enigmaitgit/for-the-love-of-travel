@@ -9,6 +9,19 @@
 
 html, body {
   scroll-behavior: smooth;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+/* Prevent page width changes from form inputs */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure form elements don't cause horizontal overflow */
+input, textarea, select {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .container {

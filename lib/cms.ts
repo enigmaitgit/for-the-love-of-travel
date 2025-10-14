@@ -2,10 +2,11 @@
 export type ContentSection =
   | { type: 'hero'; backgroundImage?: string; title?: string; subtitle?: string; author?: string; publishDate?: string; readTime?: string; overlayOpacity?: number; height?: { mobile:string; tablet:string; desktop:string }; titleSize?: { mobile:string; tablet:string; desktop:string }; parallaxEnabled?: boolean; parallaxSpeed?: number; backgroundPosition?: 'center'|'top'|'bottom'|'left'|'right'; backgroundSize?: 'cover'|'contain' }
   | { type: 'text'; content?: string; hasDropCap?: boolean; alignment?: 'left'|'center'|'right'|'justify' }
+  | { type: 'article'; title?: string; content?: string; changingImages?: Array<{ url: string; altText?: string; caption?: string; order?: number }>; pinnedImage?: { url: string; altText?: string; caption?: string }; layout?: { imageSize?: 'small'|'medium'|'large'; showPinnedImage?: boolean; showChangingImages?: boolean }; animation?: { enabled?: boolean; type?: 'fadeIn'|'slideUp'|'none'; duration?: number; delay?: number } }
   | { type: 'image'; imageUrl?: string; altText?: string; caption?: string; alignment?: 'left'|'center'|'right'; rounded?: boolean; shadow?: boolean; width?: number; height?: number }
   | { type: 'gallery'; images: Array<{ url: string; altText?: string; caption?: string; width?: number; height?: number }>; layout?: 'grid'|'masonry'|'carousel'|'postcard'|'complex'; columns?: number; spacing?: 'sm'|'md'|'lg' }
   | { type: 'popular-posts'; title?: string; description?: string; featuredPost?: { title?: string; excerpt?: string; imageUrl?: string; readTime?: string; publishDate?: string; category?: string }; sidePosts: Array<{ title?: string; excerpt?: string; imageUrl?: string; readTime?: string; publishDate?: string }> }
-  | { type: 'breadcrumb'; enabled?: boolean; items: Array<{ label: string; href: string }> };
+  | { type: 'breadcrumb'; enabled?: boolean; items: Array<{ label: string; href: string }>; style?: { separator?: '>'|'→'|'|'|'/'; textSize?: 'sm'|'base'|'lg'; showHomeIcon?: boolean; color?: 'gray'|'blue'|'black' } };
 
 export type PublicPost = {
   id: string;

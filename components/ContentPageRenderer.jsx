@@ -252,6 +252,78 @@ const GallerySection = ({ section }) => {
   );
 };
 
+// Article Section Component
+const ArticleSection = ({ section }) => {
+  return (
+    <motion.section 
+      className="py-16 bg-white"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="container max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto">
+          {section.title && (
+            <h2 className="text-3xl font-bold mb-6">{section.title}</h2>
+          )}
+          
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Main content */}
+            <div className="lg:col-span-2">
+              {section.content && (
+                <div 
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: section.content }}
+                />
+              )}
+            </div>
+            
+            {/* Images sidebar */}
+            <div className="lg:col-span-1 space-y-6">
+              {/* Pinned Image */}
+              {section.pinnedImage?.url && (
+                <div className="sticky top-8">
+                  <div className="relative w-full h-64 rounded-xl overflow-hidden">
+                    <Image
+                      src={section.pinnedImage.url}
+                      alt={section.pinnedImage.altText || section.title || 'Article image'}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  {section.pinnedImage.caption && (
+                    <p className="text-sm text-gray-600 mt-2">{section.pinnedImage.caption}</p>
+                  )}
+                </div>
+              )}
+              
+              {/* Changing Images */}
+              {section.changingImages && section.changingImages.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Gallery</h3>
+                  {section.changingImages.map((image, index) => (
+                    <div key={index} className="relative w-full h-32 rounded-lg overflow-hidden">
+                      <Image
+                        src={image.url}
+                        alt={image.altText || `Gallery image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      {image.caption && (
+                        <p className="text-xs text-gray-600 mt-1">{image.caption}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.section>
+  );
+};
+
 // Popular Posts Section Component
 const PopularPostsSection = ({ section, posts = [] }) => {
   const [featuredPosts, setFeaturedPosts] = useState([]);
@@ -368,6 +440,8 @@ const ContentPageRenderer = ({ contentPage, posts = [], categories = [] }) => {
             return <BreadcrumbSection key={index} section={section} />;
           case 'text':
             return <TextSection key={index} section={section} />;
+          case 'article':
+            return <ArticleSection key={index} section={section} />;
           case 'image':
             return <ImageSection key={index} section={section} />;
           case 'gallery':

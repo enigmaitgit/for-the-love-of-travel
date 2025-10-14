@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import DynamicNavbar from "../../../components/DynamicNavbar";
 import Footer from "../../../components/Footer";
 import Newsletter from "../../../components/Newsletter";
-import ArticleWithPinnedImage from "../../../components/ArticleWithPinnedImage";
+import DynamicPinnedImageOverlay from "../../../components/DynamicPinnedImageOverlay";
 import Comments from "../../../components/Comments";
 import ContentSectionsRenderer from "../../../components/ContentSectionsRenderer";
 import Breadcrumbs, { buildCategoryBreadcrumbs, generateBreadcrumbJsonLd } from "../../../components/Breadcrumbs";
@@ -205,12 +205,17 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
     return post.contentSections?.find(section => section.type === 'popular-posts');
   };
 
-  /* ---------- Get content sections without hero, breadcrumb, and popular-posts ---------- */
+  /* ---------- Get article with images section ---------- */
+  const getArticleWithImagesSection = () => {
+    return post.contentSections?.find(section => section.type === 'article');
+  };
+
+  /* ---------- Get content sections without hero, breadcrumb, and article ---------- */
   const getContentSections = () => {
     return post.contentSections?.filter(section => 
       section.type !== 'hero' && 
-      section.type !== 'breadcrumb' && 
-      section.type !== 'popular-posts'
+      section.type !== 'breadcrumb' &&
+      section.type !== 'article'
     ) || [];
   };
 
@@ -432,8 +437,20 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         return null;
       })()}
 
-      {/* Article Content with Pinned Image Overlay */}
-      <ArticleWithPinnedImage />
+      {/* Dynamic Article Content with Pinned Image Overlay */}
+      {(() => {
+        const articleSection = getArticleWithImagesSection();
+        if (articleSection && articleSection.type === 'article') {
+          return (
+            <DynamicPinnedImageOverlay
+              articleSection={articleSection}
+              viewportVh={100}
+              scrim={true}
+            />
+          );
+        }
+        return null;
+      })()}
 
       {/* Dynamic Content Sections */}
       <ContentSectionsRenderer sections={getContentSections()} />
