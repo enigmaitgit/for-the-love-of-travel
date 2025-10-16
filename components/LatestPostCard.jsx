@@ -1,9 +1,12 @@
 "use client";
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRef } from 'react';
+import { safePlayVideo, safePauseAndResetVideo } from '@/lib/video-utils';
 
-export default function LatestPostCard({ width = '382px', height = '146px', image, title, description, readTime, categories = [], category, publishedDate, slug, onClick }) {
+export default function LatestPostCard({ width = '382px', height = '146px', image, featuredMedia, title, description, readTime, categories = [], category, publishedDate, slug, onClick }) {
   const href = slug ? `/content/${slug}` : '/content';
+  const videoRef = useRef(null);
   
   return (
     <Link href={href} onClick={onClick}>
@@ -37,33 +40,164 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
           stiffness: 300, 
           damping: 20 
         }}
+        onMouseEnter={() => {
+          if (videoRef.current && featuredMedia?.type === 'video') {
+            console.log('Card hover enter - playing video');
+            safePlayVideo(videoRef.current, {
+              onError: (error) => console.warn('Video play error:', error),
+              onSuccess: () => console.log('Video playing successfully')
+            });
+          }
+        }}
+        onMouseLeave={() => {
+          if (videoRef.current && featuredMedia?.type === 'video') {
+            console.log('Card hover leave - pausing video');
+            safePauseAndResetVideo(videoRef.current, {
+              onError: (error) => console.warn('Video pause/reset error:', error),
+              onSuccess: () => console.log('Video paused and reset successfully')
+            });
+          }
+        }}
       >
-      {/* Background Image with Zoom Effect */}
-      {image && (
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("${image}")`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            zIndex: -1
-          }}
-          initial={{ scale: 1 }}
-          whileHover={{ 
-            scale: 1.1,
-            transition: { 
-              type: "spring", 
-              stiffness: 200, 
-              damping: 25,
-              duration: 0.4
-            }
-          }}
-        />
-      )}
+      {/* Background Media with Zoom Effect */}
+      {(() => {
+        // Determine media URL and type (prioritize featuredMedia over image)
+        const rawMediaUrl = featuredMedia?.url || image;
+        const mediaType = featuredMedia?.type || 'image';
+        
+        // Construct proper URL based on media type
+        let mediaUrl = rawMediaUrl;
+        if (mediaType === 'video' && rawMediaUrl && !rawMediaUrl.startsWith('http') && !rawMediaUrl.startsWith('/') && !rawMediaUrl.startsWith('data:')) {
+          // For videos, use admin backend URL (port 5000)
+          mediaUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(rawMediaUrl)}`;
+        }
+        
+        if (!mediaUrl) return null;
+        
+        if (mediaType === 'video') {
+          return (
+            <motion.div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: -1,
+                overflow: 'hidden'
+              }}
+              initial={{ scale: 1 }}
+              whileHover={{ 
+                scale: 1.1,
+                transition: { 
+                  type: "spring", 
+                  stiffness: 200, 
+                  damping: 25,
+                  duration: 0.4
+                }
+              }}
+            >
+              <video
+                ref={videoRef}
+                src={mediaUrl}
+                className="w-full h-full object-cover"
+                muted
+                preload="metadata"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
+              />
+              {/* Video gradient overlay - make it transparent to mouse events */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%)',
+                  zIndex: 1,
+                  pointerEvents: 'none'
+                }}
+              />
+              {/* Video badge - make it transparent to mouse events */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  zIndex: 2,
+                  pointerEvents: 'none'
+                }}
+              >
+                <div
+                  style={{
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    color: 'white',
+                    fontSize: '8px',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '2px'
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      background: 'white',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '0',
+                        height: '0',
+                        borderLeft: '2px solid black',
+                        borderTop: '1px solid transparent',
+                        borderBottom: '1px solid transparent'
+                      }}
+                    />
+                  </div>
+                  Video
+                </div>
+              </div>
+            </motion.div>
+          );
+        } else {
+          return (
+            <motion.div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%), url("${mediaUrl}")`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                zIndex: -1
+              }}
+              initial={{ scale: 1 }}
+              whileHover={{ 
+                scale: 1.1,
+                transition: { 
+                  type: "spring", 
+                  stiffness: 200, 
+                  damping: 25,
+                  duration: 0.4
+                }
+              }}
+            />
+          );
+        }
+      })()}
       {/* Top Section with Category Tags */}
       <div style={{
         display: 'flex',

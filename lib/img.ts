@@ -14,8 +14,9 @@ export function normalizeImageSrc(
   }
 
   // fallback: treat it as a filename/id from uploads (for backward compatibility)
-  const base = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-  return `${base}/uploads/${encodeURIComponent(s)}`;
+  // Images are served from the admin backend, not the website backend
+  const adminBackendUrl = process.env.NEXT_PUBLIC_ADMIN_BACKEND_URL || 'http://localhost:5000';
+  return `${adminBackendUrl}/api/v1/media/serve/${encodeURIComponent(s)}`;
 }
 
 export function isValidForNextImage(url: string | null): url is string {

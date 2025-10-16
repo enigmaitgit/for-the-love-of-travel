@@ -16,6 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import SafeImage from "../../../components/content/SafeImage";
 import { normalizeImageSrc } from "../../../lib/img";
+import { safePlayVideo, safePauseAndResetVideo } from '../../../lib/video-utils';
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   Facebook,
@@ -86,11 +87,21 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         });
 
         if ((postsResponse as any)?.success) {
-          setPosts(postsResponse.data || []);
+          const postsData = postsResponse.data || [];
+          console.log('Posts data received:', postsData);
+          // Log the specific post we're looking for
+          const videoPost = postsData.find((p: any) => p.title === 'Checking the video upload');
+          if (videoPost) {
+            console.log('Video post found:', videoPost);
+            console.log('Video post featuredMedia:', videoPost.featuredMedia);
+            console.log('Video post featuredImage:', videoPost.featuredImage);
+          }
+          setPosts(postsData);
           setTotalPages(postsResponse.meta?.pagination?.pages || 1);
         } else {
           const data = (postsResponse as any)?.data ?? [];
           const pages = (postsResponse as any)?.meta?.pagination?.pages ?? 1;
+          console.log('Posts data received (fallback):', data);
           setPosts(Array.isArray(data) ? data : []);
           setTotalPages(Number.isFinite(pages) ? pages : 1);
         }
@@ -182,7 +193,7 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
     }
   };
 
-  /* ---------- Get hero image from content sections or fallback ---------- */
+  /* ---------- Get hero media from content sections or fallback ---------- */
   const getHeroImage = () => {
     const heroSection = post.contentSections?.find(section => section.type === 'hero');
     
@@ -193,6 +204,71 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
       null;
     
     return heroSrc;
+  };
+
+  const getHeroMedia = () => {
+    const heroSection = post.contentSections?.find(section => section.type === 'hero');
+    
+    // Debug logging for hero section
+    console.log('Hero section debug in getHeroMedia:', {
+      heroSection: heroSection,
+      backgroundImage: heroSection?.backgroundImage,
+      backgroundVideo: heroSection?.backgroundVideo,
+      featuredMedia: post.featuredMedia,
+      featuredImage: post.featuredImage
+    });
+    
+    // Priority 1: Hero section's backgroundVideo
+    if (heroSection?.backgroundVideo) {
+      let videoUrl;
+      if (heroSection.backgroundVideo.startsWith('http') || heroSection.backgroundVideo.startsWith('/') || heroSection.backgroundVideo.startsWith('data:')) {
+        videoUrl = heroSection.backgroundVideo;
+      } else {
+        // For videos, use admin backend URL (port 5000) instead of website backend (port 3000)
+        videoUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(heroSection.backgroundVideo)}`;
+      }
+      
+      console.log('Using hero section backgroundVideo:', videoUrl);
+      return {
+        url: videoUrl,
+        type: 'video'
+      };
+    }
+    
+    // Priority 2: Hero section's backgroundImage
+    if (heroSection?.backgroundImage) {
+      const imageUrl = normalizeImageSrc(heroSection.backgroundImage);
+      console.log('Using hero section backgroundImage:', imageUrl);
+      return {
+        url: imageUrl,
+        type: 'image'
+      };
+    }
+    
+    // Priority 3: Post's featuredMedia (video)
+    if (post.featuredMedia?.type === 'video' && post.featuredMedia?.url) {
+      let videoUrl;
+      if (post.featuredMedia.url.startsWith('http') || post.featuredMedia.url.startsWith('/') || post.featuredMedia.url.startsWith('data:')) {
+        videoUrl = post.featuredMedia.url;
+      } else {
+        // For videos, use admin backend URL (port 5000) instead of website backend (port 3000)
+        videoUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(post.featuredMedia.url)}`;
+      }
+      
+      console.log('Using post featuredMedia video:', videoUrl);
+      return {
+        url: videoUrl,
+        type: 'video'
+      };
+    }
+    
+    // Priority 4: Post's featuredImage
+    const heroSrc = normalizeImageSrc(post.featuredImage);
+    console.log('Using post featuredImage:', heroSrc);
+    return {
+      url: heroSrc,
+      type: 'image'
+    };
   };
 
   /* ---------- Get hero section data ---------- */
@@ -299,14 +375,25 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         style={{ y, opacity }}
       >
         <motion.div style={{ scale }} className="w-full h-full">
-          {getHeroImage() ? (
-            <SafeImage
-              src={getHeroImage()}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-            />
+          {getHeroMedia().url ? (
+            getHeroMedia().type === 'video' ? (
+              <video
+                src={getHeroMedia().url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <SafeImage
+                src={getHeroMedia().url}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            )
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
               <div className="text-center text-white">
@@ -625,20 +712,111 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
                     <Link href={`/content/${postItem.slug}`}>
-                      <div className="relative h-48 overflow-hidden">
-                        <SafeImage
-                          src={postItem.featuredImage}
-                          alt={postItem.featuredImage?.alt || postItem.title}
-                          fill
-                          className="object-cover hover:scale-105 transition-transform duration-300"
-                        />
+                      <div className="relative h-48 overflow-hidden group">
+                        {(() => {
+                          // Get the media URL and type (prioritize featuredMedia over featuredImage)
+                          const rawMediaUrl = postItem.featuredMedia?.url || 
+                            (typeof postItem.featuredImage === 'string' ? postItem.featuredImage : postItem.featuredImage?.url);
+                          const mediaType = postItem.featuredMedia?.type || 'image';
+                          
+                          // Construct proper URL based on media type
+                          let mediaUrl = rawMediaUrl;
+                          if (mediaType === 'video' && rawMediaUrl && !rawMediaUrl.startsWith('http') && !rawMediaUrl.startsWith('/') && !rawMediaUrl.startsWith('data:')) {
+                            // For videos, use admin backend URL (port 5000)
+                            mediaUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(rawMediaUrl)}`;
+                          }
+                          
+          // Debug logging for video posts
+          if (mediaType === 'video') {
+            console.log('Rendering video post:', postItem.title);
+            console.log('featuredMedia:', postItem.featuredMedia);
+            console.log('featuredImage:', postItem.featuredImage);
+            console.log('mediaUrl:', mediaUrl);
+            console.log('mediaType:', mediaType);
+            console.log('Raw mediaUrl check:', {
+              startsWithHttp: mediaUrl?.startsWith('http'),
+              startsWithSlash: mediaUrl?.startsWith('/'),
+              startsWithData: mediaUrl?.startsWith('data:'),
+              fullUrl: mediaUrl
+            });
+          }
+                          
+                          if (mediaType === 'video' && mediaUrl) {
+                            return (
+                              <>
+                                <video
+                                  src={mediaUrl}
+                                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                  muted
+                                  preload="metadata"
+                                  onMouseEnter={(e) => {
+                                    safePlayVideo(e.currentTarget, {
+                                      onError: (error) => console.warn('Video play error:', error),
+                                      onSuccess: () => console.log('Video playing successfully')
+                                    });
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    safePauseAndResetVideo(e.currentTarget, {
+                                      onError: (error) => console.warn('Video pause/reset error:', error),
+                                      onSuccess: () => console.log('Video paused and reset successfully')
+                                    });
+                                  }}
+                                  onError={(e) => {
+                                    const target = e.target as HTMLVideoElement;
+                                    console.error('Video failed to load:', {
+                                      title: postItem.title,
+                                      videoUrl: target.src,
+                                      error: target.error,
+                                      networkState: target.networkState,
+                                      readyState: target.readyState,
+                                      featuredMedia: postItem.featuredMedia
+                                    });
+                                    target.style.display = 'none';
+                                    const parent = target.parentElement;
+                                    if (parent) {
+                                      parent.innerHTML = `
+                                        <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                          <div class="text-center text-gray-500">
+                                            <div class="w-8 h-8 mx-auto mb-2 bg-gray-400 rounded-full flex items-center justify-center">
+                                              <div class="w-0 h-0 border-l-[6px] border-l-white border-y-[4px] border-y-transparent ml-1"></div>
+                                            </div>
+                                            <div class="text-sm">Video</div>
+                                          </div>
+                                        </div>
+                                      `;
+                                    }
+                                  }}
+                                />
+                                {/* Video badge */}
+                                <div className="absolute top-2 right-2">
+                                  <div className="bg-black/70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                                    <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center">
+                                      <div className="w-0 h-0 border-l-[2px] border-l-black border-y-[1px] border-y-transparent"></div>
+                                    </div>
+                                    Video
+                                  </div>
+                                </div>
+                              </>
+                            );
+                          } else {
+                            return (
+                              <SafeImage
+                                src={mediaUrl || postItem.featuredImage}
+                                alt={postItem.featuredImage?.alt || postItem.title}
+                                fill
+                                className="object-cover hover:scale-105 transition-transform duration-300"
+                              />
+                            );
+                          }
+                        })()}
+                        
                         {postItem.isPinned && (
                           <div className="absolute top-4 left-4">
                             <span className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                               Pinned
                             </span>
-                  </div>
-                )}
+                          </div>
+                        )}
                       </div>
                       <div className="p-6">
                         <div className="flex flex-wrap gap-2 mb-3">

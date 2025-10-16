@@ -142,6 +142,7 @@ export default function DestinationPage() {
           id: post._id,
           slug: post.slug, // Add slug for dynamic routing
           image: post.featuredImage, // featuredImage is already a base64 string
+          featuredMedia: post.featuredMedia, // Add featuredMedia for video support
           title: post.title,
           description: post.excerpt || post.body?.replace(/<[^>]*>/g, '').substring(0, 150) + '...', // Use excerpt or strip HTML from body
           readTime: post.readingTimeText || (post.readingTime ? `${post.readingTime} min read` : '5 min read'),

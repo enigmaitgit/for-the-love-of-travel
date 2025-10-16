@@ -36,6 +36,15 @@ export interface Post {
     width?: number;
     height?: number;
   };
+  featuredMedia?: {
+    url: string;
+    alt?: string;
+    caption?: string;
+    type: 'image' | 'video';
+    width?: number;
+    height?: number;
+    duration?: number;
+  };
   tags: string[];
   categories: Category[];
   primaryCategory?: Category;
