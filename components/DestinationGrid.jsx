@@ -31,6 +31,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             width="520px" 
             height="200px" 
             image={card1?.image || "/lt1.png"} 
+            featuredMedia={card1?.featuredMedia}
             title={card1?.title}
             description={card1?.description}
             readTime={card1?.readTime}
@@ -52,6 +53,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             width="520px" 
             height="200px" 
             image={card2?.image || "/lt2.png" } 
+            featuredMedia={card2?.featuredMedia}
             title={card2?.title}
             description={card2?.description}
             readTime={card2?.readTime}
@@ -77,6 +79,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           width="450px" 
           height="250px" 
           image={card3?.image || "/lt3.png"} 
+          featuredMedia={card3?.featuredMedia}
           title={card3?.title}
           description={card3?.description}
           readTime={card3?.readTime}
@@ -90,6 +93,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           width="350px" 
           height="250px" 
           image={card4?.image || "/lt4.png"} 
+          featuredMedia={card4?.featuredMedia}
           title={card4?.title}
           description={card4?.description}
           readTime={card4?.readTime}
@@ -103,6 +107,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
           width="250px" 
           height="200px" 
           image={card5?.image || "/lt5.png"} 
+          featuredMedia={card5?.featuredMedia}
           title={card5?.title}
           description={card5?.description}
           readTime={card5?.readTime}
@@ -126,6 +131,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             width="820px" 
             height="280px" 
             image={card6?.image || "/lt6.png"} 
+            featuredMedia={card6?.featuredMedia}
             title={card6?.title}
             description={card6?.description}
             readTime={card6?.readTime}
@@ -146,6 +152,7 @@ const DestinationGrid = ({ card1, card2, card3, card4, card5, card6, card7 }) =>
             width="250px" 
             height="330px" 
             image={card7?.image || "/lt7.png"} 
+            featuredMedia={card7?.featuredMedia}
             title={card7?.title}
             description={card7?.description}
             readTime={card7?.readTime}

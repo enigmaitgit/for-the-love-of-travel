@@ -1,6 +1,6 @@
 // frontend/lib/cms.ts
 export type ContentSection =
-  | { type: 'hero'; backgroundImage?: string; title?: string; subtitle?: string; author?: string; publishDate?: string; readTime?: string; overlayOpacity?: number; height?: { mobile:string; tablet:string; desktop:string }; titleSize?: { mobile:string; tablet:string; desktop:string }; parallaxEnabled?: boolean; parallaxSpeed?: number; backgroundPosition?: 'center'|'top'|'bottom'|'left'|'right'; backgroundSize?: 'cover'|'contain' }
+  | { type: 'hero'; backgroundImage?: string; backgroundVideo?: string; title?: string; subtitle?: string; author?: string; publishDate?: string; readTime?: string; overlayOpacity?: number; height?: { mobile:string; tablet:string; desktop:string }; titleSize?: { mobile:string; tablet:string; desktop:string }; parallaxEnabled?: boolean; parallaxSpeed?: number; backgroundPosition?: 'center'|'top'|'bottom'|'left'|'right'; backgroundSize?: 'cover'|'contain' }
   | { type: 'text'; content?: string; hasDropCap?: boolean; alignment?: 'left'|'center'|'right'|'justify' }
   | { type: 'article'; title?: string; content?: string; changingImages?: Array<{ url: string; altText?: string; caption?: string; order?: number }>; pinnedImage?: { url: string; altText?: string; caption?: string }; layout?: { imageSize?: 'small'|'medium'|'large'; showPinnedImage?: boolean; showChangingImages?: boolean }; animation?: { enabled?: boolean; type?: 'fadeIn'|'slideUp'|'none'; duration?: number; delay?: number } }
   | { type: 'image'; imageUrl?: string; altText?: string; caption?: string; alignment?: 'left'|'center'|'right'; rounded?: boolean; shadow?: boolean; width?: number; height?: number }
@@ -14,6 +14,15 @@ export type PublicPost = {
   slug: string;
   body?: string;
   featuredImage?: string | { url: string };
+  featuredMedia?: {
+    url: string;
+    alt?: string;
+    caption?: string;
+    type: 'image' | 'video';
+    width?: number;
+    height?: number;
+    duration?: number;
+  };
   contentSections: ContentSection[];
   createdAt: string;
   updatedAt: string;
@@ -120,6 +129,7 @@ export async function fetchPostBySlug(slug: string, { nextOptions }: { nextOptio
       slug: post.slug,
       body: post.body || '',
       featuredImage: post.featuredImage,
+      featuredMedia: post.featuredMedia,
       contentSections: Array.isArray(post.contentSections) ? post.contentSections : [],
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,

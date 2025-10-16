@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Clock, User, Calendar, Heart, MessageCircle, ArrowRight, Search, Filter, Share2, Facebook, Twitter, Linkedin, Copy } from "lucide-react";
 import { postsApi, categoriesApi, authorsApi } from "../lib/api";
+import { safePlayVideo, safePauseAndResetVideo } from '@/lib/video-utils';
 
 // Hero Section Component
 const HeroSection = ({ section, posts = [] }) => {
@@ -378,13 +379,81 @@ const PopularPostsSection = ({ section, posts = [] }) => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
               <Link href={`/content/${post.slug}`}>
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={post.featuredImage.url}
-                    alt={post.featuredImage.alt || post.title}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-300"
-                  />
+                <div className="relative h-48 overflow-hidden group">
+                  {(() => {
+                    // Get the media URL and type (prioritize featuredMedia over featuredImage)
+                    const rawMediaUrl = post.featuredMedia?.url || post.featuredImage?.url;
+                    const mediaType = post.featuredMedia?.type || 'image';
+                    
+                    // Construct proper URL based on media type
+                    let mediaUrl = rawMediaUrl;
+                    if (mediaType === 'video' && rawMediaUrl && !rawMediaUrl.startsWith('http') && !rawMediaUrl.startsWith('/') && !rawMediaUrl.startsWith('data:')) {
+                      // For videos, use admin backend URL (port 5000)
+                      mediaUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(rawMediaUrl)}`;
+                    }
+                    
+                    if (mediaType === 'video' && mediaUrl) {
+                      return (
+                        <>
+                          <video
+                            src={mediaUrl}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            muted
+                            preload="metadata"
+                            onMouseEnter={(e) => {
+                              safePlayVideo(e.currentTarget, {
+                                onError: (error) => console.warn('Video play error:', error),
+                                onSuccess: () => console.log('Video playing successfully')
+                              });
+                            }}
+                            onMouseLeave={(e) => {
+                              safePauseAndResetVideo(e.currentTarget, {
+                                onError: (error) => console.warn('Video pause/reset error:', error),
+                                onSuccess: () => console.log('Video paused and reset successfully')
+                              });
+                            }}
+                            onError={(e) => {
+                              console.error('Video failed to load:', post.title);
+                              const target = e.target;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = `
+                                  <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <div class="text-center text-gray-500">
+                                      <div class="w-8 h-8 mx-auto mb-2 bg-gray-400 rounded-full flex items-center justify-center">
+                                        <div class="w-0 h-0 border-l-[6px] border-l-white border-y-[4px] border-y-transparent ml-1"></div>
+                                      </div>
+                                      <div class="text-sm">Video</div>
+                                    </div>
+                                  </div>
+                                `;
+                              }
+                            }}
+                          />
+                          {/* Video badge */}
+                          <div className="absolute top-2 right-2">
+                            <div className="bg-black/70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                              <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center">
+                                <div className="w-0 h-0 border-l-[2px] border-l-black border-y-[1px] border-y-transparent"></div>
+                              </div>
+                              Video
+                            </div>
+                          </div>
+                        </>
+                      );
+                    } else {
+                      return (
+                        <Image
+                          src={mediaUrl || post.featuredImage?.url}
+                          alt={post.featuredImage?.alt || post.title}
+                          fill
+                          className="object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      );
+                    }
+                  })()}
+                  
                   <div className="absolute top-4 left-4">
                     <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                       Featured

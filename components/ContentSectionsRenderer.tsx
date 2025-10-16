@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import SafeImage from './content/SafeImage';
 import type { ContentSection } from '@/lib/cms';
+import { normalizeImageSrc } from '@/lib/img';
 
 export default function ContentSectionsRenderer({ sections }: { sections: ContentSection[] }) {
   if (!Array.isArray(sections) || sections.length === 0) return null;
@@ -27,13 +28,46 @@ function Section({ section }: { section: ContentSection }) {
   switch (section.type) {
     case 'hero': {
       const bg = section.backgroundImage || '';
+      const bgVideo = section.backgroundVideo || '';
       const heightDesktop = section.height?.desktop ?? '520px';
       const overlay = section.overlayOpacity ?? 0.4;
+      
+      // Resolve URLs properly
+      const resolvedBg = bg ? normalizeImageSrc(bg) : null;
+      
+      // Special handling for video URLs from admin backend
+      let resolvedBgVideo = null;
+      if (bgVideo) {
+        if (bgVideo.includes('localhost:5000') || bgVideo.includes('/api/v1/media/')) {
+          // For admin backend URLs, use them directly (they should be accessible)
+          resolvedBgVideo = bgVideo;
+        } else {
+          // For other URLs, use normal resolution
+          resolvedBgVideo = normalizeImageSrc(bgVideo);
+        }
+      }
+      
       return (
         <section className="relative w-full" style={{ height: heightDesktop }}>
-          {bg ? (
+          {resolvedBgVideo ? (
+            <video
+              src={resolvedBgVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error('Hero video failed to load:', {
+                  originalUrl: bgVideo,
+                  resolvedUrl: resolvedBgVideo,
+                  section: section
+                });
+              }}
+            />
+          ) : resolvedBg ? (
             <SafeImage
-              src={bg}
+              src={resolvedBg}
               alt={section.title || 'Hero background'}
               fill
               className="object-cover"

@@ -37,3 +37,8 @@ export interface DynamicPinnedImageOverlayProps {
 
 declare const DynamicPinnedImageOverlay: React.FC<DynamicPinnedImageOverlayProps>;
 export default DynamicPinnedImageOverlay;
+
+
+
+
+

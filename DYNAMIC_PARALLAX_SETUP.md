@@ -161,3 +161,8 @@ Add `console.log` statements in the component to debug:
 - Custom scroll triggers
 - Advanced image effects (blur, zoom, etc.)
 - Integration with analytics for scroll tracking
+
+
+
+
+
