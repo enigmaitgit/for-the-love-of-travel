@@ -428,6 +428,24 @@ export default function DynamicNavbar() {
                 </Link>
               </motion.div>
 
+              {/* Simple Posts Link */}
+              <motion.div
+                className="relative"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                <Link
+                  href="/simple"
+                  className={[
+                    "text-sm font-medium transition-all duration-300 ease-out",
+                    pathname === "/simple" ? "text-brand-gold font-semibold" : "text-black hover:text-brand-gold",
+                  ].join(" ")}
+                >
+                  Simple Posts
+                </Link>
+              </motion.div>
+
               {/* Dynamic Category Links */}
               {categories.map((category) => {
                 const isDropdownOpen = activeDropdown === category.name;
@@ -763,6 +781,24 @@ export default function DynamicNavbar() {
                     onClick={() => setOpen(false)}
                   >
                     Home
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                >
+                  <Link
+                    href="/simple"
+                    className={`block px-4 py-3 text-lg font-medium transition-all duration-300 ease-out rounded-lg ${
+                      pathname === "/simple"
+                        ? "text-brand-gold bg-white/20"
+                        : "text-gray-700 hover:text-brand-gold hover:bg-white/10"
+                    }`}
+                    onClick={() => setOpen(false)}
+                  >
+                    Simple Posts
                   </Link>
                 </motion.div>
 

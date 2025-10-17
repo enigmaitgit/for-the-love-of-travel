@@ -14,8 +14,8 @@ export default function ContentSectionsRenderer({ sections }: { sections: Conten
   return (
     <div className="w-full">
       {sections.map((s, idx) => {
-        // Skip hero and breadcrumb sections as they're handled by the main component in ContentPageClient
-        if (s.type === 'hero' || s.type === 'breadcrumb') {
+        // Skip hero, breadcrumb, and video sections as they're handled separately
+        if (s.type === 'hero' || s.type === 'breadcrumb' || s.type === 'video') {
           return null;
         }
         return <Section key={idx} section={s} />;
@@ -144,6 +144,10 @@ function Section({ section }: { section: ContentSection }) {
         </section>
       );
     }
+
+    case 'video':
+      // Video sections are handled separately by OverlayVideoSection component
+      return null;
 
     case 'gallery': {
       const layout = section.layout ?? 'grid';

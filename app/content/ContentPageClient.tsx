@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 /* --- Shared UI (Fix/UI-fixes) --- */
 import DynamicNavbar from "../../components/DynamicNavbar";
@@ -26,11 +26,12 @@ import {
   MessageCircle,
   ArrowRight,
   Search,
+  X,
 } from "lucide-react";
 
 /* --- Data / Types --- */
-import { postsApi, categoriesApi } from "../../lib/api";
-import type { Post, Category } from "../../types";
+import { postsApi, categoriesApi, tagsApi } from "../../lib/api";
+import type { Post, Category, Tag } from "../../types";
 import type {
   ContentPageProps,
   ShareButtonProps,
@@ -58,12 +59,17 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
   /* ---------- main: posts/filters/featured ---------- */
   const [posts, setPosts] = useState<Post[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedTag, setSelectedTag] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [tagSearchQuery, setTagSearchQuery] = useState("");
+  const [showTagSuggestions, setShowTagSuggestions] = useState(false);
+  const tagSearchRef = useRef<HTMLDivElement>(null);
 
   /* ---------- Motion values for parallax hero ---------- */
   const { scrollY } = useScroll();
@@ -98,6 +104,7 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
           page: currentPage,
           limit: 12,
           category: selectedCategory || undefined,
+          tag: selectedTag || undefined,
           query: searchQuery || undefined,
           sortBy: "publishedAt",
           sortOrder: "desc",
@@ -133,6 +140,19 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
         setCategories([]);
       }
 
+      // Tags
+      try {
+        const tagsResponse = await tagsApi.getTags();
+        if ((tagsResponse as any)?.success) {
+          setTags(tagsResponse.data || []);
+        } else {
+          setTags((tagsResponse as any)?.data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching tags:", err);
+        setTags([]);
+      }
+
       // Featured posts -> hydrate hero
       try {
         const featuredResponse = await postsApi.getFeaturedPosts(3);
@@ -162,7 +182,7 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, selectedCategory, searchQuery]);
+  }, [currentPage, selectedCategory, selectedTag, searchQuery]);
 
   useEffect(() => {
     fetchData();
@@ -174,10 +194,51 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
     setCurrentPage(1);
   };
 
+  const handleTagFilter = (tagSlug: string) => {
+    setSelectedTag(tagSlug === selectedTag ? "" : tagSlug);
+    setCurrentPage(1);
+  };
+
+  const handleTagSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCurrentPage(1);
+  };
+
+  const handleTagInputChange = (value: string) => {
+    setTagSearchQuery(value);
+    setShowTagSuggestions(value.length > 0);
+  };
+
+  const handleTagSelect = (tag: Tag) => {
+    setSelectedTag(tag.slug);
+    setTagSearchQuery(tag.name);
+    setShowTagSuggestions(false);
+    setCurrentPage(1);
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentPage(1);
   };
+
+  // Filter tags based on search query
+  const filteredTags = tags.filter(tag => 
+    tag.name.toLowerCase().includes(tagSearchQuery.toLowerCase())
+  );
+
+  // Handle click outside to close tag suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (tagSearchRef.current && !tagSearchRef.current.contains(event.target as Node)) {
+        setShowTagSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   /* ---------- Share actions (UI-fixes) ---------- */
   const handleShare = async (platform: ShareButtonProps["platform"]) => {
@@ -349,60 +410,304 @@ export default function ContentPageClient({ content }: ContentPageClientProps) {
       {/* Article Content with Pinned Image Overlay */}
       <ArticleWithPinnedImage />
 
-      {/* ===== Search & Category Filter (from main, now wired to API) ===== */}
-      <section className="py-8 bg-white border-b">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-            {/* Search Bar */}
-            <form onSubmit={handleSearch} className="flex-1 max-w-md w-full">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+      {/* Enhanced Search & Filter Section */}
+      <section className="py-12 bg-gradient-to-br from-gray-50 to-white border-b border-gray-100">
+        <div className="container max-w-7xl mx-auto px-4">
+          {/* Section Header */}
+          <motion.div 
+            className="text-center mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              Discover More Content
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Search and filter through our collection of travel stories, guides, and experiences
+            </p>
+          </motion.div>
+
+          {/* Main Search Bar */}
+          <motion.div 
+            className="max-w-2xl mx-auto mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <form onSubmit={handleSearch} className="relative">
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Search posts..."
+                  placeholder="Search for destinations, experiences, or topics..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-300 bg-white shadow-sm hover:shadow-md"
                 />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                )}
               </div>
             </form>
+          </motion.div>
 
+          {/* Filter Tabs */}
+          <motion.div 
+            className="flex flex-col lg:flex-row gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             {/* Category Filters */}
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => handleCategoryFilter("")}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  selectedCategory === ""
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                All
-              </button>
+            <div className="flex-1">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <h3 className="text-lg font-semibold text-gray-900">Categories</h3>
+                  {selectedCategory && (
+                    <span className="text-sm text-gray-500">
+                      ({categories.find(cat => cat.slug === selectedCategory)?.name || 'Selected'})
+                    </span>
+                  )}
+                </div>
+                
+                <div className="flex flex-wrap gap-3">
+                  <motion.button
+                    onClick={() => handleCategoryFilter("")}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                      selectedCategory === ""
+                        ? "bg-blue-500 text-white shadow-lg shadow-blue-200 transform scale-105"
+                        : "bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:shadow-md"
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    All Categories
+                  </motion.button>
 
-              {categories.slice(0, 12).map((category) => (
-                <button
-                  key={category._id}
-                  onClick={() => handleCategoryFilter(category.slug)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category.slug
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                  style={{
-                    backgroundColor:
-                      selectedCategory === category.slug
-                        ? category.color
-                        : undefined,
-                    color:
-                      selectedCategory === category.slug ? "white" : undefined,
-                  }}
-                >
-                  {category.name}
-                </button>
-              ))}
+                  {categories.slice(0, 10).map((category, index) => (
+                    <motion.button
+                      key={category._id}
+                      onClick={() => handleCategoryFilter(category.slug)}
+                      className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        selectedCategory === category.slug
+                          ? "text-white shadow-lg transform scale-105"
+                          : "bg-gray-100 text-gray-700 hover:shadow-md"
+                      }`}
+                      style={{
+                        backgroundColor: selectedCategory === category.slug ? category.color || "#3B82F6" : undefined,
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                    >
+                      {category.name}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+
+            {/* Tag Filters */}
+            <div className="flex-1">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <h3 className="text-lg font-semibold text-gray-900">Tags</h3>
+                  {selectedTag && (
+                    <span className="text-sm text-gray-500">
+                      ({tags.find(tag => tag.slug === selectedTag)?.name || 'Selected'})
+                    </span>
+                  )}
+                </div>
+
+                {/* Tag Search Input */}
+                <div className="relative mb-4" ref={tagSearchRef}>
+                  <form onSubmit={handleTagSearch}>
+                    <div className="relative group">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-green-500 transition-colors" />
+                      <input
+                        type="text"
+                        placeholder="Search tags..."
+                        value={tagSearchQuery}
+                        onChange={(e) => handleTagInputChange(e.target.value)}
+                        onFocus={() => setShowTagSuggestions(tagSearchQuery.length > 0)}
+                        className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-100 focus:border-green-500 transition-all duration-300"
+                      />
+                      {tagSearchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTagSearchQuery("");
+                            setShowTagSuggestions(false);
+                          }}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </form>
+
+                  {/* Enhanced Tag Suggestions Dropdown */}
+                  {showTagSuggestions && filteredTags.length > 0 && (
+                    <motion.div 
+                      className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-64 overflow-y-auto"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {filteredTags.slice(0, 8).map((tag, index) => (
+                        <motion.button
+                          key={tag.slug}
+                          onClick={() => handleTagSelect(tag)}
+                          className="w-full px-4 py-3 text-left hover:bg-green-50 transition-colors flex justify-between items-center border-b border-gray-100 last:border-b-0"
+                          whileHover={{ backgroundColor: "#F0FDF4" }}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.2, delay: index * 0.05 }}
+                        >
+                          <span className="text-sm font-medium text-gray-900">{tag.name}</span>
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                            {tag.count} posts
+                          </span>
+                        </motion.button>
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* Selected Tag Display */}
+                {selectedTag && (
+                  <motion.div 
+                    className="flex items-center gap-3 mb-4"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <span className="text-sm font-medium text-gray-600">Active filter:</span>
+                    <div className="flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-xl border border-green-200">
+                      <span className="text-sm font-semibold">
+                        {tags.find(tag => tag.slug === selectedTag)?.name || selectedTag}
+                      </span>
+                      <button
+                        onClick={() => {
+                          setSelectedTag("");
+                          setTagSearchQuery("");
+                          setShowTagSuggestions(false);
+                        }}
+                        className="text-green-600 hover:text-green-800 transition-colors p-1 hover:bg-green-200 rounded-full"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Popular Tags */}
+                {!selectedTag && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">Popular Tags</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {tags.slice(0, 8).map((tag, index) => (
+                        <motion.button
+                          key={tag.slug}
+                          onClick={() => handleTagSelect(tag)}
+                          className="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-green-100 hover:text-green-800 transition-all duration-300 border border-gray-200 hover:border-green-300"
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileTap={{ scale: 0.95 }}
+                          initial={{ opacity: 0, y: 10 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                          {tag.name} <span className="text-gray-500">({tag.count})</span>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Active Filters Summary */}
+          {(selectedCategory || selectedTag || searchQuery) && (
+            <motion.div 
+              className="mt-6 flex flex-wrap gap-3 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <span className="text-sm text-gray-600 font-medium">Active filters:</span>
+              
+              {selectedCategory && (
+                <div className="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1.5 rounded-lg text-sm">
+                  <span>Category: {categories.find(cat => cat.slug === selectedCategory)?.name}</span>
+                  <button
+                    onClick={() => handleCategoryFilter("")}
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              
+              {selectedTag && (
+                <div className="flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1.5 rounded-lg text-sm">
+                  <span>Tag: {tags.find(tag => tag.slug === selectedTag)?.name}</span>
+                  <button
+                    onClick={() => {
+                      setSelectedTag("");
+                      setTagSearchQuery("");
+                      setShowTagSuggestions(false);
+                    }}
+                    className="text-green-600 hover:text-green-800 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              
+              {searchQuery && (
+                <div className="flex items-center gap-2 bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-sm">
+                  <span>Search: &ldquo;{searchQuery}&rdquo;</span>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-purple-600 hover:text-purple-800 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              
+              <button
+                onClick={() => {
+                  setSelectedCategory("");
+                  setSelectedTag("");
+                  setTagSearchQuery("");
+                  setSearchQuery("");
+                  setShowTagSuggestions(false);
+                }}
+                className="text-sm text-gray-500 hover:text-gray-700 underline transition-colors"
+              >
+                Clear all filters
+              </button>
+            </motion.div>
+          )}
         </div>
       </section>
 
