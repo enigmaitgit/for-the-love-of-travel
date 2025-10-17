@@ -205,6 +205,115 @@ const ImageSection = ({ section }) => {
   );
 };
 
+// Video Section Component
+const VideoSection = ({ section }) => {
+  return (
+    <motion.section 
+      className="relative w-full -mt-[calc(100vh+150px+600px)] md:-mt-[calc(90vh+600px)] lg:-mt-[calc(95vh+600px)] z-30"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Overlapping video content - positioned to overlap main hero section */}
+      <div 
+        className="relative flex items-center justify-center pointer-events-none"
+        style={{
+          height: section.height?.desktop || '80vh',
+        }}
+      >
+        <div className="text-center text-white max-w-4xl pointer-events-auto">
+          {/* Video player or play button */}
+          {section.videoUrl ? (
+            <div className="relative inline-block">
+              {section.controls ? (
+                <div 
+                  className="relative rounded-2xl shadow-2xl overflow-hidden border-2 border-white"
+                  style={{
+                    width: section.width ? `${section.width}px` : 'min(90vw, 800px)',
+                    aspectRatio: '16/9',
+                    maxWidth: '100%'
+                  }}
+                >
+                  <video
+                    src={section.videoUrl}
+                    poster={section.poster || undefined}
+                    className="w-full h-full object-cover"
+                    controls
+                    autoPlay={section.autoplay}
+                    muted={section.muted}
+                    loop={section.loop}
+                    preload="metadata"
+                  />
+                </div>
+              ) : (
+                <div 
+                  className="relative rounded-2xl shadow-2xl overflow-hidden border-2 border-white"
+                  style={{
+                    width: section.width ? `${section.width}px` : 'min(90vw, 800px)',
+                    aspectRatio: '16/9',
+                    maxWidth: '100%'
+                  }}
+                >
+                  {/* Video thumbnail/poster */}
+                  {section.poster ? (
+                    <img
+                      src={section.poster}
+                      alt="Video thumbnail"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                      <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l8-5-8-5z" />
+                      </svg>
+                    </div>
+                  )}
+                  
+                  {/* Play button overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <button className="bg-red-600 hover:bg-red-700 rounded-full p-4 transition-all duration-300 hover:scale-110 shadow-lg">
+                      <svg className="h-8 w-8 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l8-5-8-5z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div 
+              className="relative rounded-2xl shadow-2xl overflow-hidden bg-gray-800 flex items-center justify-center border-2 border-white"
+              style={{
+                width: section.width ? `${section.width}px` : 'min(90vw, 800px)',
+                aspectRatio: '16/9',
+                maxWidth: '100%'
+              }}
+            >
+              <div className="text-center">
+                <div className="bg-white/20 backdrop-blur-sm border-2 border-white/30 rounded-full p-6 hover:bg-white/30 transition-all duration-300 mx-auto mb-4">
+                  <svg className="h-16 w-16 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 5v10l8-5-8-5z" />
+                  </svg>
+                </div>
+                <p className="text-white/80">No video selected</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Caption below the overlapping area */}
+      {section.caption && (
+        <div className="relative z-30 p-4 bg-white/90 backdrop-blur-sm">
+          <p className="text-sm text-gray-700 italic text-center">
+            {section.caption}
+          </p>
+        </div>
+      )}
+    </motion.section>
+  );
+};
+
 // Gallery Section Component
 const GallerySection = ({ section }) => {
   return (
@@ -513,6 +622,8 @@ const ContentPageRenderer = ({ contentPage, posts = [], categories = [] }) => {
             return <ArticleSection key={index} section={section} />;
           case 'image':
             return <ImageSection key={index} section={section} />;
+          case 'video':
+            return <VideoSection key={index} section={section} />;
           case 'gallery':
             return <GallerySection key={index} section={section} />;
           case 'popular-posts':
