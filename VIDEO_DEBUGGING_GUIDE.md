@@ -116,3 +116,6 @@ curl -X GET "http://localhost:5000/api/v1/posts?limit=5&status=published" | jq '
 5. Check for any CORS or MIME type issues
 
 
+
+
+

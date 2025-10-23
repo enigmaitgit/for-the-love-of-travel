@@ -324,13 +324,48 @@ export default function DynamicPopularVideos() {
             >
               {/* Video Image */}
               <div className="h-48 sm:h-56 rounded-xl overflow-hidden border-4 sm:border-8 border-white group relative">
-                <Image
-                  src={video.thumbnail}
-                  alt={video.title}
-                  width={300}
-                  height={224}
-                  className="w-full h-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-110"
-                />
+                {video.thumbnail && typeof video.thumbnail === 'string' && video.thumbnail.trim() !== '' ? (
+                  <Image
+                    src={video.thumbnail}
+                    alt={video.title}
+                    width={300}
+                    height={224}
+                    className="w-full h-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                      console.error('Image load error for:', video.title);
+                      console.log('Failed URL:', video.thumbnail);
+                      console.log('Video data:', video);
+                      // Hide the failed image and show fallback
+                      e.target.style.display = 'none';
+                      const fallback = e.target.nextElementSibling;
+                      if (fallback) {
+                        fallback.style.display = 'flex';
+                        console.log('Fallback displayed for:', video.title);
+                      } else {
+                        console.error('Fallback element not found for:', video.title);
+                      }
+                    }}
+                    onLoad={() => {
+                      console.log('Image loaded successfully for:', video.title);
+                    }}
+                    unoptimized={true}
+                    priority={false}
+                  />
+                ) : null}
+                {/* Fallback for missing/failed images */}
+                <div 
+                  className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center rounded-lg"
+                  style={{ display: (video.thumbnail && typeof video.thumbnail === 'string' && video.thumbnail.trim() !== '') ? 'none' : 'flex' }}
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-600 text-sm font-medium">Video</span>
+                  </div>
+                </div>
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 rounded-full flex items-center justify-center shadow-lg">

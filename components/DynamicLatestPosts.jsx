@@ -54,7 +54,7 @@ const PostCard = ({ post, index, isMobile = false }) => {
 
   const getMediaUrl = () => {
     // First check featuredMedia.url (this is the correct/current media)
-    if (post.featuredMedia && post.featuredMedia.url) {
+    if (post.featuredMedia && post.featuredMedia.url && typeof post.featuredMedia.url === 'string') {
       // Transform media URLs from admin frontend (port 3002) to backend (port 5000)
       let imageUrl = post.featuredMedia.url;
       if (imageUrl.includes('localhost:3002/api/admin/media/serve/')) {
@@ -260,6 +260,13 @@ const PostCard = ({ post, index, isMobile = false }) => {
             </div>
           )}
           
+          {/* Simple Post Indicator */}
+          {post.isSimplePost && (
+            <div className="absolute top-3 left-3 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-semibold z-30">
+              SIMPLE
+            </div>
+          )}
+          
           {/* Post Title Overlay */}
           <div className={`absolute text-white z-40 ${isMobile ? 'bottom-4 left-4 right-4' : 'bottom-6 left-6 right-6'}`}>
             <h3 className={`font-semibold line-clamp-2 transition-colors ${
@@ -339,6 +346,11 @@ export default function DynamicLatestPosts() {
             // Get the best available image URL - prioritize featuredMedia.url over featuredImage
             let imageUrl = post.featuredMedia?.url || post.featuredImage || null;
             
+            // Handle simple posts where featuredImage is an object
+            if (post.featuredImage && typeof post.featuredImage === 'object' && post.featuredImage.url) {
+              imageUrl = post.featuredImage.url;
+            }
+            
             // Transform media URLs from admin frontend (port 3002) to backend (port 5000)
             if (imageUrl && typeof imageUrl === 'string' && imageUrl.includes('localhost:3002/api/admin/media/serve/')) {
               imageUrl = imageUrl.replace('localhost:3002/api/admin/media/serve/', 'localhost:5000/api/v1/media/serve/');
@@ -398,7 +410,9 @@ export default function DynamicLatestPosts() {
               featuredMedia: post.featuredMedia ? {
                 ...post.featuredMedia,
                 url: imageUrl
-              } : undefined
+              } : undefined,
+              // Add simple post indicator
+              isSimplePost: !!post.content && !post.body
             };
           });
           

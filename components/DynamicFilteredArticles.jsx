@@ -52,6 +52,11 @@ export default function DynamicFilteredArticles({ selectedCategory, onCategorySe
             // Get the best available image URL - prioritize featuredMedia.url over featuredImage
             let imageUrl = post.featuredMedia?.url || post.featuredImage || null;
             
+            // Handle simple posts where featuredImage is an object
+            if (post.featuredImage && typeof post.featuredImage === 'object' && post.featuredImage.url) {
+              imageUrl = post.featuredImage.url;
+            }
+            
             // Transform media URLs from admin frontend (port 3002) to backend (port 5000)
             if (imageUrl && typeof imageUrl === 'string' && imageUrl.includes('localhost:3002/api/admin/media/serve/')) {
               imageUrl = imageUrl.replace('localhost:3002/api/admin/media/serve/', 'localhost:5000/api/v1/media/serve/');
@@ -111,7 +116,9 @@ export default function DynamicFilteredArticles({ selectedCategory, onCategorySe
               featuredMedia: post.featuredMedia ? {
                 ...post.featuredMedia,
                 url: imageUrl
-              } : undefined
+              } : undefined,
+              // Add simple post indicator
+              isSimplePost: !!post.content && !post.body
             };
           });
           
@@ -133,7 +140,7 @@ export default function DynamicFilteredArticles({ selectedCategory, onCategorySe
 
   const getMediaUrl = (post) => {
     // First check featuredMedia.url (this is the correct/current media)
-    if (post.featuredMedia && post.featuredMedia.url) {
+    if (post.featuredMedia && post.featuredMedia.url && typeof post.featuredMedia.url === 'string') {
       // Transform media URLs from admin frontend (port 3002) to backend (port 5000)
       let imageUrl = post.featuredMedia.url;
       if (imageUrl.includes('localhost:3002/api/admin/media/serve/')) {
@@ -368,6 +375,13 @@ export default function DynamicFilteredArticles({ selectedCategory, onCategorySe
                 {isVideo && (
                   <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs font-medium">
                     Video
+                  </div>
+                )}
+                
+                {/* Simple Post indicator */}
+                {post.isSimplePost && (
+                  <div className="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">
+                    Simple
                   </div>
                 )}
               </div>

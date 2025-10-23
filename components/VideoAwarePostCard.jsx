@@ -11,7 +11,7 @@ export default function VideoAwarePostCard({ post, width, height, variant = "lat
 
   const getMediaUrl = () => {
     // First check featuredMedia.url (this is the correct/current media)
-    if (post.featuredMedia && post.featuredMedia.url) {
+    if (post.featuredMedia && post.featuredMedia.url && typeof post.featuredMedia.url === 'string') {
       return post.featuredMedia.url;
     }
     // Then check featuredImage (fallback for older posts)
@@ -127,7 +127,7 @@ export default function VideoAwarePostCard({ post, width, height, variant = "lat
             }
           }}
         >
-          {isVideoPost && isValidVideoUrl ? (
+          {isVideoPost && isValidVideoUrl && videoUrl && typeof videoUrl === 'string' && videoUrl.trim() !== '' ? (
             <video
               ref={videoRef}
               src={videoUrl}
@@ -160,7 +160,7 @@ export default function VideoAwarePostCard({ post, width, height, variant = "lat
           ) : null}
           
           {/* Image fallback or primary image */}
-          {imageUrl && (
+          {imageUrl && typeof imageUrl === 'string' && imageUrl.trim() !== '' && (
             <Image
               src={imageUrl}
               alt={post.title}

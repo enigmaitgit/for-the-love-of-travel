@@ -29,10 +29,13 @@ export default function DynamicNavbar() {
           useEffect(() => {
             const fetchCategories = async () => {
               try {
+                console.log('Fetching categories...');
                 const response = await categoriesApi.getCategoryTree();
+                console.log('Categories response:', response);
                 if (response.success) {
                   // Sort categories by order field
                   const sortedCategories = response.data.sort((a, b) => (a.order || 0) - (b.order || 0));
+                  console.log('Sorted categories:', sortedCategories);
                   setCategories(sortedCategories);
                 }
               } catch (error) {
@@ -110,7 +113,7 @@ export default function DynamicNavbar() {
   };
 
   const isActive = (category: Category) => {
-    if (category.slug === 'destinations' && pathname === '/destination') return true;
+    if (category.slug === 'destinations' && (pathname === '/destinations' || pathname.startsWith('/destinations/'))) return true;
     if (category.slug === 'experiences' && pathname === '/vacation') return true;
     if (category.slug === 'vacations' && pathname === '/vacation') return true;
     if (category.slug === 'stay' && pathname === '/Tour') return true;
@@ -428,35 +431,22 @@ export default function DynamicNavbar() {
                 </Link>
               </motion.div>
 
-              {/* Simple Posts Link */}
-              <motion.div
-                className="relative"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              >
-                <Link
-                  href="/simple"
-                  className={[
-                    "text-sm font-medium transition-all duration-300 ease-out",
-                    pathname === "/simple" ? "text-brand-gold font-semibold" : "text-black hover:text-brand-gold",
-                  ].join(" ")}
-                >
-                  Simple Posts
-                </Link>
-              </motion.div>
 
               {/* Dynamic Category Links */}
               {categories.map((category) => {
                 const isDropdownOpen = activeDropdown === category.name;
                 const hasChildren = category.children && category.children.length > 0;
                 const cards = generateCategoryCards(category);
+                
+                console.log(`Category: ${category.name}, isDropdownOpen: ${isDropdownOpen}, hasChildren: ${hasChildren}`);
 
                 return (
                   <motion.div
                     key={category._id}
                     className="relative"
                     onMouseEnter={() => {
+                      console.log('Mouse entered category:', category.name);
+                      console.log('Has children:', category.children && category.children.length > 0);
                       if (hoverTimeout) {
                         clearTimeout(hoverTimeout);
                         setHoverTimeout(null);
@@ -477,7 +467,7 @@ export default function DynamicNavbar() {
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     <Link
-                      href={category.slug === 'destinations' ? '/destination' : 
+                      href={category.slug === 'destinations' ? '/destinations' : 
                             category.slug === 'experiences' ? '/vacation' :
                             category.slug === 'vacations' ? '/vacation' :
                             category.slug === 'stay' ? '/Tour' :
@@ -493,7 +483,9 @@ export default function DynamicNavbar() {
                     {/* Desktop dropdown */}
                     <AnimatePresence>
                       {isDropdownOpen && hasChildren && (
-                        <motion.div
+                        <>
+                          {console.log(`Rendering dropdown for ${category.name}`)}
+                          <motion.div
                           initial={{ opacity: 0, y: 15, scale: 0.9, rotateX: -10 }}
                           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
                           exit={{ opacity: 0, y: 15, scale: 0.9, rotateX: -10 }}
@@ -534,12 +526,17 @@ export default function DynamicNavbar() {
                                   }}
                                 >
                                   <Link
-                                    href={`/category/${child.slug}`}
+                                    href={category.slug === 'destinations' ? `/destinations/${child.slug}` : `/category/${child.slug}`}
                                     className={`group relative block px-5 py-3 text-sm font-medium transition-all duration-300 ease-out ${
                                       hoveredDropdownItem === `${category.name}-${child.name}`
                                         ? "text-brand-gold bg-white/20 shadow-sm"
                                         : "text-gray-900 hover:text-brand-gold hover:bg-white/15"
                                     }`}
+                                    onClick={() => {
+                                      console.log('Category slug:', category.slug);
+                                      console.log('Child slug:', child.slug);
+                                      console.log('Generated URL:', category.slug === 'destinations' ? `/destinations/${child.slug}` : `/category/${child.slug}`);
+                                    }}
                                     onMouseEnter={() => {
                                       if (hoverTimeout) {
                                         clearTimeout(hoverTimeout);
@@ -650,6 +647,7 @@ export default function DynamicNavbar() {
                             </div>
                           )}
                         </motion.div>
+                        </>
                       )}
                     </AnimatePresence>
                   </motion.div>
@@ -784,23 +782,6 @@ export default function DynamicNavbar() {
                   </Link>
                 </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 }}
-                >
-                  <Link
-                    href="/simple"
-                    className={`block px-4 py-3 text-lg font-medium transition-all duration-300 ease-out rounded-lg ${
-                      pathname === "/simple"
-                        ? "text-brand-gold bg-white/20"
-                        : "text-gray-700 hover:text-brand-gold hover:bg-white/10"
-                    }`}
-                    onClick={() => setOpen(false)}
-                  >
-                    Simple Posts
-                  </Link>
-                </motion.div>
 
                 {categories.map((category, index) => (
                   <motion.div
@@ -810,7 +791,7 @@ export default function DynamicNavbar() {
                     transition={{ delay: 0.1 + index * 0.05 }}
                   >
                     <Link
-                      href={category.slug === 'destinations' ? '/destination' : 
+                      href={category.slug === 'destinations' ? '/destinations' : 
                             category.slug === 'experiences' ? '/vacation' :
                             category.slug === 'vacations' ? '/vacation' :
                             category.slug === 'stay' ? '/Tour' :
@@ -835,9 +816,14 @@ export default function DynamicNavbar() {
                             transition={{ delay: 0.15 + index * 0.05 + childIndex * 0.02 }}
                           >
                             <Link
-                              href={`/category/${child.slug}`}
+                              href={category.slug === 'destinations' ? `/destinations/${child.slug}` : `/category/${child.slug}`}
                               className="block px-4 py-2 text-sm text-gray-600 hover:text-brand-gold hover:bg-white/10 transition-all duration-300 ease-out rounded-lg"
-                              onClick={() => setOpen(false)}
+                              onClick={() => {
+                                console.log('Mobile - Category slug:', category.slug);
+                                console.log('Mobile - Child slug:', child.slug);
+                                console.log('Mobile - Generated URL:', category.slug === 'destinations' ? `/destinations/${child.slug}` : `/category/${child.slug}`);
+                                setOpen(false);
+                              }}
                             >
                               {child.name}
                             </Link>

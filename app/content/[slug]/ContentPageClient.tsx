@@ -477,20 +477,23 @@ export default function ContentPageClient({ post }: ContentPageClientProps) {
         {/* Content Overlay - Enhanced */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white max-w-6xl px-4">
-            <motion.h1
-              className="mb-8"
-              style={{
-                fontFamily: "Roboto",
-                fontWeight: 600,
-                fontSize: "60px",
-                lineHeight: "60px",
-              }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              {getHeroTitle()}
-            </motion.h1>
+            {/* Hero Title - Hidden when video section is present */}
+            {!hasVideoSection() && (
+              <motion.h1
+                className="mb-8"
+                style={{
+                  fontFamily: "Roboto",
+                  fontWeight: 600,
+                  fontSize: "60px",
+                  lineHeight: "60px",
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                {getHeroTitle()}
+              </motion.h1>
+            )}
 
             {getHeroSubtitle() && (
               <motion.p
