@@ -70,7 +70,7 @@ export default function VideoAwarePostCard({ post, width, height, variant = "lat
   // New LatestPostCard variant with inline styles (matching original PostCard structure)
   if (variant === "latest") {
     return (
-      <Link href={`/content/${post.slug}`}>
+      <Link href={post.isSimplePost ? `/simple/${post.slug}` : `/content/${post.slug}`}>
         <motion.div 
           className="w-full lg:w-auto"
           style={{

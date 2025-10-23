@@ -146,7 +146,7 @@ const PostCard = ({ post, index, isMobile = false }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Link href={`/content/${post.slug}`}>
+      <Link href={post.isSimplePost ? `/simple/${post.slug}` : `/content/${post.slug}`}>
         {/* Media Container */}
         <div className="relative w-full h-full">
           {isVideoPost && isValidVideoUrl ? (
