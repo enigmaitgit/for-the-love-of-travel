@@ -1,7 +1,9 @@
 import React from 'react';
+import Image from 'next/image';
 
 const PopularPostCard = ({ 
   image = "/popular1.jpg", 
+  featuredMedia,
   title = "Popular Post Title", 
   description = "This is a description of the popular post content that provides more details about the topic.",
   category = "Travel",
@@ -13,13 +15,63 @@ const PopularPostCard = ({
       className="w-full max-w-4xl lg:w-[879px] h-auto lg:h-[275px] border border-gray-200 rounded-xl p-3 lg:p-4 bg-white flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-6"
       style={{ transform: 'scale(1.45)' }}
     >
-      {/* Image Section */}
-      <div className="w-full lg:w-[372px] h-48 lg:h-[251px] rounded-lg overflow-hidden flex-shrink-0">
-        <img 
-          src={image} 
-          alt={title}
-          className="w-full h-full object-cover rounded-lg"
-        />
+      {/* Media Section */}
+      <div className="w-full lg:w-[372px] h-48 lg:h-[251px] rounded-lg overflow-hidden flex-shrink-0 relative">
+        {(() => {
+          // Determine media URL and type (prioritize featuredMedia over image)
+          const rawMediaUrl = featuredMedia?.url || image;
+          const mediaType = featuredMedia?.type || 'image';
+          
+          // Construct proper URL based on media type
+          let mediaUrl = rawMediaUrl;
+          if (rawMediaUrl && !rawMediaUrl.startsWith('http') && !rawMediaUrl.startsWith('/') && !rawMediaUrl.startsWith('data:')) {
+            // For both images and videos, use admin backend URL (port 5000)
+            mediaUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(rawMediaUrl)}`;
+          }
+          
+          if (!mediaUrl) return null;
+          
+          if (mediaType === 'video') {
+            return (
+              <div className="relative w-full h-full">
+                <video
+                  src={mediaUrl}
+                  className="w-full h-full object-cover rounded-lg"
+                  muted
+                  preload="metadata"
+                  poster={image} // Use image as poster/thumbnail
+                />
+                {/* Video play button overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                  <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-gray-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+                {/* Video badge */}
+                <div className="absolute top-2 right-2">
+                  <div className="bg-black/70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                    <div className="w-2 h-2 bg-white rounded-full flex items-center justify-center">
+                      <div className="w-0 h-0 border-l-2 border-t-1 border-b-1 border-white border-transparent ml-0.5"></div>
+                    </div>
+                    Video
+                  </div>
+                </div>
+              </div>
+            );
+          } else {
+            return (
+              <Image 
+                src={mediaUrl} 
+                alt={title}
+                width={372}
+                height={251}
+                className="w-full h-full object-cover rounded-lg"
+              />
+            );
+          }
+        })()}
       </div>
 
       {/* Content Section */}

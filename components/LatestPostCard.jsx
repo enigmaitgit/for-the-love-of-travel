@@ -67,9 +67,13 @@ export default function LatestPostCard({ width = '382px', height = '146px', imag
         
         // Construct proper URL based on media type
         let mediaUrl = rawMediaUrl;
-        if (mediaType === 'video' && rawMediaUrl && !rawMediaUrl.startsWith('http') && !rawMediaUrl.startsWith('/') && !rawMediaUrl.startsWith('data:')) {
-          // For videos, use admin backend URL (port 5000)
-          mediaUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(rawMediaUrl)}`;
+        if (rawMediaUrl && !rawMediaUrl.startsWith('http') && !rawMediaUrl.startsWith('/') && !rawMediaUrl.startsWith('data:')) {
+          // For both images and videos, use admin backend URL (port 5000)
+          if (mediaType === 'video') {
+            mediaUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(rawMediaUrl)}`;
+          } else {
+            mediaUrl = `http://localhost:5000/api/v1/media/serve/${encodeURIComponent(rawMediaUrl)}`;
+          }
         }
         
         if (!mediaUrl) return null;

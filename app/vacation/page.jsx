@@ -13,7 +13,7 @@ import FramerCard from '../../components/FramerCard.jsx'
 import VideoCard from '../../components/VideoCard.jsx'
 import Newsletter from '../../components/Newsletter.jsx'
 import Footer from '../../components/Footer.jsx'
-import { postsApi, videosApi } from '../../lib/api'
+import { postsApi, videosApi, categoriesApi } from '../../lib/api'
 
 
 
@@ -130,7 +130,13 @@ export default function VacationPage() {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await postsApi.getLatestPostCards(7); // Get 7 latest post cards for the grid
+        // Filter posts by experiences category
+        const response = await categoriesApi.getPostsByCategorySlug('experiences', {
+          limit: 7,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          status: 'published'
+        });
         const posts = response.data || [];
         
         // Debug: Log the first post to see the data structure
@@ -168,7 +174,13 @@ export default function VacationPage() {
   useEffect(() => {
     const fetchPopularPosts = async () => {
       try {
-        const response = await postsApi.getPopularPosts(4, '30d'); // Get 4 popular posts from last 30 days
+        // Filter popular posts by experiences category
+        const response = await categoriesApi.getPostsByCategorySlug('experiences', {
+          limit: 4,
+          sortBy: 'viewCount',
+          sortOrder: 'desc',
+          status: 'published'
+        });
         const posts = response.data || [];
         
         // Map backend Post data to popular post format
@@ -202,7 +214,13 @@ export default function VacationPage() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await videosApi.getPopularVideos(4); // Get 4 popular videos
+        // Filter videos by experiences category
+        const response = await categoriesApi.getPostsByCategorySlug('experiences', {
+          limit: 4,
+          sortBy: 'viewCount',
+          sortOrder: 'desc',
+          status: 'published'
+        });
         const posts = response.data || [];
         
         // Map backend Post data to video format

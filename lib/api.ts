@@ -36,7 +36,11 @@ export const API_ENDPOINTS = {
   authors: '/api/authors',
   search: '/api/search',
   analytics: '/api/analytics',
-  health: '/health'
+  health: '/health',
+  
+  // New endpoints for dynamic popular posts
+  viewAnalytics: '/api/v1/analytics',
+  homepageSections: '/api/v1/homepage-sections'
 };
 
 // API Response handler
@@ -409,6 +413,115 @@ export const analyticsApi = {
   },
 };
 
+// View Analytics API functions
+export const viewAnalyticsApi = {
+  trackView: async (postId: string, postType: 'post' | 'simplePost' = 'post'): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.viewAnalytics}/track-view`, {
+      method: 'POST',
+      body: JSON.stringify({ postId, postType }),
+    });
+  },
+  getPopularPostsWithAnalytics: async (
+    limit: number = 10,
+    timeframe: string = '30d',
+    algorithm: string = 'weighted',
+    postType: string = 'all'
+  ): Promise<PostsResponse> => {
+    const params = new URLSearchParams({
+      limit: limit.toString(),
+      timeframe,
+      algorithm,
+      postType
+    });
+    return apiRequest<PostsResponse>(`${API_ENDPOINTS.viewAnalytics}/popular-posts?${params}`);
+  },
+  getPostAnalytics: async (postId: string, postType: 'post' | 'simplePost' = 'post'): Promise<ApiResponse> => {
+    const params = new URLSearchParams({ postType });
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.viewAnalytics}/post/${postId}?${params}`);
+  },
+  getAnalyticsDashboard: async (timeframe: string = '30d'): Promise<ApiResponse> => {
+    const params = new URLSearchParams({ timeframe });
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.viewAnalytics}/dashboard?${params}`);
+  },
+};
+
+// Homepage Sections API functions
+export const homepageSectionsApi = {
+  getHomepageSections: async (params: {
+    type?: string;
+    isActive?: boolean;
+    isPublished?: boolean;
+    includeData?: boolean;
+  } = {}): Promise<ApiResponse> => {
+    const queryString = new URLSearchParams(
+      Object.entries(params)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString();
+    const endpoint = queryString ? `${API_ENDPOINTS.homepageSections}?${queryString}` : API_ENDPOINTS.homepageSections;
+    return apiRequest<ApiResponse>(endpoint);
+  },
+  getPublishedHomepageSections: async (): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/published`);
+  },
+  getHomepageSection: async (id: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}`);
+  },
+  createHomepageSection: async (sectionData: any): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(API_ENDPOINTS.homepageSections, {
+      method: 'POST',
+      body: JSON.stringify(sectionData),
+    });
+  },
+  updateHomepageSection: async (id: string, sectionData: any): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(sectionData),
+    });
+  },
+  deleteHomepageSection: async (id: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}`, {
+      method: 'DELETE',
+    });
+  },
+  reorderHomepageSections: async (sections: Array<{ id: string }>): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/reorder`, {
+      method: 'PATCH',
+      body: JSON.stringify({ sections }),
+    });
+  },
+  publishHomepageSection: async (id: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}/publish`, {
+      method: 'PATCH',
+    });
+  },
+  unpublishHomepageSection: async (id: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}/unpublish`, {
+      method: 'PATCH',
+    });
+  },
+  toggleSectionActive: async (id: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}/toggle-active`, {
+      method: 'PATCH',
+    });
+  },
+  duplicateHomepageSection: async (id: string): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}/duplicate`, {
+      method: 'POST',
+    });
+  },
+  getHomepageSectionAnalytics: async (id: string, timeframe: string = '30d'): Promise<ApiResponse> => {
+    const params = new URLSearchParams({ timeframe });
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}/analytics?${params}`);
+  },
+  updateHomepageSectionAnalytics: async (id: string, type: 'view' | 'click' | 'engagement', value: number = 1): Promise<ApiResponse> => {
+    return apiRequest<ApiResponse>(`${API_ENDPOINTS.homepageSections}/${id}/analytics`, {
+      method: 'PATCH',
+      body: JSON.stringify({ type, value }),
+    });
+  },
+};
+
 // Health check
 export const healthCheck = async (): Promise<ApiResponse> => {
   return apiRequest<ApiResponse>(API_ENDPOINTS.health);
@@ -418,14 +531,14 @@ const api = {
   contactApi,
   newsletterApi,
   postsApi,
-
   videosApi,
-
   categoriesApi,
   authorsApi,
   tagsApi,
   searchApi,
   analyticsApi,
+  viewAnalyticsApi,
+  homepageSectionsApi,
   healthCheck,
 };
 
