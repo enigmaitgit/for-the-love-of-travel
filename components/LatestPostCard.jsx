@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { safePlayVideo, safePauseAndResetVideo } from '@/lib/video-utils';
 
-export default function LatestPostCard({ width = '382px', height = '146px', image, featuredMedia, title, description, readTime, categories = [], category, publishedDate, slug, onClick }) {
-  const href = slug ? `/content/${slug}` : '/content';
+export default function LatestPostCard({ width = '382px', height = '146px', image, featuredMedia, title, description, readTime, categories = [], category, publishedDate, slug, isSimplePost = false, onClick }) {
+  const href = slug ? (isSimplePost ? `/simple/${slug}` : `/content/${slug}`) : '/content';
   const videoRef = useRef(null);
   
   return (

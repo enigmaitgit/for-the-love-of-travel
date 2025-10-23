@@ -493,7 +493,7 @@ export default function SimplePostClient({ post }: SimplePostClientProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  <Link href={`/content/${featuredPost.slug}`}>
+                  <Link href={featuredPost.isSimplePost ? `/simple/${featuredPost.slug}` : `/content/${featuredPost.slug}`}>
                     <div className="relative h-48 overflow-hidden">
                       <SafeImage
                         src={featuredPost.featuredImage}
@@ -578,7 +578,7 @@ export default function SimplePostClient({ post }: SimplePostClientProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    <Link href={`/content/${postItem.slug}`}>
+                    <Link href={postItem.isSimplePost ? `/simple/${postItem.slug}` : `/content/${postItem.slug}`}>
                       <div className="relative h-48 overflow-hidden group">
                         <SafeImage
                           src={postItem.featuredImage}

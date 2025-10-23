@@ -250,7 +250,7 @@ const PostCard = ({ post, config }) => {
   };
 
   return (
-    <Link href={`/content/${post.slug}`} className="block">
+    <Link href={post.isSimplePost ? `/simple/${post.slug}` : `/content/${post.slug}`} className="block">
       <motion.article 
         className={`${cardStyles[cardStyle]} cursor-pointer group`}
         whileHover={{ 

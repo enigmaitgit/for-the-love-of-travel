@@ -278,7 +278,7 @@ export default function DynamicFilteredArticles({ selectedCategory, onCategorySe
         
         
         return (
-          <Link key={post._id || index} href={`/content/${post.slug}`}>
+          <Link key={post._id || index} href={post.isSimplePost ? `/simple/${post.slug}` : `/content/${post.slug}`}>
             <motion.article 
               className="bg-white rounded-xl overflow-hidden hover:bg-gray-50 transition-colors cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
